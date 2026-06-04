@@ -3,55 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نقل‌قول‌سرای هوشمند | چندرباته</title>
+  <title>نقل‌قول‌سرا | فقط واقعی</title>
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     :root {
-      --bg: #0a0f14;
-      --surface: #151e24;
-      --text: #cbd5e0;
-      --primary: #f4a261;
-      --secondary: #e76f51;
-      --accent: #2a9d8f;
-      --glass-bg: rgba(21, 30, 36, 0.75);
-      --glass-border: rgba(255,255,255,0.07);
+      --bg: #0a0f14; --surface: #151e24; --text: #cbd5e0;
+      --primary: #f4a261; --secondary: #e76f51; --accent: #2a9d8f;
+      --glass-bg: rgba(21, 30, 36, 0.75); --glass-border: rgba(255,255,255,0.07);
       --font: 'Vazirmatn', sans-serif;
-      --sent-pos: #2ecc71;
-      --sent-neu: #f1c40f;
-      --sent-neg: #e74c3c;
+      --danger: #e74c3c;
     }
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font);
-      transition: background 0.3s, color 0.3s;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      background: var(--bg); color: var(--text); font-family: var(--font);
+      transition: background 0.3s, color 0.3s; min-height: 100vh;
+      display: flex; flex-direction: column;
     }
     #particles {
       position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events:none;
     }
     header {
-      background: var(--glass-bg);
-      backdrop-filter: blur(25px);
-      border-bottom: 1px solid var(--glass-border);
-      padding: 0.8rem 1.5rem;
+      background: var(--glass-bg); backdrop-filter: blur(25px);
+      border-bottom: 1px solid var(--glass-border); padding: 0.8rem 1.5rem;
       display: flex; align-items: center; justify-content: space-between;
       position: sticky; top:0; z-index:100;
     }
     .logo {
       font-size: 1.8rem; font-weight: 900;
       background: linear-gradient(45deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      cursor: pointer;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer;
     }
     .header-actions { display: flex; gap: 0.5rem; align-items: center; }
     .icon-btn {
       background: var(--surface); border: 1px solid var(--glass-border);
       padding: 0.5rem; border-radius: 2rem; color: var(--text);
-      cursor: pointer; font-family: var(--font); font-size: 1rem;
+      cursor: pointer; font-family: var(--font); font-size: 0.9rem;
       display: flex; align-items: center; gap: 0.3rem; transition: 0.2s;
     }
     .icon-btn:hover { background: var(--primary); color:#000; }
@@ -76,50 +62,54 @@
     }
     .sidebar-overlay.open { display:block; }
     .close-sidebar { align-self: flex-end; background:none; border:none; color:var(--text); font-size:1.5rem; cursor:pointer; }
-    .category-list { display:flex; flex-direction:column; gap:0.5rem; }
+    main {
+      flex:1; padding:1rem 1.5rem; max-width:1200px; margin:0 auto; width:100%;
+    }
+    .category-filter {
+      display: flex; gap: 0.5rem; margin: 1rem 0; flex-wrap: wrap;
+    }
     .category-btn {
       background: var(--surface); border:1px solid var(--glass-border);
-      padding:0.5rem 1rem; border-radius:1.5rem; color:var(--text);
-      cursor:pointer; font-family:var(--font); font-size:0.9rem; transition:0.2s;
+      padding:0.5rem 1.2rem; border-radius:2rem; color:var(--text);
+      cursor:pointer; font-family:var(--font); font-size:0.85rem; transition:0.2s;
+      white-space: nowrap;
     }
     .category-btn:hover, .category-btn.active { background:var(--accent); color:#000; }
-    main {
-      flex:1; padding:1rem 1.5rem; max-width:1300px; margin:0 auto; width:100%;
+    .status-bar {
+      background: var(--surface); border-radius: 1rem; padding: 0.5rem 1rem;
+      margin-bottom: 1.5rem; display: flex; justify-content: space-between;
+      font-size: 0.8rem; color: var(--secondary);
     }
-    .commander-panel {
-      background: var(--surface); border-radius: 1.2rem; padding: 1rem 1.5rem;
-      margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; align-items: center; gap:1rem;
-      justify-content: space-between;
-    }
-    .robot-status { display:flex; flex-wrap:wrap; gap:0.8rem; }
-    .robot-badge {
-      display: flex; align-items: center; gap:0.3rem;
-      background: var(--glass-bg); padding:0.3rem 0.8rem; border-radius:1.5rem;
-      font-size:0.8rem; border:1px solid var(--glass-border);
-    }
-    .robot-badge .dot { width:8px; height:8px; border-radius:50%; background:var(--accent); }
-    .quote-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:1rem;
+    .quote-list {
+      display: flex; flex-direction: column; gap: 0.8rem;
     }
     .quote-card {
       background: var(--glass-bg); backdrop-filter: blur(10px);
-      border:1px solid var(--glass-border); border-radius:1.2rem; padding:1.2rem;
-      display:flex; flex-direction:column; gap:0.8rem;
+      border:1px solid var(--glass-border); border-radius:1.2rem; padding:1rem 1.2rem;
+      display:flex; align-items: center; gap:1rem;
       transition: transform 0.2s, box-shadow 0.2s; animation: fadeInUp 0.4s ease;
     }
-    .quote-card:hover { transform:translateY(-4px); box-shadow:0 10px 25px rgba(0,0,0,0.3); }
-    .quote-text { font-size:1.1rem; line-height:1.8; font-style:italic; }
-    .quote-footer { display:flex; justify-content:space-between; align-items:center; }
-    .sentiment { font-size:1.2rem; }
+    .quote-card:hover { transform:translateY(-3px); box-shadow:0 10px 25px rgba(0,0,0,0.3); }
+    .quote-number {
+      font-size: 1.5rem; font-weight: 900; color: var(--primary);
+      min-width: 2.5rem; text-align: center;
+    }
+    .quote-content { flex:1; }
+    .quote-text {
+      font-size: 1.1rem; line-height: 1.8; font-style: italic; margin-bottom: 0.3rem;
+    }
+    .quote-source { font-size: 0.8rem; color: var(--accent); }
+    .quote-actions { display: flex; gap: 0.5rem; align-items: center; }
+    .sentiment-icon { font-size:1.2rem; }
     .delete-btn {
-      background: var(--danger, #e74c3c); border:none; padding:0.4rem 1.2rem;
+      background: var(--danger); border:none; padding:0.4rem 1.2rem;
       border-radius:2rem; color:white; font-family:var(--font); cursor:pointer;
       font-weight:bold; transition: background 0.2s;
     }
     .delete-btn:hover { background: #c0392b; }
     .log-area {
       background: var(--surface); border-radius:1rem; padding:0.8rem; margin-top:1.5rem;
-      font-size:0.8rem; color:var(--secondary); max-height:120px; overflow-y:auto;
+      font-size:0.8rem; color:var(--secondary); max-height:100px; overflow-y:auto;
       border:1px solid var(--glass-border);
     }
     .log-area p { margin:0.2rem 0; border-right:2px solid var(--accent); padding-right:0.5rem; }
@@ -133,9 +123,8 @@
       --glass-bg: rgba(255,255,255,0.85); --glass-border: rgba(0,0,0,0.05);
     }
     @media (max-width: 600px) {
-      .quote-grid { grid-template-columns: 1fr; }
+      .quote-card { flex-direction: column; align-items: flex-start; }
       .logo { font-size:1.4rem; }
-      .commander-panel { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -147,7 +136,6 @@
     <div class="header-actions">
       <button class="icon-btn" id="langToggle">🌐 <span id="langLabel">FA</span></button>
       <button class="icon-btn" id="themeToggle">🌓</button>
-      <button class="icon-btn" id="fetchNowBtn">🔄 دریافت جمله</button>
       <button class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
     </div>
   </header>
@@ -155,92 +143,56 @@
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <div class="sidebar" id="sidebar">
     <button class="close-sidebar" id="closeSidebar">✕</button>
-    <h3>🗂️ دسته‌بندی‌ها</h3>
-    <div class="category-list" id="categoryList"></div>
-    <hr style="border-color:var(--glass-border);">
+    <h3>🤖 ربات‌ها</h3>
     <div style="font-size:0.9rem;">
-      <p>🤖 ربات‌ها</p>
       <p>📥 دروگر: <span id="harvesterStatus">فعال</span></p>
       <p>🧹 پالایشگر: <span id="cleanerStatus">آماده</span></p>
-      <p>📊 تحلیل‌گر: <span id="sentimentStatus">فعال</span></p>
+      <p>🧠 تحلیل‌گر: <span id="sentimentStatus">فعال</span></p>
+      <p>🔍 ارزیاب کیفیت: <span id="qualityStatus">فعال</span></p>
     </div>
+    <hr style="border-color:var(--glass-border);">
+    <p style="font-size:0.8rem;">📊 کل جملات مخزن: <span id="poolSize">0</span></p>
   </div>
 
   <main>
-    <!-- پنل فرمانده -->
-    <div class="commander-panel">
-      <div style="display:flex; align-items:center; gap:0.5rem;">
-        <span style="font-size:1.3rem;">🧠</span>
-        <span>فرمانده هوش مصنوعی</span>
-      </div>
-      <div class="robot-status">
-        <span class="robot-badge"><span class="dot"></span> دروگر</span>
-        <span class="robot-badge"><span class="dot"></span> پالایشگر</span>
-        <span class="robot-badge"><span class="dot"></span> تحلیل‌گر</span>
-        <span class="robot-badge"><span class="dot"></span> دسته‌بند</span>
-      </div>
-      <span id="quoteCounter">۴۰ جمله</span>
+    <div class="category-filter" id="categoryFilter"></div>
+    <div class="status-bar">
+      <span id="quoteCounter">۰ جمله</span>
+      <span id="commanderLog">در حال بارگذاری...</span>
     </div>
-
-    <!-- شبکه جملات -->
-    <div class="quote-grid" id="quoteGrid"></div>
-
-    <!-- لاگ ربات‌ها -->
+    <div class="quote-list" id="quoteList"></div>
     <div class="log-area" id="logArea">
-      <p>🤖 ربات‌ها آمادهٔ سرویس‌دهی هستند...</p>
+      <p>🤖 ربات‌ها آمادهٔ سرویس‌دهی...</p>
     </div>
   </main>
 
   <footer>
-    قدرت‌گرفته از Quotable API + هوش مصنوعی مرورگر | طراحی شده با ❤️
+    قدرت‌گرفته از Quotable API + هوش مصنوعی مرورگر | فقط جملات واقعی
   </footer>
 
   <script>
     // ==================== پیکربندی ====================
     const MAX_DISPLAY = 40;
     const CATEGORIES = [
-      'عشق', 'زمان', 'اخلاق', 'موفقیت', 'زندگی', 'مرگ', 'دوستی', 'امید', 'شجاعت', 'دانش',
+      'همه', 'عشق', 'زمان', 'اخلاق', 'موفقیت', 'زندگی', 'مرگ', 'دوستی', 'امید', 'شجاعت', 'دانش',
       'قدرت', 'آرامش', 'هنر', 'طبیعت', 'سفر', 'کار', 'سلامتی', 'معنویت', 'خلاقیت', 'رهبری',
       'شادی', 'غم', 'صبر', 'آزادی', 'عدالت'
     ];
 
-    // ==================== دیتابیس پایه (۵۰ جمله برای شروع) ====================
-    const baseQuotes = [
-      { id:1, cat:'عشق', fa:'عشق تنها پلی است که تاریکی را به روشنایی می‌رساند.', en:'Love is the only bridge that leads from darkness to light.', sentiment:'pos' },
-      { id:2, cat:'زمان', fa:'زمان مانند رودخانه‌ایست که نمی‌توان دوبار در آن قدم گذاشت.', en:'Time is a river you cannot step into twice.', sentiment:'neu' },
-      { id:3, cat:'اخلاق', fa:'اخلاق، در نبود قانون، چراغ راه انسان است.', en:'Ethics is the light in the absence of law.', sentiment:'pos' },
-      { id:4, cat:'موفقیت', fa:'موفقیت حاصل پشتکار است، نه شانس.', en:'Success is the fruit of persistence, not luck.', sentiment:'pos' },
-      { id:5, cat:'زندگی', fa:'زندگی یک سفر است، نه مقصد.', en:'Life is a journey, not a destination.', sentiment:'neu' }
-      // (برای اختصار ۵ جمله گذاشتم – تو می‌تونی آرایه رو با جمله‌های واقعی پر کنی)
-    ];
-    // پر کردن جمله‌های ساختگی تا ۵۰ تا
-    for (let i = baseQuotes.length + 1; i <= 50; i++) {
-      let cat = CATEGORIES[i % CATEGORIES.length];
-      baseQuotes.push({
-        id: i,
-        cat: cat,
-        fa: `جملهٔ پایه #${i} دربارهٔ ${cat}.`,
-        en: `Base quote #${i} about ${cat}.`,
-        sentiment: (i % 3 === 0) ? 'neg' : ((i % 3 === 1) ? 'pos' : 'neu')
-      });
-    }
-
-    // ==================== وضعیت کلی ====================
+    // ==================== وضعیت ====================
     let currentLang = localStorage.getItem('qlang') || 'fa';
-    let currentCategory = 'all';
-    let displayedQuotes = [];          // آرایه‌ای از آبجکت‌های quote که روی صفحه هستند
-    let quotesPool = [...baseQuotes];  // مخزن کل (پایه + جملات دریافت‌شده)
-    let nextId = baseQuotes.length + 1;
+    let currentCategory = 'همه';
+    let displayedQuotes = [];          // دقیقاً MAX_DISPLAY جمله که روی صفحه هستند
+    let quotesPool = [];              // مخزن کل جملات دریافت‌شده از API
     let robotLogs = [];
 
     // ==================== المان‌های DOM ====================
-    const quoteGrid = document.getElementById('quoteGrid');
-    const categoryListEl = document.getElementById('categoryList');
-    const quoteCounterEl = document.getElementById('quoteCounter');
+    const quoteList = document.getElementById('quoteList');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const quoteCounter = document.getElementById('quoteCounter');
+    const commanderLog = document.getElementById('commanderLog');
     const logArea = document.getElementById('logArea');
-    const harvesterStatus = document.getElementById('harvesterStatus');
-    const cleanerStatus = document.getElementById('cleanerStatus');
-    const sentimentStatus = document.getElementById('sentimentStatus');
+    const poolSizeEl = document.getElementById('poolSize');
 
     // ==================== ذرات پس‌زمینه ====================
     const canvas = document.getElementById('particles');
@@ -275,12 +227,18 @@
     }
     animateParticles();
 
-    // ==================== رابط کاربری ====================
+    // ==================== ترجمه رابط ====================
     const ui = {
-      fa: { logo:'📖 نقل‌قول‌سرا', counter:(n)=>`${n} جمله`, deleteBtn:'حذف', fetchNow:'🔄 دریافت جمله',
-            harvesterActive:'فعال', cleanerReady:'آماده', sentimentActive:'فعال' },
-      en: { logo:'📖 QuoteVault', counter:(n)=>`${n} quotes`, deleteBtn:'Remove', fetchNow:'🔄 Fetch quote',
-            harvesterActive:'Active', cleanerReady:'Ready', sentimentActive:'Active' }
+      fa: { 
+        logo:'📖 نقل‌قول‌سرا', counter:(n)=>`${n} جمله`, deleteBtn:'حذف',
+        harvester:'فعال', cleaner:'آماده', sentiment:'فعال', quality:'فعال',
+        loading:'در حال دریافت جملات واقعی...', commanderLog:'ربات‌ها فعال هستند'
+      },
+      en: { 
+        logo:'📖 QuoteVault', counter:(n)=>`${n} quotes`, deleteBtn:'Remove',
+        harvester:'Active', cleaner:'Ready', sentiment:'Active', quality:'Active',
+        loading:'Fetching real quotes...', commanderLog:'Robots are active'
+      }
     };
     function t(key, ...args) {
       let str = (ui[currentLang] && ui[currentLang][key]) || key;
@@ -291,12 +249,13 @@
     function updateUILanguage() {
       document.getElementById('logoText').textContent = t('logo');
       document.getElementById('langLabel').textContent = currentLang === 'fa' ? 'FA' : 'EN';
-      document.getElementById('fetchNowBtn').textContent = t('fetchNow');
-      quoteCounterEl.textContent = t('counter', displayedQuotes.length);
-      harvesterStatus.textContent = t('harvesterActive');
-      cleanerStatus.textContent = t('cleanerReady');
-      sentimentStatus.textContent = t('sentimentActive');
-      renderCategoryList();
+      quoteCounter.textContent = t('counter', displayedQuotes.length);
+      commanderLog.textContent = t('commanderLog');
+      document.getElementById('harvesterStatus').textContent = t('harvester');
+      document.getElementById('cleanerStatus').textContent = t('cleaner');
+      document.getElementById('sentimentStatus').textContent = t('sentiment');
+      document.getElementById('qualityStatus').textContent = t('quality');
+      renderCategoryFilter();
       renderQuotes();
     }
 
@@ -309,76 +268,74 @@
     document.getElementById('closeSidebar').addEventListener('click', toggleSidebar);
     document.getElementById('sidebarOverlay').addEventListener('click', toggleSidebar);
 
-    function renderCategoryList() {
-      let html = `<button class="category-btn ${currentCategory==='all'?'active':''}" data-cat="all">${currentLang==='fa'?'همه':'All'}</button>`;
+    // ==================== دسته‌بندی‌ها ====================
+    function renderCategoryFilter() {
+      let html = '';
       CATEGORIES.forEach(cat => {
-        html += `<button class="category-btn ${cat===currentCategory?'active':''}" data-cat="${cat}">${cat}</button>`;
+        html += `<button class="category-btn ${cat === currentCategory ? 'active' : ''}" data-cat="${cat}">${cat}</button>`;
       });
-      categoryListEl.innerHTML = html;
-      categoryListEl.querySelectorAll('.category-btn').forEach(btn => {
+      categoryFilter.innerHTML = html;
+      categoryFilter.querySelectorAll('.category-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           currentCategory = btn.dataset.cat;
-          renderCategoryList();
+          renderCategoryFilter();
           refreshDisplay();
-          toggleSidebar();
         });
       });
     }
 
     // ==================== مدیریت جملات ====================
     function getAvailableQuotes() {
-      // مخزن جملات غیر تکراری که در حال حاضر نمایش داده نشده‌اند
-      let filtered = currentCategory === 'all' ? quotesPool : quotesPool.filter(q => q.cat === currentCategory);
+      let filtered = currentCategory === 'همه' ? quotesPool : quotesPool.filter(q => q.cat === currentCategory);
       const displayedIds = new Set(displayedQuotes.map(q => q.id));
       return filtered.filter(q => !displayedIds.has(q.id));
     }
 
     function refreshDisplay() {
       const available = getAvailableQuotes();
-      // کمبود تا MAX_DISPLAY
       const needed = MAX_DISPLAY - displayedQuotes.length;
       if (needed > 0 && available.length > 0) {
         const shuffled = [...available].sort(() => Math.random() - 0.5);
         const toAdd = shuffled.slice(0, Math.min(needed, shuffled.length));
         displayedQuotes.push(...toAdd);
       }
-      // حذف اضافی اگر بیش از MAX_DISPLAY
       if (displayedQuotes.length > MAX_DISPLAY) {
         displayedQuotes.length = MAX_DISPLAY;
       }
-      quoteCounterEl.textContent = t('counter', displayedQuotes.length);
+      quoteCounter.textContent = t('counter', displayedQuotes.length);
       renderQuotes();
     }
 
     function deleteQuote(quoteId) {
       const index = displayedQuotes.findIndex(q => q.id === quoteId);
       if (index !== -1) {
-        const removed = displayedQuotes.splice(index, 1)[0];
-        // پیدا کردن یک جملهٔ جدید از مخزن
+        displayedQuotes.splice(index, 1);
         const available = getAvailableQuotes();
         if (available.length > 0) {
           const newQuote = available[Math.floor(Math.random() * available.length)];
           displayedQuotes.push(newQuote);
         }
-        // ثبت در لاگ
-        addLog(`🗑️ جمله حذف شد: «${removed.fa.substring(0,30)}...» و جملهٔ جدید جایگزین شد.`);
-        quoteCounterEl.textContent = t('counter', displayedQuotes.length);
+        addLog(`🗑️ جمله حذف شد و جملهٔ جدید جایگزین شد.`);
+        quoteCounter.textContent = t('counter', displayedQuotes.length);
         renderQuotes();
       }
     }
 
     function renderQuotes() {
-      quoteGrid.innerHTML = '';
-      displayedQuotes.forEach(q => {
+      quoteList.innerHTML = '';
+      displayedQuotes.forEach((q, idx) => {
         const card = document.createElement('div');
         card.className = 'quote-card';
         const text = currentLang === 'fa' ? q.fa : q.en;
         const sentEmoji = { pos:'😊', neu:'😐', neg:'😞' };
         card.innerHTML = `
-          <div class="quote-text">“${text}”</div>
-          <div class="quote-footer">
-            <span class="sentiment">${sentEmoji[q.sentiment] || '😐'}</span>
-            <span style="font-size:0.8rem; color:var(--accent);">${q.cat}</span>
+          <div class="quote-number">${idx + 1}</div>
+          <div class="quote-content">
+            <div class="quote-text">“${text}”</div>
+            <div class="quote-source">${q.source || 'Quotable'}</div>
+          </div>
+          <div class="quote-actions">
+            <span class="sentiment-icon">${sentEmoji[q.sentiment] || '😐'}</span>
             <button class="delete-btn" data-id="${q.id}">${t('deleteBtn')}</button>
           </div>
         `;
@@ -386,11 +343,10 @@
           e.stopPropagation();
           deleteQuote(q.id);
         });
-        quoteGrid.appendChild(card);
+        quoteList.appendChild(card);
       });
     }
 
-    // ==================== ربات‌ها ====================
     function addLog(msg) {
       const time = new Date().toLocaleTimeString('fa-IR');
       robotLogs.push(`[${time}] ${msg}`);
@@ -399,9 +355,10 @@
       logArea.scrollTop = logArea.scrollHeight;
     }
 
+    // ==================== تحلیل احساس ====================
     function simpleSentiment(text) {
-      const positiveWords = ['خوب', 'عالی', 'زیبا', 'عشق', 'امید', 'شادی', 'موفقیت', 'love', 'hope', 'joy', 'success'];
-      const negativeWords = ['بد', 'غم', 'ترس', 'شکست', 'مرگ', 'درد', 'sad', 'fear', 'failure', 'death'];
+      const positiveWords = ['خوب', 'عالی', 'زیبا', 'عشق', 'امید', 'شادی', 'موفقیت', 'love', 'hope', 'joy', 'success', 'great', 'wonderful', 'beautiful'];
+      const negativeWords = ['بد', 'غم', 'ترس', 'شکست', 'مرگ', 'درد', 'sad', 'fear', 'failure', 'death', 'pain', 'hate', 'angry'];
       const lower = text.toLowerCase();
       let pos = 0, neg = 0;
       positiveWords.forEach(w => { if (lower.includes(w)) pos++; });
@@ -411,52 +368,59 @@
       return 'neu';
     }
 
+    // ==================== دسته‌بندی جمله ====================
     function categorizeQuote(text) {
       const lower = text.toLowerCase();
-      for (let cat of CATEGORIES) {
+      for (let cat of CATEGORIES.slice(1)) { // همه به جز 'همه'
         if (lower.includes(cat)) return cat;
       }
-      return CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
+      return 'زندگی'; // پیش‌فرض
     }
 
-    // ربات دروگر: جمع‌آوری جملات از API
-    async function fetchQuotesFromAPI() {
+    // ==================== ربات ارزیاب کیفیت ====================
+    function isQualityQuote(text) {
+      return text && text.length >= 20 && !/^[0-9\s]+$/.test(text) && !/[<>{}]/.test(text);
+    }
+
+    // ==================== ربات دروگر: دریافت از API ====================
+    async function fetchQuotes(count = 5) {
       try {
-        addLog('📡 ربات دروگر: در حال دریافت جملات جدید...');
-        const res = await fetch('https://api.quotable.io/quotes/random?limit=5');
+        const res = await fetch(`https://api.quotable.io/quotes/random?limit=${count}`);
         const data = await res.json();
         if (data && data.length) {
           let added = 0;
           data.forEach(item => {
-            const textFa = item.content; // Quotable فقط انگلیسی داره
             const textEn = item.content;
-            // جلوگیری از تکراری (با id یا محتوا)
-            if (!quotesPool.some(q => q.en === textEn)) {
+            const textFa = textEn; // Quotable فقط انگلیسی دارد، می‌توان بعداً ترجمه اضافه کرد
+            if (!quotesPool.some(q => q.en === textEn) && isQualityQuote(textEn)) {
               const cat = categorizeQuote(textEn);
               const sent = simpleSentiment(textEn);
               quotesPool.push({
-                id: nextId++,
+                id: Date.now() + Math.random(),
                 cat: cat,
-                fa: textFa, // ترجمه نداریم، همون انگلیسی رو نمایش می‌دهیم (می‌توان بعداً با MyMemory ترجمه کرد)
+                fa: textFa,
                 en: textEn,
-                sentiment: sent
+                sentiment: sent,
+                source: item.author || 'Quotable'
               });
               added++;
             }
           });
-          addLog(`✅ ربات دروگر: ${added} جملهٔ جدید به مخزن اضافه کرد.`);
-          // اگر صفحه جا دارد، نمایش را به‌روزرسانی کن
-          if (displayedQuotes.length < MAX_DISPLAY) refreshDisplay();
+          if (added > 0) {
+            addLog(`📥 دروگر: ${added} جملهٔ جدید به مخزن اضافه کرد.`);
+            poolSizeEl.textContent = quotesPool.length;
+            refreshDisplay();
+          }
         }
       } catch (e) {
-        addLog('⚠️ ربات دروگر: خطا در دریافت جملات.');
+        addLog('⚠️ دروگر: خطا در دریافت جملات.');
       }
     }
 
-    // ربات پالایشگر: حذف تکراری‌ها
+    // ==================== ربات پالایشگر ====================
     function cleanDuplicates() {
-      const unique = [];
       const seen = new Set();
+      const unique = [];
       quotesPool.forEach(q => {
         const key = q.en.toLowerCase().trim();
         if (!seen.has(key)) {
@@ -467,19 +431,26 @@
       const removed = quotesPool.length - unique.length;
       if (removed > 0) {
         quotesPool = unique;
-        addLog(`🧹 ربات پالایشگر: ${removed} جملهٔ تکراری را حذف کرد.`);
+        addLog(`🧹 پالایشگر: ${removed} جملهٔ تکراری حذف شد.`);
+        poolSizeEl.textContent = quotesPool.length;
+        // حذف از displayedQuotes اگر تکراری بوده
+        const displayedIds = new Set(displayedQuotes.map(q => q.id));
+        displayedQuotes = displayedQuotes.filter(q => quotesPool.some(p => p.id === q.id));
+        refreshDisplay();
       }
     }
 
-    // حلقهٔ مدیریت ربات‌ها
-    function runRobots() {
-      cleanDuplicates();
-      // دروگر هر ۱۰ دقیقه یک‌بار توسط setInterval صدا زده می‌شود، اینجا فقط وضعیت را نشان می‌دهیم
-    }
+    // ==================== زمان‌بندی ربات‌ها ====================
+    setInterval(() => fetchQuotes(5), 10 * 60 * 1000); // هر ۱۰ دقیقه
+    setInterval(cleanDuplicates, 30 * 1000); // هر ۳۰ ثانیه
 
-    // راه‌اندازی زمان‌بندی ربات دروگر
-    setInterval(fetchQuotesFromAPI, 10 * 60 * 1000); // هر ۱۰ دقیقه
-    setInterval(runRobots, 30000); // پالایش هر ۳۰ ثانیه
+    // ==================== بارگذاری اولیه ====================
+    async function initialFetch() {
+      commanderLog.textContent = t('loading');
+      await fetchQuotes(40); // ۴۰ جمله اولیه
+      commanderLog.textContent = t('commanderLog');
+      quoteCounter.textContent = t('counter', displayedQuotes.length);
+    }
 
     // ==================== تغییر زبان و تم ====================
     function toggleLanguage() {
@@ -496,23 +467,16 @@
 
     document.getElementById('langToggle').addEventListener('click', toggleLanguage);
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-    document.getElementById('fetchNowBtn').addEventListener('click', fetchQuotesFromAPI);
-
-    // بارگذاری تم ذخیره شده
     if (localStorage.getItem('qtheme') === 'light') document.body.classList.add('light-mode');
 
-    // ==================== راه‌اندازی اولیه ====================
+    // ==================== راه‌اندازی ====================
     function init() {
       document.documentElement.lang = currentLang;
       document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
-      renderCategoryList();
-      // انتخاب ۴۰ جملهٔ تصادفی اولیه
-      const shuffled = [...quotesPool].sort(() => Math.random() - 0.5);
-      displayedQuotes = shuffled.slice(0, Math.min(MAX_DISPLAY, shuffled.length));
+      renderCategoryFilter();
       updateUILanguage();
-      runRobots(); // اجرای اولیهٔ پالایش
-      fetchQuotesFromAPI(); // اولین برداشت
-      addLog('🤖 فرمانده: همهٔ ربات‌ها فعال شدند.');
+      initialFetch();
+      addLog('🤖 همهٔ ربات‌ها فعال شدند.');
     }
     init();
   </script>
