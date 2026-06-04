@@ -3,36 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نمایش کفش سه‌بعدی | Samisaki</title>
+    <title>گوسفند پشمالو | Samisaki</title>
     <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background: #e8e4df;
-            font-family: 'Vazirmatn', sans-serif;
-        }
-        canvas {
-            display: block;
-        }
+        body { margin: 0; overflow: hidden; background: #f0ebe3; font-family: 'Vazirmatn', sans-serif; }
+        canvas { display: block; }
         .hint {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(10px);
-            color: #fff;
-            padding: 10px 24px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            pointer-events: none;
-            z-index: 10;
-            border: 1px solid rgba(255,255,255,0.2);
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(8px);
+            color: #fff; padding: 8px 22px; border-radius: 25px;
+            font-size: 0.85rem; pointer-events: none; z-index: 10;
         }
     </style>
 </head>
 <body>
-    <div class="hint">🖱️ بچرخانید | اسکرول برای زوم | کفش اسپرت Samisaki</div>
+    <div class="hint">🐑 بچرخونید | اسکرول برای زوم | گوسفند آبی Samisaki</div>
 
     <script type="importmap">
         {
@@ -46,13 +30,13 @@
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        // ==================== صحنه، دوربین، رندرر ====================
+        // --- صحنه، دوربین، رندرر ---
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xe8e4df); // پس‌زمینهٔ کرم روشن (استودیویی)
+        scene.background = new THREE.Color(0xf5f0e8);
 
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
-        camera.position.set(2.5, 1.8, 3.5);
-        camera.lookAt(0, 0.3, 0);
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 20);
+        camera.position.set(3, 2.2, 4.5);
+        camera.lookAt(0, 0.8, 0);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -60,173 +44,168 @@
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.2;
+        renderer.toneMappingExposure = 1.1;
         document.body.appendChild(renderer.domElement);
 
-        // ==================== کنترل‌ها ====================
         const controls = new OrbitControls(camera, renderer.domElement);
-        controls.target.set(0, 0.35, 0);
+        controls.target.set(0, 0.9, 0);
         controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = 1.5;
-        controls.minDistance = 1.8;
-        controls.maxDistance = 6;
-        controls.maxPolarAngle = Math.PI / 1.8;
+        controls.dampingFactor = 0.08;
+        controls.minDistance = 2.2;
+        controls.maxDistance = 8;
+        controls.maxPolarAngle = Math.PI / 2.1;
         controls.update();
 
-        // ==================== نورپردازی حرفه‌ای (Three-Point Lighting) ====================
-        // نور محیطی برای روشنایی پایه
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-        scene.add(ambientLight);
+        // --- نور ---
+        scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+        const sun = new THREE.DirectionalLight(0xfff5e8, 5);
+        sun.position.set(4, 6, 3);
+        sun.castShadow = true;
+        sun.shadow.mapSize.width = 1024;
+        sun.shadow.mapSize.height = 1024;
+        sun.shadow.camera.near = 0.5;
+        sun.shadow.camera.far = 20;
+        sun.shadow.camera.left = -5;
+        sun.shadow.camera.right = 5;
+        sun.shadow.camera.top = 5;
+        sun.shadow.camera.bottom = -5;
+        scene.add(sun);
 
-        // Key Light (نور اصلی از جلو-چپ)
-        const keyLight = new THREE.DirectionalLight(0xfff5f0, 8.0);
-        keyLight.position.set(-3, 4, 4);
-        keyLight.castShadow = true;
-        keyLight.shadow.mapSize.width = 1024;
-        keyLight.shadow.mapSize.height = 1024;
-        keyLight.shadow.camera.near = 0.5;
-        keyLight.shadow.camera.far = 20;
-        keyLight.shadow.camera.left = -3;
-        keyLight.shadow.camera.right = 3;
-        keyLight.shadow.camera.top = 3;
-        keyLight.shadow.camera.bottom = -3;
-        keyLight.shadow.bias = -0.0001;
-        scene.add(keyLight);
+        const fill = new THREE.DirectionalLight(0xc8d8ff, 2);
+        fill.position.set(-2, 1, -2);
+        scene.add(fill);
 
-        // Fill Light (نور پرکننده از راست، ملایم)
-        const fillLight = new THREE.DirectionalLight(0xccddff, 3.5);
-        fillLight.position.set(3, 1.5, 1.5);
-        scene.add(fillLight);
+        // --- کف ---
+        const floor = new THREE.Mesh(
+            new THREE.PlaneGeometry(8, 8),
+            new THREE.MeshStandardMaterial({ color: 0xe8e0d5, roughness: 0.9 })
+        );
+        floor.rotation.x = -Math.PI / 2;
+        floor.position.y = -0.5;
+        floor.receiveShadow = true;
+        scene.add(floor);
 
-        // Rim Light (نور لبه از پشت برای جدا شدن سوژه از پس‌زمینه)
-        const rimLight = new THREE.DirectionalLight(0xffffff, 6.0);
-        rimLight.position.set(0, 1.5, -3);
-        scene.add(rimLight);
+        // --- گروه گوسفند ---
+        const sheep = new THREE.Group();
+        scene.add(sheep);
 
-        // ==================== کف و پایه ====================
-        // یک دیسک نرم برای پایه (سایه‌ها رو خوب نشون بده)
-        const pedestalGeometry = new THREE.CylinderGeometry(0.7, 0.75, 0.05, 64);
-        const pedestalMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3, metalness: 0.2 });
-        const pedestal = new THREE.Mesh(pedestalGeometry, pedestalMaterial);
-        pedestal.position.y = -0.05;
-        pedestal.receiveShadow = true;
-        pedestal.castShadow = true;
-        scene.add(pedestal);
+        // متریال پشم (آبی کمرنگ، خیلی زبر)
+        const woolMat = new THREE.MeshStandardMaterial({
+            color: 0xa8c8e8,
+            roughness: 1.0,
+            metalness: 0.0
+        });
 
-        // ==================== ساخت کفش ====================
-        const shoeGroup = new THREE.Group();
-        scene.add(shoeGroup);
+        // متریال صورت و پاها (صورتی-کرم)
+        const skinMat = new THREE.MeshStandardMaterial({
+            color: 0xe8c8b8,
+            roughness: 0.6,
+            metalness: 0.0
+        });
 
-        // --- بافت‌ها با Canvas ---
-        // بافت پارچه‌ای (مشکی)
-        const fabricCanvas = document.createElement('canvas');
-        fabricCanvas.width = 256; fabricCanvas.height = 256;
-        const fCtx = fabricCanvas.getContext('2d');
-        fCtx.fillStyle = '#2a2a2a'; fCtx.fillRect(0, 0, 256, 256);
-        for (let i = 0; i < 1000; i++) {
-            fCtx.fillStyle = `rgba(${Math.random()>0.5?255:0},${Math.random()>0.5?255:0},${Math.random()>0.5?255:0},0.04)`;
-            fCtx.fillRect(Math.random()*256, Math.random()*256, 1, 1);
+        const eyeMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.05 });
+        const pupilMat = new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.05 });
+        const noseMat = new THREE.MeshStandardMaterial({ color: 0x444444, roughness: 0.3 });
+
+        // --- بدنه (کره بزرگ) ---
+        const body = new THREE.Mesh(new THREE.SphereGeometry(0.65, 32, 32), woolMat);
+        body.position.y = 0.45;
+        body.castShadow = true; body.receiveShadow = true;
+        sheep.add(body);
+
+        // --- توده‌های پشم اضافی (برای حس پفکی) ---
+        function addWoolCluster(x, y, z, scale) {
+            const cluster = new THREE.Mesh(new THREE.SphereGeometry(0.35 * scale, 16, 16), woolMat);
+            cluster.position.set(x, y, z);
+            cluster.castShadow = true; cluster.receiveShadow = true;
+            sheep.add(cluster);
         }
-        const fabricTexture = new THREE.CanvasTexture(fabricCanvas);
+        addWoolCluster(0.4, 0.55, 0.35, 0.7);
+        addWoolCluster(-0.4, 0.55, 0.35, 0.7);
+        addWoolCluster(0.35, 0.55, -0.35, 0.65);
+        addWoolCluster(-0.35, 0.55, -0.35, 0.65);
+        addWoolCluster(0, 0.7, 0.4, 0.6);
+        addWoolCluster(0, 0.7, -0.4, 0.6);
+        addWoolCluster(0.5, 0.4, 0, 0.5);
+        addWoolCluster(-0.5, 0.4, 0, 0.5);
+        addWoolCluster(0, 0.35, 0.55, 0.55);
+        addWoolCluster(0, 0.35, -0.55, 0.55);
 
-        // بافت لاستیکی (سفید کدر)
-        const rubberCanvas = document.createElement('canvas');
-        rubberCanvas.width = 128; rubberCanvas.height = 128;
-        const rCtx = rubberCanvas.getContext('2d');
-        rCtx.fillStyle = '#eeeeee'; rCtx.fillRect(0, 0, 128, 128);
-        for (let i = 0; i < 300; i++) {
-            rCtx.fillStyle = `rgba(0,0,0,${Math.random()*0.05})`;
-            rCtx.fillRect(Math.random()*128, Math.random()*128, 2, 2);
+        // --- سر ---
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.4, 32, 32), skinMat);
+        head.position.set(0, 0.95, 0.55);
+        head.castShadow = true; head.receiveShadow = true;
+        sheep.add(head);
+
+        // --- پشم روی سر (چند تا توده کوچیک) ---
+        function addHeadWool(x, y, z, s) {
+            const w = new THREE.Mesh(new THREE.SphereGeometry(0.15 * s, 8, 8), woolMat);
+            w.position.set(x, y, z);
+            w.castShadow = true;
+            sheep.add(w);
         }
-        const rubberTexture = new THREE.CanvasTexture(rubberCanvas);
+        addHeadWool(0, 1.2, 0.55, 1.3);
+        addHeadWool(0.2, 1.15, 0.55, 0.9);
+        addHeadWool(-0.2, 1.15, 0.55, 0.9);
+        addHeadWool(0.15, 1.05, 0.7, 0.7);
+        addHeadWool(-0.15, 1.05, 0.7, 0.7);
 
-        // متریال‌ها
-        const fabricMat = new THREE.MeshStandardMaterial({ map: fabricTexture, roughness: 0.7, metalness: 0.0, color: 0x333333 });
-        const rubberMat = new THREE.MeshStandardMaterial({ map: rubberTexture, roughness: 0.4, metalness: 0.05, color: 0xeeeeee });
-        const soleMat = new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.5, metalness: 0.1 });
-        const accentMat = new THREE.MeshStandardMaterial({ color: 0xff5533, roughness: 0.3, metalness: 0.2 }); // جزئیات نارنجی
+        // --- گوش‌ها ---
+        const earL = new THREE.Mesh(new THREE.SphereGeometry(0.13, 8, 8), skinMat);
+        earL.position.set(-0.35, 1.1, 0.6);
+        earL.castShadow = true;
+        sheep.add(earL);
+        const earR = new THREE.Mesh(new THREE.SphereGeometry(0.13, 8, 8), skinMat);
+        earR.position.set(0.35, 1.1, 0.6);
+        earR.castShadow = true;
+        sheep.add(earR);
 
-        // --- زیره (Sole) ---
-        const sole = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.08, 1.5), soleMat);
-        sole.position.set(0, 0.02, 0.1);
-        sole.castShadow = true; sole.receiveShadow = true;
-        shoeGroup.add(sole);
-        // زیرهٔ پاشنه
-        const heelSole = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.1, 0.35), soleMat);
-        heelSole.position.set(0, 0.04, -0.45);
-        heelSole.castShadow = true; heelSole.receiveShadow = true;
-        shoeGroup.add(heelSole);
+        // --- چشم‌ها (درشت و بامزه) ---
+        const eyeWhiteL = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 16), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.05 }));
+        eyeWhiteL.position.set(-0.15, 1.05, 0.9);
+        sheep.add(eyeWhiteL);
+        const eyeWhiteR = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 16), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.05 }));
+        eyeWhiteR.position.set(0.15, 1.05, 0.9);
+        sheep.add(eyeWhiteR);
 
-        // --- رویهٔ اصلی (بدنهٔ کفش) ---
-        // قسمت جلویی (Toe Box)
-        const toeBox = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.3, 0.65), fabricMat);
-        toeBox.position.set(0, 0.25, 0.55);
-        toeBox.castShadow = true; toeBox.receiveShadow = true;
-        shoeGroup.add(toeBox);
-        // قسمت میانی (Mid Section)
-        const midSection = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.35, 0.5), fabricMat);
-        midSection.position.set(0, 0.3, 0.1);
-        midSection.castShadow = true; midSection.receiveShadow = true;
-        shoeGroup.add(midSection);
-        // پاشنه (Heel Counter)
-        const heelCounter = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.35, 0.35), fabricMat);
-        heelCounter.position.set(0, 0.3, -0.45);
-        heelCounter.castShadow = true; heelCounter.receiveShadow = true;
-        shoeGroup.add(heelCounter);
+        const pupilL = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 8), pupilMat);
+        pupilL.position.set(-0.15, 1.05, 0.98);
+        sheep.add(pupilL);
+        const pupilR = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 8), pupilMat);
+        pupilR.position.set(0.15, 1.05, 0.98);
+        sheep.add(pupilR);
 
-        // --- زبانه (Tongue) ---
-        const tongue = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.5, 0.15), fabricMat);
-        tongue.position.set(0, 0.55, 0.2);
-        tongue.rotation.x = -0.3;
-        tongue.castShadow = true; tongue.receiveShadow = true;
-        shoeGroup.add(tongue);
+        // --- بینی ---
+        const nose = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 8), noseMat);
+        nose.position.set(0, 0.92, 0.93);
+        sheep.add(nose);
 
-        // --- یقه (Collar) دور مچ پا ---
-        const collar = new THREE.Mesh(new THREE.TorusGeometry(0.25, 0.06, 8, 16), fabricMat);
-        collar.position.set(0, 0.55, -0.35);
-        collar.rotation.x = Math.PI / 2;
-        collar.castShadow = true; collar.receiveShadow = true;
-        shoeGroup.add(collar);
+        // --- دهان (خط کوچیک) ---
+        const mouth = new THREE.Mesh(new THREE.TorusGeometry(0.04, 0.015, 4, 8), new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.3 }));
+        mouth.position.set(0, 0.86, 0.94);
+        mouth.rotation.x = Math.PI / 2;
+        mouth.rotation.z = Math.PI;
+        sheep.add(mouth);
 
-        // --- بندها (Laces) ---
-        for (let i = 0; i < 4; i++) {
-            const lace = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.35, 6), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.6 }));
-            lace.position.set(0, 0.45 + i * 0.08, 0.25);
-            lace.rotation.z = Math.PI / 2;
-            lace.castShadow = true;
-            shoeGroup.add(lace);
+        // --- پاها (۴ تا استوانه کوتاه) ---
+        function createLeg(x, z) {
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.15, 0.5, 8), skinMat);
+            leg.position.set(x, -0.05, z);
+            leg.castShadow = true; leg.receiveShadow = true;
+            sheep.add(leg);
         }
+        createLeg(0.3, 0.3);
+        createLeg(-0.3, 0.3);
+        createLeg(0.3, -0.3);
+        createLeg(-0.3, -0.3);
 
-        // --- جزئیات نارنجی (خط روی زیره) ---
-        const accentStripe = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.03, 1.3), accentMat);
-        accentStripe.position.set(0, 0.07, 0.1);
-        accentStripe.castShadow = true;
-        shoeGroup.add(accentStripe);
+        // --- دم (یه گلوله پشمی کوچیک) ---
+        const tail = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 8), woolMat);
+        tail.position.set(0, 0.5, -0.7);
+        tail.castShadow = true;
+        sheep.add(tail);
 
-        // --- لوگوی Swoosh (منحنی ساده) ---
-        const curve = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(-0.2, 0.15, 0.6),
-            new THREE.Vector3(-0.05, 0.28, 0.3),
-            new THREE.Vector3(0.15, 0.35, -0.1),
-            new THREE.Vector3(0.1, 0.25, -0.5)
-        ]);
-        const tubeGeometry = new THREE.TubeGeometry(curve, 32, 0.025, 8, false);
-        const swoosh = new THREE.Mesh(tubeGeometry, new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3, metalness: 0.1 }));
-        swoosh.castShadow = true;
-        shoeGroup.add(swoosh);
-
-        // --- زیرهٔ داخلی (Insole) — قابل مشاهده از بالا ---
-        const insole = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.03, 0.9), new THREE.MeshStandardMaterial({ color: 0xffddcc, roughness: 0.8 }));
-        insole.position.set(0, 0.42, 0.15);
-        insole.castShadow = true; insole.receiveShadow = true;
-        shoeGroup.add(insole);
-
-        // تنظیم موقعیت کلی کفش (چرخش ۱۵ درجه برای زاویهٔ بهتر)
-        shoeGroup.rotation.y = -0.2;
-
-        // ==================== انیمیشن ====================
+        // --- انیمیشن ---
         function animate() {
             requestAnimationFrame(animate);
             controls.update();
@@ -234,7 +213,6 @@
         }
         animate();
 
-        // ==================== واکنش‌گرایی ====================
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
