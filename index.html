@@ -4,73 +4,207 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>momento | جملات ماندگار</title>
-    <!-- فونت‌های خفن -->
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
     <style>
-        :root {
+        /* ==================== تم‌ها ==================== */
+        :root,
+        [data-theme="purple"] {
             --bg: #06050a;
+            --bg-image: radial-gradient(ellipse at 30% 10%, rgba(179,136,255,0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 90%, rgba(255,107,157,0.06) 0%, transparent 60%);
             --card-bg: rgba(18, 16, 28, 0.7);
             --accent: #b388ff;
             --accent2: #ff6b9d;
             --text: #e4e0f0;
             --text-dim: #8882a0;
             --border: rgba(179, 136, 255, 0.25);
-            --radius: 28px;
-            --shadow: 0 20px 40px rgba(0,0,0,0.6);
             --glow: 0 0 30px rgba(179, 136, 255, 0.15);
+            --card-hover-border: rgba(179,136,255,0.6);
+            --card-glow: rgba(179,136,255,0.1);
+            --btn-hover-bg: rgba(179,136,255,0.15);
+            --btn-hover-shadow: 0 0 12px rgba(179,136,255,0.3);
+            --fav-color: #ff5e7a;
+            --fav-shadow: 0 0 14px rgba(255,94,122,0.3);
+            --del-color: #ff7b7b;
+            --del-shadow: 0 0 14px rgba(255,123,123,0.3);
+            --scrollbar: rgba(179,136,255,0.3);
+            --logo-gradient: linear-gradient(135deg, #e0c3ff, #b388ff, #ff8aab);
+            --text-color-on-bg: #f0eaff;
         }
 
+        [data-theme="emerald"] {
+            --bg: #050a08;
+            --bg-image: radial-gradient(ellipse at 30% 10%, rgba(52,211,153,0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 90%, rgba(16,185,129,0.06) 0%, transparent 60%);
+            --card-bg: rgba(16, 28, 22, 0.7);
+            --accent: #34d399;
+            --accent2: #10b981;
+            --text: #e0f0e8;
+            --text-dim: #6b8b7a;
+            --border: rgba(52,211,153,0.25);
+            --glow: 0 0 30px rgba(52,211,153,0.15);
+            --card-hover-border: rgba(52,211,153,0.6);
+            --card-glow: rgba(52,211,153,0.1);
+            --btn-hover-bg: rgba(52,211,153,0.15);
+            --btn-hover-shadow: 0 0 12px rgba(52,211,153,0.3);
+            --fav-color: #f472b6;
+            --fav-shadow: 0 0 14px rgba(244,114,182,0.3);
+            --del-color: #f87171;
+            --del-shadow: 0 0 14px rgba(248,113,113,0.3);
+            --scrollbar: rgba(52,211,153,0.3);
+            --logo-gradient: linear-gradient(135deg, #a7f3d0, #34d399, #6ee7b7);
+            --text-color-on-bg: #eafff5;
+        }
+
+        [data-theme="ocean"] {
+            --bg: #050a14;
+            --bg-image: radial-gradient(ellipse at 30% 10%, rgba(56,189,248,0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 90%, rgba(14,165,233,0.06) 0%, transparent 60%);
+            --card-bg: rgba(16, 22, 38, 0.7);
+            --accent: #38bdf8;
+            --accent2: #0ea5e9;
+            --text: #e0e8f8;
+            --text-dim: #7a8ba8;
+            --border: rgba(56,189,248,0.25);
+            --glow: 0 0 30px rgba(56,189,248,0.15);
+            --card-hover-border: rgba(56,189,248,0.6);
+            --card-glow: rgba(56,189,248,0.1);
+            --btn-hover-bg: rgba(56,189,248,0.15);
+            --btn-hover-shadow: 0 0 12px rgba(56,189,248,0.3);
+            --fav-color: #fb7185;
+            --fav-shadow: 0 0 14px rgba(251,113,133,0.3);
+            --del-color: #f87171;
+            --del-shadow: 0 0 14px rgba(248,113,113,0.3);
+            --scrollbar: rgba(56,189,248,0.3);
+            --logo-gradient: linear-gradient(135deg, #bae6fd, #38bdf8, #7dd3fc);
+            --text-color-on-bg: #eef6ff;
+        }
+
+        [data-theme="golden"] {
+            --bg: #0f0a05;
+            --bg-image: radial-gradient(ellipse at 30% 10%, rgba(251,191,36,0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 90%, rgba(245,158,11,0.06) 0%, transparent 60%);
+            --card-bg: rgba(30, 22, 14, 0.7);
+            --accent: #fbbf24;
+            --accent2: #f59e0b;
+            --text: #f0e8d8;
+            --text-dim: #a89870;
+            --border: rgba(251,191,36,0.25);
+            --glow: 0 0 30px rgba(251,191,36,0.15);
+            --card-hover-border: rgba(251,191,36,0.6);
+            --card-glow: rgba(251,191,36,0.1);
+            --btn-hover-bg: rgba(251,191,36,0.15);
+            --btn-hover-shadow: 0 0 12px rgba(251,191,36,0.3);
+            --fav-color: #fb7185;
+            --fav-shadow: 0 0 14px rgba(251,113,133,0.3);
+            --del-color: #ef4444;
+            --del-shadow: 0 0 14px rgba(239,68,68,0.3);
+            --scrollbar: rgba(251,191,36,0.3);
+            --logo-gradient: linear-gradient(135deg, #fde68a, #fbbf24, #f59e0b);
+            --text-color-on-bg: #fff8e8;
+        }
+
+        [data-theme="rose"] {
+            --bg: #0f0508;
+            --bg-image: radial-gradient(ellipse at 30% 10%, rgba(251,113,133,0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 90%, rgba(244,63,94,0.06) 0%, transparent 60%);
+            --card-bg: rgba(30, 16, 20, 0.7);
+            --accent: #fb7185;
+            --accent2: #f43f5e;
+            --text: #f0e0e4;
+            --text-dim: #a87882;
+            --border: rgba(251,113,133,0.25);
+            --glow: 0 0 30px rgba(251,113,133,0.15);
+            --card-hover-border: rgba(251,113,133,0.6);
+            --card-glow: rgba(251,113,133,0.1);
+            --btn-hover-bg: rgba(251,113,133,0.15);
+            --btn-hover-shadow: 0 0 12px rgba(251,113,133,0.3);
+            --fav-color: #fbbf24;
+            --fav-shadow: 0 0 14px rgba(251,191,36,0.3);
+            --del-color: #ef4444;
+            --del-shadow: 0 0 14px rgba(239,68,68,0.3);
+            --scrollbar: rgba(251,113,133,0.3);
+            --logo-gradient: linear-gradient(135deg, #fecdd3, #fb7185, #e11d48);
+            --text-color-on-bg: #ffeef0;
+        }
+
+        [data-theme="sepia"] {
+            --bg: #1a1510;
+            --bg-image: radial-gradient(ellipse at 30% 10%, rgba(180,130,80,0.06) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 90%, rgba(160,110,60,0.04) 0%, transparent 60%);
+            --card-bg: rgba(35, 28, 20, 0.75);
+            --accent: #d4a574;
+            --accent2: #c4956a;
+            --text: #e8ddd0;
+            --text-dim: #9e8a72;
+            --border: rgba(180,140,100,0.25);
+            --glow: 0 0 30px rgba(180,140,100,0.12);
+            --card-hover-border: rgba(200,160,120,0.6);
+            --card-glow: rgba(180,140,100,0.08);
+            --btn-hover-bg: rgba(200,160,120,0.15);
+            --btn-hover-shadow: 0 0 12px rgba(200,160,120,0.25);
+            --fav-color: #d4786a;
+            --fav-shadow: 0 0 14px rgba(212,120,106,0.3);
+            --del-color: #c06050;
+            --del-shadow: 0 0 14px rgba(192,96,80,0.3);
+            --scrollbar: rgba(180,140,100,0.3);
+            --logo-gradient: linear-gradient(135deg, #e8d5c0, #d4a574, #c4956a);
+            --text-color-on-bg: #f5efe8;
+        }
+
+        /* ==================== ریست و بیس ==================== */
         * { margin:0; padding:0; box-sizing:border-box; }
 
         body {
             font-family: 'Vazirmatn', sans-serif;
             background: var(--bg);
-            background-image:
-                radial-gradient(ellipse at 30% 10%, rgba(179,136,255,0.08) 0%, transparent 60%),
-                radial-gradient(ellipse at 70% 90%, rgba(255,107,157,0.06) 0%, transparent 60%),
-                radial-gradient(ellipse at 50% 50%, rgba(100,80,180,0.04) 0%, transparent 70%);
+            background-image: var(--bg-image);
             color: var(--text);
             min-height: 100vh;
             line-height: 2;
             position: relative;
+            transition: background 0.5s, color 0.5s;
         }
 
-        /* هدر بسیار کوچک و شیک */
+        /* هدر */
         .header {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(6,5,10,0.75);
+            background: rgba(6,5,10,0.7);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
-            border-bottom: 1px solid rgba(179,136,255,0.15);
+            border-bottom: 1px solid var(--border);
             padding: 6px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             height: 52px;
+            transition: background 0.5s, border-color 0.5s;
         }
+        .header-left { display: flex; align-items: center; gap: 8px; }
         .logo {
             font-family: 'Lalezar', cursive;
             font-size: 2rem;
             font-weight: 400;
-            background: linear-gradient(135deg, #e0c3ff, #b388ff, #ff8aab);
+            background: var(--logo-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: 1px;
             line-height: 1;
             text-shadow: 0 0 20px rgba(179,136,255,0.4);
+            transition: all 0.5s;
         }
-        .hamburger {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
+        .header-actions { display: flex; align-items: center; gap: 8px; }
+
+        .theme-btn, .hamburger {
+            width: 38px; height: 38px; border-radius: 50%;
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--border);
-            color: #c0b0f0;
-            font-size: 1.2rem;
+            color: var(--text-dim);
+            font-size: 1.1rem;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -79,11 +213,22 @@
             z-index: 200;
             backdrop-filter: blur(8px);
         }
-        .hamburger:hover {
-            background: rgba(179,136,255,0.15);
+        .theme-btn:hover, .hamburger:hover {
+            background: var(--btn-hover-bg);
             border-color: var(--accent);
             color: #fff;
-            box-shadow: 0 0 18px rgba(179,136,255,0.3);
+            box-shadow: var(--btn-hover-shadow);
+        }
+        .theme-indicator {
+            display: flex; align-items: center; gap: 4px;
+            font-size: 0.7rem; color: var(--text-dim);
+            margin: 0 4px;
+        }
+        .color-dots { display: flex; gap: 3px; }
+        .color-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--accent);
+            transition: all 0.5s;
         }
 
         /* overlay */
@@ -104,7 +249,7 @@
         .sidebar.active { right:0; }
         .sidebar h3 {
             color:var(--accent); text-align:center; font-size:1.3rem; margin-bottom:8px;
-            font-family: 'Lalezar', cursive; letter-spacing:1px;
+            font-family: 'Lalezar', cursive; letter-spacing:1px; transition: color 0.5s;
         }
         .sidebar .section-title { color:var(--text-dim); font-size:0.7rem; letter-spacing:2px; margin-top:12px; padding-right:8px; }
         .sidebar button {
@@ -112,10 +257,10 @@
             border:1px solid transparent; background:rgba(255,255,255,0.03); color:var(--text);
             font-size:0.95rem; cursor:pointer; transition:0.3s; font-family:inherit; text-align:right;
         }
-        .sidebar button:hover { background:rgba(179,136,255,0.1); border-color:var(--border); color:#fff; }
-        .sidebar button.active-cat { background:rgba(179,136,255,0.15); border-color:var(--accent); color:var(--accent); font-weight:600; }
+        .sidebar button:hover { background: var(--btn-hover-bg); border-color:var(--border); color:#fff; }
+        .sidebar button.active-cat { background: var(--btn-hover-bg); border-color:var(--accent); color:var(--accent); font-weight:600; }
         .sidebar .icon { font-size:1.2rem; width:26px; }
-        .danger-btn { color:#ff7b7b !important; border-color:rgba(255,123,123,0.3)!important; }
+        .danger-btn { color:var(--del-color) !important; border-color:rgba(255,123,123,0.3)!important; }
         .danger-btn:hover { background:rgba(255,123,123,0.15)!important; }
         .sidebar .close-btn {
             position:absolute; top:14px; left:14px; width:36px; height:36px; border-radius:50%;
@@ -134,17 +279,18 @@
         @media (max-width: 700px) {
             .quotes-grid { grid-template-columns: 1fr; }
             .logo { font-size: 1.6rem; }
+            .theme-indicator { display: none; }
         }
 
-        /* کارت نقل‌قول – طراحی مدرن و نادیده */
+        /* کارت نقل‌قول */
         .quote-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
+            border-radius: 28px;
             padding: 28px 22px 22px;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            box-shadow: var(--shadow);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             transition: all 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
             display: flex;
             flex-direction: column;
@@ -160,15 +306,15 @@
             position: absolute;
             inset: 0;
             border-radius: inherit;
-            background: radial-gradient(circle at 30% 20%, rgba(179,136,255,0.1), transparent 70%);
+            background: radial-gradient(circle at 30% 20%, var(--card-glow), transparent 70%);
             opacity: 0;
             transition: opacity 0.5s;
             pointer-events: none;
         }
         .quote-card:hover {
-            border-color: rgba(179,136,255,0.6);
+            border-color: var(--card-hover-border);
             transform: translateY(-6px);
-            box-shadow: var(--shadow), var(--glow);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), var(--glow);
         }
         .quote-card:hover::after { opacity: 1; }
 
@@ -180,10 +326,11 @@
         .quote-text {
             font-size: 1.25rem;
             line-height: 2.3;
-            color: #f0eaff;
+            color: var(--text-color-on-bg);
             font-weight: 400;
             max-width: 90%;
             z-index: 1;
+            transition: color 0.5s;
         }
 
         .quote-author {
@@ -194,17 +341,12 @@
             font-weight: 500;
             letter-spacing: 0.5px;
             z-index: 1;
+            transition: color 0.5s;
         }
 
-        .card-actions {
-            display: flex;
-            gap: 8px;
-            z-index: 1;
-        }
+        .card-actions { display: flex; gap: 8px; z-index: 1; }
         .card-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            width: 40px; height: 40px; border-radius: 50%;
             border: 1px solid var(--border);
             background: rgba(255,255,255,0.02);
             color: var(--text-dim);
@@ -219,15 +361,15 @@
         .card-btn:hover {
             border-color: var(--accent);
             color: #fff;
-            background: rgba(179,136,255,0.15);
-            box-shadow: 0 0 12px rgba(179,136,255,0.3);
+            background: var(--btn-hover-bg);
+            box-shadow: var(--btn-hover-shadow);
         }
         .card-btn.fav-btn.liked {
-            color: #ff5e7a;
-            border-color: #ff5e7a;
-            background: rgba(255,94,122,0.2);
+            color: #fff;
+            border-color: var(--fav-color);
+            background: rgba(255,94,122,0.25);
             animation: heartPop 0.4s ease;
-            box-shadow: 0 0 14px rgba(255,94,122,0.3);
+            box-shadow: var(--fav-shadow);
         }
         @keyframes heartPop {
             0% { transform:scale(1); }
@@ -235,10 +377,10 @@
             100% { transform:scale(1); }
         }
         .card-btn.delete-btn:hover {
-            border-color: #ff7b7b;
-            color: #ff7b7b;
-            background: rgba(255,123,123,0.15);
-            box-shadow: 0 0 14px rgba(255,123,123,0.3);
+            border-color: var(--del-color);
+            color: var(--del-color);
+            background: rgba(255,123,123,0.2);
+            box-shadow: var(--del-shadow);
         }
 
         .empty-state {
@@ -248,7 +390,7 @@
 
         .toast {
             position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
-            background:rgba(18,16,28,0.95); border:1px solid var(--border); color:var(--text);
+            background: rgba(18,16,28,0.95); border:1px solid var(--border); color:var(--text);
             padding:12px 28px; border-radius:30px; z-index:300; backdrop-filter:blur(20px);
             font-size:0.95rem; opacity:0; pointer-events:none; transition:opacity 0.4s, transform 0.4s;
         }
@@ -256,14 +398,29 @@
 
         ::-webkit-scrollbar { width:5px; }
         ::-webkit-scrollbar-track { background:transparent; }
-        ::-webkit-scrollbar-thumb { background:rgba(179,136,255,0.3); border-radius:10px; }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius:10px; }
     </style>
 </head>
-<body>
+<body data-theme="purple">
 
     <header class="header">
-        <span class="logo">momento</span>
-        <button class="hamburger" id="hamburgerBtn" title="منو">☰</button>
+        <div class="header-left">
+            <span class="logo">momento</span>
+        </div>
+        <div class="header-actions">
+            <div class="theme-indicator">
+                <div class="color-dots">
+                    <span class="color-dot" style="background:#b388ff;"></span>
+                    <span class="color-dot" style="background:#34d399;"></span>
+                    <span class="color-dot" style="background:#38bdf8;"></span>
+                    <span class="color-dot" style="background:#fbbf24;"></span>
+                    <span class="color-dot" style="background:#fb7185;"></span>
+                    <span class="color-dot" style="background:#d4a574;"></span>
+                </div>
+            </div>
+            <button class="theme-btn" id="themeBtn" title="تغییر تم">🎨</button>
+            <button class="hamburger" id="hamburgerBtn" title="منو">☰</button>
+        </div>
     </header>
 
     <div class="overlay" id="overlay"></div>
@@ -300,6 +457,7 @@
             const overlay = document.getElementById('overlay');
             const hamburgerBtn = document.getElementById('hamburgerBtn');
             const closeSidebarBtn = document.getElementById('closeSidebar');
+            const themeBtn = document.getElementById('themeBtn');
             const toast = document.getElementById('toast');
             const favCountEl = document.getElementById('favCount');
             const blacklistCountEl = document.getElementById('blacklistCount');
@@ -307,12 +465,24 @@
             const showBlacklistBtn = document.getElementById('showBlacklist');
             const clearBlacklistBtn = document.getElementById('clearBlacklist');
 
-            const STORAGE_KEY = 'momento_quotes_v1';
+            const STORAGE_KEY = 'momento_quotes_v2';
+            const THEME_STORAGE_KEY = 'momento_theme';
+            const themes = ['purple', 'emerald', 'ocean', 'golden', 'rose', 'sepia'];
+            const themeNames = {
+                purple: 'بنفش نیمه‌شب',
+                emerald: 'زمردین',
+                ocean: 'اقیانوسی',
+                golden: 'کهربایی',
+                rose: 'مخملی',
+                sepia: 'سپیا'
+            };
+
             let currentCategory = 'all';
             let displayedIds = [];
             let blacklist = new Set();
             let favorites = new Set();
             let allQuotes = [];
+            let currentThemeIndex = 0;
 
             if (typeof quotes !== 'undefined' && Array.isArray(quotes)) {
                 allQuotes = [...quotes];
@@ -330,6 +500,12 @@
                         if (data.currentCategory) currentCategory = data.currentCategory;
                         if (data.displayedIds) displayedIds = data.displayedIds;
                     }
+                    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+                    if (savedTheme && themes.includes(savedTheme)) {
+                        currentThemeIndex = themes.indexOf(savedTheme);
+                    } else {
+                        currentThemeIndex = 0;
+                    }
                 } catch (e) {}
             }
 
@@ -341,8 +517,29 @@
                         currentCategory,
                         displayedIds,
                     }));
+                    localStorage.setItem(THEME_STORAGE_KEY, themes[currentThemeIndex]);
                 } catch (e) {}
             }
+
+            function applyTheme(index) {
+                currentThemeIndex = index;
+                const theme = themes[index];
+                document.body.setAttribute('data-theme', theme);
+                document.querySelectorAll('.color-dot').forEach((dot, i) => {
+                    dot.style.opacity = i === index ? '1' : '0.35';
+                    dot.style.transform = i === index ? 'scale(1.4)' : 'scale(1)';
+                    dot.style.transition = 'all 0.5s';
+                });
+                saveState();
+            }
+
+            function cycleTheme() {
+                const next = (currentThemeIndex + 1) % themes.length;
+                applyTheme(next);
+                showToast(`🎨 تم ${themeNames[themes[next]]} فعال شد`);
+            }
+
+            themeBtn.addEventListener('click', cycleTheme);
 
             function getQuotesByCategory(cat) {
                 return cat === 'all' ? [...allQuotes] : allQuotes.filter(q => q.category === cat);
@@ -521,6 +718,7 @@
 
             function init() {
                 loadState();
+                applyTheme(currentThemeIndex);
                 if (displayedIds.length === 0 && currentCategory !== 'favorites' && currentCategory !== 'blacklist') {
                     initDisplayedIds(currentCategory);
                     refillDisplayedIds(currentCategory);
