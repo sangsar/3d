@@ -3,71 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تور مجازی آپارتمان مدرن | Samisaki Real Estate</title>
+    <title>نمایش کفش سه‌بعدی | Samisaki</title>
     <style>
-        body { margin: 0; overflow: hidden; background: #000; font-family: 'Vazirmatn', sans-serif; }
-        canvas { display: block; }
-        .ui {
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #e8e4df;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        canvas {
+            display: block;
+        }
+        .hint {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            display: flex;
-            gap: 12px;
-            z-index: 10;
-            background: rgba(20, 20, 30, 0.8);
+            background: rgba(0,0,0,0.6);
             backdrop-filter: blur(10px);
-            padding: 12px 20px;
-            border-radius: 40px;
-            border: 1px solid rgba(255,255,255,0.15);
-        }
-        .ui button {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: #e0d6ff;
-            font-family: inherit;
-            font-size: 0.85rem;
-            padding: 10px 18px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-        .ui button:hover, .ui button.active {
-            background: #2d5a27;
-            border-color: #8bc34a;
             color: #fff;
-            box-shadow: 0 0 20px rgba(45,90,39,0.5);
-        }
-        .ui button.active {
-            background: #8bc34a;
-            color: #0a0a0c;
-            font-weight: bold;
-        }
-        .hint {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255,255,255,0.7);
-            background: rgba(0,0,0,0.5);
-            padding: 8px 20px;
-            border-radius: 20px;
+            padding: 10px 24px;
+            border-radius: 30px;
             font-size: 0.85rem;
             pointer-events: none;
             z-index: 10;
+            border: 1px solid rgba(255,255,255,0.2);
         }
     </style>
 </head>
 <body>
-    <div class="hint">🖱️ موس بچرخانید | اسکرول برای زوم | دکمه‌ها برای جابجایی</div>
-    <div class="ui" id="ui">
-        <button class="active" data-room="living">نشیمن</button>
-        <button data-room="kitchen">آشپزخانه</button>
-        <button data-room="bedroom">اتاق خواب</button>
-        <button data-room="bathroom">حمام</button>
-        <button data-room="exterior">نمای بیرونی</button>
-    </div>
+    <div class="hint">🖱️ بچرخانید | اسکرول برای زوم | کفش اسپرت Samisaki</div>
 
     <script type="importmap">
         {
@@ -81,333 +46,185 @@
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        // ==================== صحنه ====================
+        // ==================== صحنه، دوربین، رندرر ====================
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x87CEEB); // آسمان آبی
-        scene.fog = new THREE.Fog(0x87CEEB, 15, 50);
+        scene.background = new THREE.Color(0xe8e4df); // پس‌زمینهٔ کرم روشن (استودیویی)
 
-        const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 50);
-        camera.position.set(0, 1.7, 6);
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
+        camera.position.set(2.5, 1.8, 3.5);
+        camera.lookAt(0, 0.3, 0);
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.0;
+        renderer.toneMappingExposure = 1.2;
         document.body.appendChild(renderer.domElement);
 
+        // ==================== کنترل‌ها ====================
         const controls = new OrbitControls(camera, renderer.domElement);
-        controls.target.set(0, 1.3, 0);
+        controls.target.set(0, 0.35, 0);
         controls.enableDamping = true;
-        controls.dampingFactor = 0.08;
-        controls.minDistance = 1.5;
-        controls.maxDistance = 10;
-        controls.maxPolarAngle = Math.PI / 2.2;
+        controls.dampingFactor = 0.05;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 1.5;
+        controls.minDistance = 1.8;
+        controls.maxDistance = 6;
+        controls.maxPolarAngle = Math.PI / 1.8;
         controls.update();
 
-        // ==================== نورپردازی (نور طبیعی روز) ====================
-        const ambient = new THREE.AmbientLight(0x8899aa, 0.6);
-        scene.add(ambient);
+        // ==================== نورپردازی حرفه‌ای (Three-Point Lighting) ====================
+        // نور محیطی برای روشنایی پایه
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+        scene.add(ambientLight);
 
-        const sunLight = new THREE.DirectionalLight(0xfff5e8, 5.5);
-        sunLight.position.set(8, 12, 2);
-        sunLight.castShadow = true;
-        sunLight.shadow.mapSize.width = 2048;
-        sunLight.shadow.mapSize.height = 2048;
-        sunLight.shadow.camera.near = 0.5;
-        sunLight.shadow.camera.far = 30;
-        sunLight.shadow.camera.left = -10;
-        sunLight.shadow.camera.right = 10;
-        sunLight.shadow.camera.top = 10;
-        sunLight.shadow.camera.bottom = -10;
-        sunLight.shadow.bias = -0.0001;
-        scene.add(sunLight);
+        // Key Light (نور اصلی از جلو-چپ)
+        const keyLight = new THREE.DirectionalLight(0xfff5f0, 8.0);
+        keyLight.position.set(-3, 4, 4);
+        keyLight.castShadow = true;
+        keyLight.shadow.mapSize.width = 1024;
+        keyLight.shadow.mapSize.height = 1024;
+        keyLight.shadow.camera.near = 0.5;
+        keyLight.shadow.camera.far = 20;
+        keyLight.shadow.camera.left = -3;
+        keyLight.shadow.camera.right = 3;
+        keyLight.shadow.camera.top = 3;
+        keyLight.shadow.camera.bottom = -3;
+        keyLight.shadow.bias = -0.0001;
+        scene.add(keyLight);
 
-        // نور آسمان (hemisphere light برای realism بیشتر)
-        const hemiLight = new THREE.HemisphereLight(0x87CEEB, 0x362907, 0.4);
-        scene.add(hemiLight);
+        // Fill Light (نور پرکننده از راست، ملایم)
+        const fillLight = new THREE.DirectionalLight(0xccddff, 3.5);
+        fillLight.position.set(3, 1.5, 1.5);
+        scene.add(fillLight);
 
-        // ==================== متریال‌ها ====================
-        // بافت پارکت چوبی
-        const woodCanvas = document.createElement('canvas');
-        woodCanvas.width = 512; woodCanvas.height = 512;
-        const wCtx = woodCanvas.getContext('2d');
-        wCtx.fillStyle = '#8B7355'; wCtx.fillRect(0, 0, 512, 512);
-        for (let i = 0; i < 40; i++) {
-            wCtx.fillStyle = `rgba(${100+Math.random()*40}, ${70+Math.random()*30}, ${40+Math.random()*20}, 0.3)`;
-            wCtx.fillRect(0, i * 12.8, 512, 4 + Math.random() * 8);
+        // Rim Light (نور لبه از پشت برای جدا شدن سوژه از پس‌زمینه)
+        const rimLight = new THREE.DirectionalLight(0xffffff, 6.0);
+        rimLight.position.set(0, 1.5, -3);
+        scene.add(rimLight);
+
+        // ==================== کف و پایه ====================
+        // یک دیسک نرم برای پایه (سایه‌ها رو خوب نشون بده)
+        const pedestalGeometry = new THREE.CylinderGeometry(0.7, 0.75, 0.05, 64);
+        const pedestalMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3, metalness: 0.2 });
+        const pedestal = new THREE.Mesh(pedestalGeometry, pedestalMaterial);
+        pedestal.position.y = -0.05;
+        pedestal.receiveShadow = true;
+        pedestal.castShadow = true;
+        scene.add(pedestal);
+
+        // ==================== ساخت کفش ====================
+        const shoeGroup = new THREE.Group();
+        scene.add(shoeGroup);
+
+        // --- بافت‌ها با Canvas ---
+        // بافت پارچه‌ای (مشکی)
+        const fabricCanvas = document.createElement('canvas');
+        fabricCanvas.width = 256; fabricCanvas.height = 256;
+        const fCtx = fabricCanvas.getContext('2d');
+        fCtx.fillStyle = '#2a2a2a'; fCtx.fillRect(0, 0, 256, 256);
+        for (let i = 0; i < 1000; i++) {
+            fCtx.fillStyle = `rgba(${Math.random()>0.5?255:0},${Math.random()>0.5?255:0},${Math.random()>0.5?255:0},0.04)`;
+            fCtx.fillRect(Math.random()*256, Math.random()*256, 1, 1);
         }
-        const woodTexture = new THREE.CanvasTexture(woodCanvas);
-        woodTexture.wrapS = THREE.RepeatWrapping;
-        woodTexture.wrapT = THREE.RepeatWrapping;
-        woodTexture.repeat.set(4, 4);
+        const fabricTexture = new THREE.CanvasTexture(fabricCanvas);
 
-        const floorMat = new THREE.MeshStandardMaterial({ map: woodTexture, roughness: 0.5, metalness: 0.05 });
-        const wallMat = new THREE.MeshStandardMaterial({ color: 0xf5f0e8, roughness: 0.85 });
-        const ceilingMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 });
-        const woodMat = new THREE.MeshStandardMaterial({ color: 0x5a4030, roughness: 0.5, metalness: 0.1 });
-        const metalMat = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.2, metalness: 0.9 });
-        const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.1, metalness: 0.1, transparent: true, opacity: 0.3 });
-        const fabricMat = new THREE.MeshStandardMaterial({ color: 0x4a4a5a, roughness: 0.9 });
-        const plantMat = new THREE.MeshStandardMaterial({ color: 0x2d5a27, roughness: 0.7 });
-        const marbleMat = new THREE.MeshStandardMaterial({ color: 0xeeebe6, roughness: 0.2, metalness: 0.3 });
-
-        // ==================== تابع‌های کمکی ====================
-        function createBox(w, h, d, mat, x, y, z, cast = true, receive = true) {
-            const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
-            mesh.position.set(x, y, z);
-            mesh.castShadow = cast;
-            mesh.receiveShadow = receive;
-            return mesh;
+        // بافت لاستیکی (سفید کدر)
+        const rubberCanvas = document.createElement('canvas');
+        rubberCanvas.width = 128; rubberCanvas.height = 128;
+        const rCtx = rubberCanvas.getContext('2d');
+        rCtx.fillStyle = '#eeeeee'; rCtx.fillRect(0, 0, 128, 128);
+        for (let i = 0; i < 300; i++) {
+            rCtx.fillStyle = `rgba(0,0,0,${Math.random()*0.05})`;
+            rCtx.fillRect(Math.random()*128, Math.random()*128, 2, 2);
         }
+        const rubberTexture = new THREE.CanvasTexture(rubberCanvas);
 
-        // ==================== گروه‌های اتاق ====================
-        const rooms = {};
-        ['living', 'kitchen', 'bedroom', 'bathroom', 'exterior'].forEach(name => {
-            const group = new THREE.Group();
-            group.name = name;
-            scene.add(group);
-            rooms[name] = group;
-        });
+        // متریال‌ها
+        const fabricMat = new THREE.MeshStandardMaterial({ map: fabricTexture, roughness: 0.7, metalness: 0.0, color: 0x333333 });
+        const rubberMat = new THREE.MeshStandardMaterial({ map: rubberTexture, roughness: 0.4, metalness: 0.05, color: 0xeeeeee });
+        const soleMat = new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.5, metalness: 0.1 });
+        const accentMat = new THREE.MeshStandardMaterial({ color: 0xff5533, roughness: 0.3, metalness: 0.2 }); // جزئیات نارنجی
 
-        // ==================== نمای بیرونی ====================
-        const ext = rooms.exterior;
-        // زمین چمن
-        const groundCanvas = document.createElement('canvas');
-        groundCanvas.width = 256; groundCanvas.height = 256;
-        const gCtx = groundCanvas.getContext('2d');
-        gCtx.fillStyle = '#4a7c3f'; gCtx.fillRect(0, 0, 256, 256);
-        for (let i = 0; i < 200; i++) {
-            gCtx.fillStyle = `rgb(${60+Math.random()*40}, ${100+Math.random()*60}, ${30+Math.random()*40})`;
-            gCtx.fillRect(Math.random()*256, Math.random()*256, 2, 6);
-        }
-        const groundTexture = new THREE.CanvasTexture(groundCanvas);
-        groundTexture.wrapS = THREE.RepeatWrapping;
-        groundTexture.wrapT = THREE.RepeatWrapping;
-        groundTexture.repeat.set(8, 8);
-        const groundMat = new THREE.MeshStandardMaterial({ map: groundTexture, roughness: 0.9 });
-        const ground = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), groundMat);
-        ground.rotation.x = -Math.PI / 2;
-        ground.position.y = 0;
-        ground.receiveShadow = true;
-        ext.add(ground);
+        // --- زیره (Sole) ---
+        const sole = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.08, 1.5), soleMat);
+        sole.position.set(0, 0.02, 0.1);
+        sole.castShadow = true; sole.receiveShadow = true;
+        shoeGroup.add(sole);
+        // زیرهٔ پاشنه
+        const heelSole = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.1, 0.35), soleMat);
+        heelSole.position.set(0, 0.04, -0.45);
+        heelSole.castShadow = true; heelSole.receiveShadow = true;
+        shoeGroup.add(heelSole);
 
-        // ساختمان (مکعب ساده با پنجره)
-        const buildingMat = new THREE.MeshStandardMaterial({ color: 0xd4c5b9, roughness: 0.7 });
-        const building = new THREE.Mesh(new THREE.BoxGeometry(8, 3.5, 8), buildingMat);
-        building.position.set(0, 1.75, 0);
-        building.castShadow = true; building.receiveShadow = true;
-        ext.add(building);
-        // سقف
-        ext.add(createBox(8.4, 0.15, 8.4, new THREE.MeshStandardMaterial({ color: 0x4a4a4a, roughness: 0.4 }), 0, 3.55, 0));
-        // پنجره‌ها
-        for (let fx = -2; fx <= 2; fx += 4) {
-            const windowFrame = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.5, 0.1), metalMat);
-            windowFrame.position.set(fx, 2.2, 3.95);
-            ext.add(windowFrame);
-            const windowGlass = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 1.3), glassMat);
-            windowGlass.position.set(fx, 2.2, 3.96);
-            ext.add(windowGlass);
-        }
-        // در ورودی
-        const door = new THREE.Mesh(new THREE.BoxGeometry(1.2, 2.4, 0.1), woodMat);
-        door.position.set(0, 1.2, 3.95);
-        ext.add(door);
-        // درخت
-        const treeTrunk = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.2, 2.5, 8), new THREE.MeshStandardMaterial({ color: 0x5a3a2a, roughness: 0.8 }));
-        treeTrunk.position.set(-5, 1.25, -5);
-        treeTrunk.castShadow = true;
-        ext.add(treeTrunk);
-        const treeLeaves = new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 8), plantMat);
-        treeLeaves.position.set(-5, 2.8, -5);
-        treeLeaves.castShadow = true;
-        ext.add(treeLeaves);
+        // --- رویهٔ اصلی (بدنهٔ کفش) ---
+        // قسمت جلویی (Toe Box)
+        const toeBox = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.3, 0.65), fabricMat);
+        toeBox.position.set(0, 0.25, 0.55);
+        toeBox.castShadow = true; toeBox.receiveShadow = true;
+        shoeGroup.add(toeBox);
+        // قسمت میانی (Mid Section)
+        const midSection = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.35, 0.5), fabricMat);
+        midSection.position.set(0, 0.3, 0.1);
+        midSection.castShadow = true; midSection.receiveShadow = true;
+        shoeGroup.add(midSection);
+        // پاشنه (Heel Counter)
+        const heelCounter = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.35, 0.35), fabricMat);
+        heelCounter.position.set(0, 0.3, -0.45);
+        heelCounter.castShadow = true; heelCounter.receiveShadow = true;
+        shoeGroup.add(heelCounter);
 
-        // ==================== نشیمن ====================
-        const living = rooms.living;
-        living.add(createBox(8, 0.15, 8, floorMat, 0, -0.075, -1));
-        living.add(createBox(8, 3, 0.2, wallMat, 0, 1.5, -5));
-        living.add(createBox(0.2, 3, 8, wallMat, -4, 1.5, -1));
-        living.add(createBox(0.2, 3, 8, wallMat, 4, 1.5, -1));
-        living.add(createBox(2.5, 3, 0.2, wallMat, -2.75, 1.5, 3));
-        living.add(createBox(2.5, 3, 0.2, wallMat, 2.75, 1.5, 3));
-        living.add(createBox(0.3, 2.4, 0.2, woodMat, -1.2, 1.2, 2.9));
-        living.add(createBox(0.3, 2.4, 0.2, woodMat, 1.2, 1.2, 2.9));
-        living.add(createBox(2.7, 0.15, 0.3, woodMat, 0, 2.35, 2.9));
-        living.add(createBox(8, 0.1, 8, ceilingMat, 0, 2.95, -1));
-        // پنجره بزرگ
-        const bigWindow = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 2.0), glassMat);
-        bigWindow.position.set(0, 2.0, -4.88);
-        living.add(bigWindow);
-        // مبل و مبلمان (مانند نسخه قبلی، کمی جزئیات بیشتر)
-        const sofaBase = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.5, 0.9), fabricMat);
-        sofaBase.position.set(-1.8, 0.4, -2.5);
-        sofaBase.castShadow = true; sofaBase.receiveShadow = true;
-        living.add(sofaBase);
-        const sofaBack = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.6, 0.25), fabricMat);
-        sofaBack.position.set(-1.8, 0.9, -2.85);
-        sofaBack.castShadow = true; sofaBack.receiveShadow = true;
-        living.add(sofaBack);
-        for (let i = 0; i < 3; i++) {
-            const cushion = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.15, 0.55), new THREE.MeshStandardMaterial({ color: 0x6a5a7a, roughness: 0.8 }));
-            cushion.position.set(-2.4 + i * 0.6, 0.7, -2.5);
-            cushion.castShadow = true; cushion.receiveShadow = true;
-            living.add(cushion);
-        }
-        living.add(createBox(1.2, 0.35, 0.6, woodMat, -1.8, 0.35, -1.6));
-        const tvPanel = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.0, 0.06), new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.1, metalness: 0.9 }));
-        tvPanel.position.set(2.5, 1.6, -4.75);
-        tvPanel.castShadow = true;
-        living.add(tvPanel);
-        const tvScreen = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 0.85), new THREE.MeshBasicMaterial({ color: 0x001122 }));
-        tvScreen.position.set(2.5, 1.6, -4.71);
-        living.add(tvScreen);
-        living.add(createBox(2.0, 0.45, 0.5, woodMat, 2.5, 0.5, -3.8));
-        // کتابخانه
-        for (let row = 0; row < 3; row++) {
-            living.add(createBox(1.0, 0.05, 0.35, woodMat, -3.5, 0.7 + row * 0.6, -3.5));
-            for (let col = 0; col < 2; col++) {
-                const book = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.3 + Math.random() * 0.2, 0.2), new THREE.MeshStandardMaterial({ color: new THREE.Color().setHSL(Math.random() * 0.1 + 0.05, 0.6, 0.3 + Math.random() * 0.4), roughness: 0.7 }));
-                book.position.set(-3.5 - 0.25 + col * 0.25, 0.75 + row * 0.6, -3.45);
-                book.castShadow = true; book.receiveShadow = true;
-                living.add(book);
-            }
-        }
-        const rugL = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 3.5), new THREE.MeshStandardMaterial({ color: 0x5a4a6a, roughness: 0.95 }));
-        rugL.rotation.x = -Math.PI / 2;
-        rugL.position.set(-1.8, 0.01, -1.5);
-        rugL.receiveShadow = true;
-        living.add(rugL);
-        const chandelierL = new THREE.Mesh(new THREE.TorusGeometry(0.35, 0.03, 8, 16), new THREE.MeshStandardMaterial({ color: 0xffccaa, roughness: 0.2, metalness: 0.9, emissive: 0x331100 }));
-        chandelierL.position.set(0, 2.8, -1);
-        chandelierL.rotation.x = Math.PI / 2;
-        living.add(chandelierL);
-        const bulbL = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffeedd }));
-        bulbL.position.set(0, 2.7, -1);
-        living.add(bulbL);
+        // --- زبانه (Tongue) ---
+        const tongue = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.5, 0.15), fabricMat);
+        tongue.position.set(0, 0.55, 0.2);
+        tongue.rotation.x = -0.3;
+        tongue.castShadow = true; tongue.receiveShadow = true;
+        shoeGroup.add(tongue);
 
-        // ==================== آشپزخانه ====================
-        const kitchen = rooms.kitchen;
-        kitchen.add(createBox(8, 0.15, 8, floorMat, 0, -0.075, -1));
-        kitchen.add(createBox(8, 3, 0.2, wallMat, 0, 1.5, -5));
-        kitchen.add(createBox(0.2, 3, 8, wallMat, -4, 1.5, -1));
-        kitchen.add(createBox(0.2, 3, 8, wallMat, 4, 1.5, -1));
-        kitchen.add(createBox(8, 0.1, 8, ceilingMat, 0, 2.95, -1));
-        kitchen.add(createBox(6.5, 3, 0.2, wallMat, 0.75, 1.5, 3));
+        // --- یقه (Collar) دور مچ پا ---
+        const collar = new THREE.Mesh(new THREE.TorusGeometry(0.25, 0.06, 8, 16), fabricMat);
+        collar.position.set(0, 0.55, -0.35);
+        collar.rotation.x = Math.PI / 2;
+        collar.castShadow = true; collar.receiveShadow = true;
+        shoeGroup.add(collar);
+
+        // --- بندها (Laces) ---
         for (let i = 0; i < 4; i++) {
-            const cabinet = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.9, 0.6), woodMat);
-            cabinet.position.set(-3 + i * 1, 0.7, -4.2);
-            cabinet.castShadow = true; cabinet.receiveShadow = true;
-            kitchen.add(cabinet);
+            const lace = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.35, 6), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.6 }));
+            lace.position.set(0, 0.45 + i * 0.08, 0.25);
+            lace.rotation.z = Math.PI / 2;
+            lace.castShadow = true;
+            shoeGroup.add(lace);
         }
-        kitchen.add(createBox(3.8, 0.06, 0.65, marbleMat, -1.5, 1.16, -4.2));
-        const sink = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.15, 0.5), metalMat);
-        sink.position.set(2.5, 1.1, -4.1);
-        kitchen.add(sink);
-        const stove = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.1, 0.5), new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.1, metalness: 0.9 }));
-        stove.position.set(-3, 1.1, -4.1);
-        kitchen.add(stove);
-        const diningTable = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.7, 0.06, 32), woodMat);
-        diningTable.position.set(2, 0.9, -1.5);
-        diningTable.castShadow = true; diningTable.receiveShadow = true;
-        kitchen.add(diningTable);
-        const tableLegK = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.9, 8), metalMat);
-        tableLegK.position.set(2, 0.45, -1.5);
-        kitchen.add(tableLegK);
-        for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 2) {
-            const chair = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.1, 0.4), fabricMat);
-            chair.position.set(2 + Math.cos(angle) * 1, 0.55, -1.5 + Math.sin(angle) * 1);
-            chair.castShadow = true; chair.receiveShadow = true;
-            kitchen.add(chair);
-        }
-        const fridge = new THREE.Mesh(new THREE.BoxGeometry(0.9, 2, 0.7), new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.15, metalness: 0.9 }));
-        fridge.position.set(-3.2, 1.2, 3.8);
-        fridge.castShadow = true; fridge.receiveShadow = true;
-        kitchen.add(fridge);
 
-        // ==================== اتاق خواب ====================
-        const bedroom = rooms.bedroom;
-        bedroom.add(createBox(6, 0.15, 7, floorMat, 0, -0.075, -0.5));
-        bedroom.add(createBox(6, 3, 0.2, wallMat, 0, 1.5, -4));
-        bedroom.add(createBox(0.2, 3, 7, wallMat, -3, 1.5, -0.5));
-        bedroom.add(createBox(0.2, 3, 7, wallMat, 3, 1.5, -0.5));
-        bedroom.add(createBox(6, 0.1, 7, ceilingMat, 0, 2.95, -0.5));
-        bedroom.add(createBox(6, 3, 0.2, wallMat, 0, 1.5, 3));
-        const bedBase = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.4, 2.2), woodMat);
-        bedBase.position.set(0, 0.45, -2);
-        bedBase.castShadow = true; bedBase.receiveShadow = true;
-        bedroom.add(bedBase);
-        const mattress = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.2, 2.1), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8 }));
-        mattress.position.set(0, 0.75, -2);
-        mattress.castShadow = true; mattress.receiveShadow = true;
-        bedroom.add(mattress);
-        const pillow = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.12, 1.2), new THREE.MeshStandardMaterial({ color: 0xeeeeff, roughness: 0.9 }));
-        pillow.position.set(0, 0.9, -2.9);
-        pillow.castShadow = true; pillow.receiveShadow = true;
-        bedroom.add(pillow);
-        const blanket = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.08, 1.2), new THREE.MeshStandardMaterial({ color: 0x5a4a6a, roughness: 0.9 }));
-        blanket.position.set(0, 0.9, -1.3);
-        blanket.castShadow = true; blanket.receiveShadow = true;
-        bedroom.add(blanket);
-        const wardrobe = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2.4, 0.6), woodMat);
-        wardrobe.position.set(2.2, 1.4, -3);
-        wardrobe.castShadow = true; wardrobe.receiveShadow = true;
-        bedroom.add(wardrobe);
-        bedroom.add(createBox(1, 0.05, 0.4, woodMat, -2.2, 0.8, 2.2));
-        bedroom.add(createBox(0.05, 0.8, 0.4, woodMat, -2.7, 0.4, 2.2));
-        bedroom.add(createBox(0.05, 0.8, 0.4, woodMat, -1.7, 0.4, 2.2));
-        const mirrorB = new THREE.Mesh(new THREE.PlaneGeometry(0.6, 0.8), new THREE.MeshStandardMaterial({ color: 0xccccff, roughness: 0.05, metalness: 0.9 }));
-        mirrorB.position.set(-2.2, 1.3, 2.38);
-        bedroom.add(mirrorB);
+        // --- جزئیات نارنجی (خط روی زیره) ---
+        const accentStripe = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.03, 1.3), accentMat);
+        accentStripe.position.set(0, 0.07, 0.1);
+        accentStripe.castShadow = true;
+        shoeGroup.add(accentStripe);
 
-        // ==================== حمام ====================
-        const bathroom = rooms.bathroom;
-        bathroom.add(createBox(5, 0.15, 5, new THREE.MeshStandardMaterial({ color: 0xd0ccc8, roughness: 0.3 }), 0, -0.075, 0));
-        bathroom.add(createBox(5, 3, 0.2, new THREE.MeshStandardMaterial({ color: 0xd8e8e8, roughness: 0.2 }), 0, 1.5, -2.5));
-        bathroom.add(createBox(0.2, 3, 5, new THREE.MeshStandardMaterial({ color: 0xd8e8e8, roughness: 0.2 }), -2.5, 1.5, 0));
-        bathroom.add(createBox(0.2, 3, 5, new THREE.MeshStandardMaterial({ color: 0xd8e8e8, roughness: 0.2 }), 2.5, 1.5, 0));
-        bathroom.add(createBox(5, 0.1, 5, new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 }), 0, 2.95, 0));
-        bathroom.add(createBox(5, 3, 0.2, new THREE.MeshStandardMaterial({ color: 0xd8e8e8, roughness: 0.2 }), 0, 1.5, 2.5));
-        const tub = new THREE.Mesh(new THREE.CapsuleGeometry(0.6, 1.2, 8, 16), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1, metalness: 0.2 }));
-        tub.position.set(1.2, 0.4, -0.8);
-        tub.rotation.z = Math.PI / 2;
-        tub.castShadow = true; tub.receiveShadow = true;
-        bathroom.add(tub);
-        const vanity = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.15, 0.5), marbleMat);
-        vanity.position.set(-1.5, 0.9, 1.5);
-        vanity.castShadow = true; vanity.receiveShadow = true;
-        bathroom.add(vanity);
-        bathroom.add(createBox(0.8, 0.7, 0.4, woodMat, -1.5, 0.5, 1.5));
-        const toiletBase = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.3, 0.5, 16), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 }));
-        toiletBase.position.set(-1.5, 0.35, -1.8);
-        toiletBase.castShadow = true; toiletBase.receiveShadow = true;
-        bathroom.add(toiletBase);
-        bathroom.add(createBox(0.3, 0.5, 0.25, new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 }), -1.5, 0.75, -1.95));
+        // --- لوگوی Swoosh (منحنی ساده) ---
+        const curve = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(-0.2, 0.15, 0.6),
+            new THREE.Vector3(-0.05, 0.28, 0.3),
+            new THREE.Vector3(0.15, 0.35, -0.1),
+            new THREE.Vector3(0.1, 0.25, -0.5)
+        ]);
+        const tubeGeometry = new THREE.TubeGeometry(curve, 32, 0.025, 8, false);
+        const swoosh = new THREE.Mesh(tubeGeometry, new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3, metalness: 0.1 }));
+        swoosh.castShadow = true;
+        shoeGroup.add(swoosh);
 
-        // ==================== مدیریت اتاق‌ها ====================
-        Object.values(rooms).forEach(group => group.visible = false);
-        rooms.living.visible = true;
+        // --- زیرهٔ داخلی (Insole) — قابل مشاهده از بالا ---
+        const insole = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.03, 0.9), new THREE.MeshStandardMaterial({ color: 0xffddcc, roughness: 0.8 }));
+        insole.position.set(0, 0.42, 0.15);
+        insole.castShadow = true; insole.receiveShadow = true;
+        shoeGroup.add(insole);
 
-        document.querySelectorAll('.ui button').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const roomName = btn.dataset.room;
-                Object.values(rooms).forEach(g => g.visible = false);
-                rooms[roomName].visible = true;
-                document.querySelectorAll('.ui button').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                // تنظیم دوربین برای نمای بیرونی
-                if (roomName === 'exterior') {
-                    camera.position.set(8, 5, 8);
-                    controls.target.set(0, 1.5, 0);
-                } else {
-                    camera.position.set(0, 1.7, 6);
-                    controls.target.set(0, 1.3, -1);
-                }
-                controls.update();
-            });
-        });
+        // تنظیم موقعیت کلی کفش (چرخش ۱۵ درجه برای زاویهٔ بهتر)
+        shoeGroup.rotation.y = -0.2;
 
         // ==================== انیمیشن ====================
         function animate() {
@@ -417,6 +234,7 @@
         }
         animate();
 
+        // ==================== واکنش‌گرایی ====================
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
