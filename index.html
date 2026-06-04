@@ -4,17 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>momento | جملات ماندگار</title>
-    <!-- فونت فرانسوی + فارسی -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+    <!-- فونت IranSans (فارسی محبوب) -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/iransans@latest/dist/font-face.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
     <style>
-        /* ==================== تم‌ها ==================== */
+        /* ==================== ۱۰ تم ==================== */
         :root,
         [data-theme="purple"] {
             --bg: #06050a;
-            --bg-image: radial-gradient(ellipse at 30% 10%, rgba(179,136,255,0.08) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 90%, rgba(255,107,157,0.06) 0%, transparent 60%);
             --card-bg: rgba(18, 16, 28, 0.7);
             --accent: #b388ff;
             --accent2: #ff6b9d;
@@ -37,8 +34,6 @@
 
         [data-theme="emerald"] {
             --bg: #050a08;
-            --bg-image: radial-gradient(ellipse at 30% 10%, rgba(52,211,153,0.08) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 90%, rgba(16,185,129,0.06) 0%, transparent 60%);
             --card-bg: rgba(16, 28, 22, 0.7);
             --accent: #34d399;
             --accent2: #10b981;
@@ -61,8 +56,6 @@
 
         [data-theme="ocean"] {
             --bg: #050a14;
-            --bg-image: radial-gradient(ellipse at 30% 10%, rgba(56,189,248,0.08) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 90%, rgba(14,165,233,0.06) 0%, transparent 60%);
             --card-bg: rgba(16, 22, 38, 0.7);
             --accent: #38bdf8;
             --accent2: #0ea5e9;
@@ -85,8 +78,6 @@
 
         [data-theme="golden"] {
             --bg: #0f0a05;
-            --bg-image: radial-gradient(ellipse at 30% 10%, rgba(251,191,36,0.08) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 90%, rgba(245,158,11,0.06) 0%, transparent 60%);
             --card-bg: rgba(30, 22, 14, 0.7);
             --accent: #fbbf24;
             --accent2: #f59e0b;
@@ -109,8 +100,6 @@
 
         [data-theme="rose"] {
             --bg: #0f0508;
-            --bg-image: radial-gradient(ellipse at 30% 10%, rgba(251,113,133,0.08) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 90%, rgba(244,63,94,0.06) 0%, transparent 60%);
             --card-bg: rgba(30, 16, 20, 0.7);
             --accent: #fb7185;
             --accent2: #f43f5e;
@@ -133,8 +122,6 @@
 
         [data-theme="sepia"] {
             --bg: #1a1510;
-            --bg-image: radial-gradient(ellipse at 30% 10%, rgba(180,130,80,0.06) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 90%, rgba(160,110,60,0.04) 0%, transparent 60%);
             --card-bg: rgba(35, 28, 20, 0.75);
             --accent: #d4a574;
             --accent2: #c4956a;
@@ -155,12 +142,99 @@
             --text-color-on-bg: #f5efe8;
         }
 
+        [data-theme="sakura"] {
+            --bg: #0d0710;
+            --card-bg: rgba(28, 18, 30, 0.7);
+            --accent: #f9a8d4;
+            --accent2: #f472b6;
+            --text: #f0e0ec;
+            --text-dim: #a8829a;
+            --border: rgba(249,168,212,0.25);
+            --glow: 0 0 30px rgba(249,168,212,0.15);
+            --card-hover-border: rgba(249,168,212,0.6);
+            --card-glow: rgba(249,168,212,0.1);
+            --btn-hover-bg: rgba(249,168,212,0.15);
+            --btn-hover-shadow: 0 0 12px rgba(249,168,212,0.3);
+            --fav-color: #fb7185;
+            --fav-shadow: 0 0 14px rgba(251,113,133,0.3);
+            --del-color: #f87171;
+            --del-shadow: 0 0 14px rgba(248,113,113,0.3);
+            --scrollbar: rgba(249,168,212,0.3);
+            --logo-gradient: linear-gradient(135deg, #fce7f3, #f9a8d4, #f472b6);
+            --text-color-on-bg: #fff0f8;
+        }
+
+        [data-theme="mint"] {
+            --bg: #060f0e;
+            --card-bg: rgba(16, 30, 28, 0.7);
+            --accent: #6ee7b7;
+            --accent2: #34d399;
+            --text: #d8f0e8;
+            --text-dim: #6e9e8a;
+            --border: rgba(110,231,183,0.25);
+            --glow: 0 0 30px rgba(110,231,183,0.12);
+            --card-hover-border: rgba(110,231,183,0.55);
+            --card-glow: rgba(110,231,183,0.08);
+            --btn-hover-bg: rgba(110,231,183,0.15);
+            --btn-hover-shadow: 0 0 12px rgba(110,231,183,0.25);
+            --fav-color: #f472b6;
+            --fav-shadow: 0 0 14px rgba(244,114,182,0.3);
+            --del-color: #f87171;
+            --del-shadow: 0 0 14px rgba(248,113,113,0.3);
+            --scrollbar: rgba(110,231,183,0.3);
+            --logo-gradient: linear-gradient(135deg, #d1fae5, #6ee7b7, #34d399);
+            --text-color-on-bg: #eafff5;
+        }
+
+        [data-theme="lavender"] {
+            --bg: #0b0a18;
+            --card-bg: rgba(20, 18, 35, 0.7);
+            --accent: #c4b5fd;
+            --accent2: #a78bfa;
+            --text: #e0ddf0;
+            --text-dim: #8e8aa8;
+            --border: rgba(196,181,253,0.25);
+            --glow: 0 0 30px rgba(196,181,253,0.15);
+            --card-hover-border: rgba(196,181,253,0.6);
+            --card-glow: rgba(196,181,253,0.1);
+            --btn-hover-bg: rgba(196,181,253,0.15);
+            --btn-hover-shadow: 0 0 12px rgba(196,181,253,0.3);
+            --fav-color: #fb7185;
+            --fav-shadow: 0 0 14px rgba(251,113,133,0.3);
+            --del-color: #f87171;
+            --del-shadow: 0 0 14px rgba(248,113,113,0.3);
+            --scrollbar: rgba(196,181,253,0.3);
+            --logo-gradient: linear-gradient(135deg, #ede9fe, #c4b5fd, #a78bfa);
+            --text-color-on-bg: #f2efff;
+        }
+
+        [data-theme="navy"] {
+            --bg: #040810;
+            --card-bg: rgba(14, 20, 35, 0.7);
+            --accent: #60a5fa;
+            --accent2: #3b82f6;
+            --text: #dce4f5;
+            --text-dim: #7e8eaa;
+            --border: rgba(96,165,250,0.25);
+            --glow: 0 0 30px rgba(96,165,250,0.15);
+            --card-hover-border: rgba(96,165,250,0.6);
+            --card-glow: rgba(96,165,250,0.1);
+            --btn-hover-bg: rgba(96,165,250,0.15);
+            --btn-hover-shadow: 0 0 12px rgba(96,165,250,0.3);
+            --fav-color: #fb7185;
+            --fav-shadow: 0 0 14px rgba(251,113,133,0.3);
+            --del-color: #f87171;
+            --del-shadow: 0 0 14px rgba(248,113,113,0.3);
+            --scrollbar: rgba(96,165,250,0.3);
+            --logo-gradient: linear-gradient(135deg, #dbeafe, #60a5fa, #3b82f6);
+            --text-color-on-bg: #eef4ff;
+        }
+
         * { margin:0; padding:0; box-sizing:border-box; }
 
         body {
-            font-family: 'Playfair Display', 'Vazirmatn', serif;
+            font-family: 'IRANSansWeb(FaNum)', 'IRANSans', 'Vazirmatn', sans-serif;
             background: var(--bg);
-            background-image: var(--bg-image);
             color: var(--text);
             min-height: 100vh;
             line-height: 2;
@@ -169,7 +243,7 @@
             overflow-x: hidden;
         }
 
-        /* پس‌زمینهٔ متحرک ستاره و ابر */
+        /* آسمان متحرک */
         #sky {
             position: fixed;
             inset: 0;
@@ -178,15 +252,15 @@
         }
         .sky-element {
             position: absolute;
-            opacity: 0.6;
             animation: floatSky linear infinite;
             will-change: transform;
+            filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));
         }
         @keyframes floatSky {
-            0% { transform: translateY(105vh) rotate(0deg); opacity: 0.3; }
-            20% { opacity: 0.7; }
-            80% { opacity: 0.5; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+            0% { transform: translateY(108vh) rotate(0deg); opacity: 0.2; }
+            15% { opacity: 0.7; }
+            85% { opacity: 0.5; }
+            100% { transform: translateY(-12vh) rotate(360deg); opacity: 0; }
         }
 
         /* هدر */
@@ -219,7 +293,7 @@
             text-shadow: 0 0 20px rgba(179,136,255,0.4);
             transition: all 0.5s;
         }
-        .header-actions { display: flex; align-items: center; gap: 8px; }
+        .header-actions { display: flex; align-items: center; gap: 8px; position: relative; }
 
         .theme-btn, .hamburger {
             width: 38px; height: 38px; border-radius: 50%;
@@ -241,16 +315,64 @@
             color: #fff;
             box-shadow: var(--btn-hover-shadow);
         }
-        .theme-indicator {
-            display: flex; align-items: center; gap: 4px;
-            font-size: 0.7rem; color: var(--text-dim);
-            margin: 0 4px;
+
+        /* پنل تم */
+        .theme-panel {
+            position: absolute;
+            top: 46px;
+            left: 0;
+            background: rgba(14,12,24,0.96);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            z-index: 190;
+            min-width: 200px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-8px);
+            transition: opacity 0.3s, transform 0.3s;
         }
-        .color-dots { display: flex; gap: 3px; }
-        .color-dot {
-            width: 8px; height: 8px; border-radius: 50%;
-            background: var(--accent);
-            transition: all 0.5s;
+        .theme-panel.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+        .theme-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.25s;
+            border: 1px solid transparent;
+            background: rgba(255,255,255,0.02);
+            font-size: 0.9rem;
+            color: var(--text);
+            font-family: inherit;
+        }
+        .theme-option:hover {
+            background: var(--btn-hover-bg);
+            border-color: var(--border);
+        }
+        .theme-option.active-option {
+            background: var(--btn-hover-bg);
+            border-color: var(--accent);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .theme-swatch {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px currentColor;
         }
 
         /* overlay */
@@ -301,7 +423,6 @@
         @media (max-width: 700px) {
             .quotes-grid { grid-template-columns: 1fr; }
             .logo { font-size: 1.6rem; }
-            .theme-indicator { display: none; }
         }
 
         /* کارت نقل‌قول */
@@ -346,14 +467,13 @@
         }
 
         .quote-text {
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             line-height: 2.1;
             color: var(--text-color-on-bg);
             font-weight: 400;
             max-width: 90%;
             z-index: 1;
             transition: color 0.5s;
-            font-style: italic;
         }
 
         .quote-author {
@@ -418,7 +538,6 @@
 </head>
 <body data-theme="purple">
 
-    <!-- پس‌زمینهٔ ستاره‌ها و ابرها -->
     <div id="sky"></div>
 
     <header class="header">
@@ -426,17 +545,10 @@
             <span class="logo">momento</span>
         </div>
         <div class="header-actions">
-            <div class="theme-indicator">
-                <div class="color-dots">
-                    <span class="color-dot" style="background:#b388ff;"></span>
-                    <span class="color-dot" style="background:#34d399;"></span>
-                    <span class="color-dot" style="background:#38bdf8;"></span>
-                    <span class="color-dot" style="background:#fbbf24;"></span>
-                    <span class="color-dot" style="background:#fb7185;"></span>
-                    <span class="color-dot" style="background:#d4a574;"></span>
-                </div>
+            <div style="position: relative;">
+                <button class="theme-btn" id="themeBtn" title="انتخاب تم">🎨</button>
+                <div class="theme-panel" id="themePanel"></div>
             </div>
-            <button class="theme-btn" id="themeBtn" title="تغییر تم">🎨</button>
             <button class="hamburger" id="hamburgerBtn" title="منو">☰</button>
         </div>
     </header>
@@ -474,30 +586,35 @@
             const hamburgerBtn = document.getElementById('hamburgerBtn');
             const closeSidebarBtn = document.getElementById('closeSidebar');
             const themeBtn = document.getElementById('themeBtn');
+            const themePanel = document.getElementById('themePanel');
             const favCountEl = document.getElementById('favCount');
             const blacklistCountEl = document.getElementById('blacklistCount');
             const showFavoritesBtn = document.getElementById('showFavorites');
             const showBlacklistBtn = document.getElementById('showBlacklist');
             const clearBlacklistBtn = document.getElementById('clearBlacklist');
 
-            const STORAGE_KEY = 'momento_quotes_v2';
-            const THEME_STORAGE_KEY = 'momento_theme';
-            const themes = ['purple', 'emerald', 'ocean', 'golden', 'rose', 'sepia'];
-            const themeNames = {
-                purple: 'بنفش نیمه‌شب',
-                emerald: 'زمردین',
-                ocean: 'اقیانوسی',
-                golden: 'کهربایی',
-                rose: 'مخملی',
-                sepia: 'سپیا'
-            };
+            const STORAGE_KEY = 'momento_v3';
+            const THEME_KEY = 'momento_theme_v3';
+
+            const themes = [
+                { id: 'purple', name: 'بنفش نیمه‌شب', color: '#b388ff' },
+                { id: 'emerald', name: 'زمردین', color: '#34d399' },
+                { id: 'ocean', name: 'اقیانوسی', color: '#38bdf8' },
+                { id: 'golden', name: 'کهربایی', color: '#fbbf24' },
+                { id: 'rose', name: 'مخملی', color: '#fb7185' },
+                { id: 'sepia', name: 'سپیا', color: '#d4a574' },
+                { id: 'sakura', name: 'شکوفهٔ گیلاس', color: '#f9a8d4' },
+                { id: 'mint', name: 'نعنایی یخی', color: '#6ee7b7' },
+                { id: 'lavender', name: 'لاوندر', color: '#c4b5fd' },
+                { id: 'navy', name: 'آبی نفتی', color: '#60a5fa' },
+            ];
 
             let currentCategory = 'all';
             let displayedIds = [];
             let blacklist = new Set();
             let favorites = new Set();
             let allQuotes = [];
-            let currentThemeIndex = 0;
+            let currentTheme = 'purple';
 
             if (typeof quotes !== 'undefined' && Array.isArray(quotes)) {
                 allQuotes = [...quotes];
@@ -505,19 +622,24 @@
                 console.error('quotes.js یافت نشد.');
             }
 
-            // پس‌زمینهٔ ستاره و ابر
             function createSky() {
                 const sky = document.getElementById('sky');
-                const symbols = ['★', '☁️'];
-                for (let i = 0; i < 35; i++) {
+                for (let i = 0; i < 45; i++) {
                     const el = document.createElement('span');
                     el.className = 'sky-element';
-                    el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                    if (Math.random() < 0.55) {
+                        el.textContent = '★';
+                        el.style.color = '#ffffff';
+                        el.style.fontSize = (Math.random() * 5 + 6) + 'px';
+                        el.style.opacity = Math.random() * 0.5 + 0.3;
+                    } else {
+                        el.textContent = '☁️';
+                        el.style.fontSize = (Math.random() * 7 + 14) + 'px';
+                        el.style.opacity = Math.random() * 0.45 + 0.35;
+                    }
                     el.style.left = Math.random() * 100 + '%';
-                    el.style.fontSize = (Math.random() * 24 + 14) + 'px';
-                    el.style.animationDuration = (Math.random() * 12 + 12) + 's';
-                    el.style.animationDelay = Math.random() * 15 + 's';
-                    el.style.opacity = Math.random() * 0.5 + 0.2;
+                    el.style.animationDuration = (Math.random() * 14 + 14) + 's';
+                    el.style.animationDelay = Math.random() * 18 + 's';
                     sky.appendChild(el);
                 }
             }
@@ -532,11 +654,9 @@
                         if (data.currentCategory) currentCategory = data.currentCategory;
                         if (data.displayedIds) displayedIds = data.displayedIds;
                     }
-                    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-                    if (savedTheme && themes.includes(savedTheme)) {
-                        currentThemeIndex = themes.indexOf(savedTheme);
-                    } else {
-                        currentThemeIndex = 0;
+                    const savedTheme = localStorage.getItem(THEME_KEY);
+                    if (savedTheme && themes.find(t => t.id === savedTheme)) {
+                        currentTheme = savedTheme;
                     }
                 } catch (e) {}
             }
@@ -549,28 +669,45 @@
                         currentCategory,
                         displayedIds,
                     }));
-                    localStorage.setItem(THEME_STORAGE_KEY, themes[currentThemeIndex]);
+                    localStorage.setItem(THEME_KEY, currentTheme);
                 } catch (e) {}
             }
 
-            function applyTheme(index) {
-                currentThemeIndex = index;
-                const theme = themes[index];
-                document.body.setAttribute('data-theme', theme);
-                document.querySelectorAll('.color-dot').forEach((dot, i) => {
-                    dot.style.opacity = i === index ? '1' : '0.35';
-                    dot.style.transform = i === index ? 'scale(1.4)' : 'scale(1)';
-                    dot.style.transition = 'all 0.5s';
-                });
+            function applyTheme(id) {
+                currentTheme = id;
+                document.body.setAttribute('data-theme', id);
+                buildThemePanel();
                 saveState();
             }
 
-            function cycleTheme() {
-                const next = (currentThemeIndex + 1) % themes.length;
-                applyTheme(next);
+            function buildThemePanel() {
+                themePanel.innerHTML = '';
+                themes.forEach(t => {
+                    const opt = document.createElement('div');
+                    opt.className = 'theme-option' + (t.id === currentTheme ? ' active-option' : '');
+                    opt.innerHTML = `
+                        <span class="theme-swatch" style="background:${t.color}; color:${t.color};"></span>
+                        <span>${t.name}</span>
+                    `;
+                    opt.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        applyTheme(t.id);
+                        themePanel.classList.remove('active');
+                    });
+                    themePanel.appendChild(opt);
+                });
             }
 
-            themeBtn.addEventListener('click', cycleTheme);
+            themeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                themePanel.classList.toggle('active');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!themePanel.contains(e.target) && e.target !== themeBtn) {
+                    themePanel.classList.remove('active');
+                }
+            });
 
             function getQuotesByCategory(cat) {
                 return cat === 'all' ? [...allQuotes] : allQuotes.filter(q => q.category === cat);
@@ -738,7 +875,7 @@
             function init() {
                 createSky();
                 loadState();
-                applyTheme(currentThemeIndex);
+                applyTheme(currentTheme);
                 if (displayedIds.length === 0 && currentCategory !== 'favorites' && currentCategory !== 'blacklist') {
                     initDisplayedIds(currentCategory);
                     refillDisplayedIds(currentCategory);
