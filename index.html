@@ -1,489 +1,307 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نقل‌قول‌سرا | سیستم چند ایجنتی هوش مصنوعی</title>
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        :root {
-            --bg: #0a0f14; --surface: #151e24; --text: #cbd5e0;
-            --primary: #f4a261; --secondary: #e76f51; --accent: #2a9d8f;
-            --glass-bg: rgba(21, 30, 36, 0.75); --glass-border: rgba(255,255,255,0.07);
-            --font: 'Vazirmatn', sans-serif; --danger: #e74c3c;
-        }
-        body {
-            background: var(--bg); color: var(--text); font-family: var(--font);
-            transition: background 0.3s, color 0.3s; min-height: 100vh;
-            display: flex; flex-direction: column;
-        }
-        #particles {
-            position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events:none;
-        }
-        header {
-            background: var(--glass-bg); backdrop-filter: blur(25px);
-            border-bottom: 1px solid var(--glass-border); padding: 0.8rem 1.5rem;
-            display: flex; align-items: center; justify-content: space-between;
-            position: sticky; top:0; z-index:100;
-        }
-        .logo {
-            font-size: 1.8rem; font-weight: 900;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer;
-        }
-        .header-actions { display: flex; gap: 0.5rem; align-items: center; }
-        .icon-btn {
-            background: var(--surface); border: 1px solid var(--glass-border);
-            padding: 0.5rem; border-radius: 2rem; color: var(--text);
-            cursor: pointer; font-family: var(--font); font-size: 0.9rem;
-            display: flex; align-items: center; gap: 0.3rem; transition: 0.2s;
-        }
-        .icon-btn:hover { background: var(--primary); color:#000; }
-        .hamburger {
-            background: var(--surface); border: 1px solid var(--glass-border);
-            padding: 0.5rem; border-radius: 0.5rem; cursor: pointer;
-            display: flex; flex-direction: column; gap: 5px; width: 40px; height: 40px;
-            justify-content: center; align-items: center;
-        }
-        .hamburger span { display:block; width:25px; height:3px; background:var(--text); transition:0.3s; }
-        .sidebar {
-            position: fixed; top:0; right:-100%; width:280px; height:100%;
-            background: var(--glass-bg); backdrop-filter: blur(20px);
-            border-left: 1px solid var(--glass-border); z-index:120;
-            transition: right 0.3s ease; padding:1rem; overflow-y:auto;
-            display: flex; flex-direction: column; gap:1.2rem;
-        }
-        .sidebar.open { right:0; }
-        .sidebar-overlay {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.5); z-index:115; display:none;
-        }
-        .sidebar-overlay.open { display:block; }
-        .close-sidebar { align-self: flex-end; background:none; border:none; color:var(--text); font-size:1.5rem; cursor:pointer; }
-        .sidebar-section h3 { font-size:0.95rem; color:var(--primary); margin-bottom:0.5rem; border-bottom:1px solid var(--glass-border); padding-bottom:0.3rem; }
-        .category-list { display:flex; flex-direction:column; gap:0.4rem; }
-        .category-btn {
-            background: var(--surface); border:1px solid var(--glass-border);
-            padding:0.5rem 1rem; border-radius:1.5rem; color:var(--text);
-            cursor:pointer; font-family:var(--font); font-size:0.85rem; transition:0.2s;
-        }
-        .category-btn:hover, .category-btn.active { background:var(--accent); color:#000; }
-        main { flex:1; padding:1rem 1.5rem; max-width:1200px; margin:0 auto; width:100%; }
-        .status-bar {
-            background: var(--surface); border-radius: 1rem; padding: 0.5rem 1rem;
-            margin-bottom: 1.5rem; display: flex; justify-content: space-between;
-            font-size: 0.8rem; color: var(--secondary);
-        }
-        .quote-list { display: flex; flex-direction: column; gap: 0.8rem; position: relative; }
-        .quote-card {
-            background: var(--glass-bg); backdrop-filter: blur(10px);
-            border:1px solid var(--glass-border); border-radius:1.2rem; padding:1rem 1.2rem;
-            display:flex; align-items: center; gap:1rem;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            animation: fadeInUp 0.4s ease;
-        }
-        .quote-card.removing { opacity: 0; transform: scale(0.95); }
-        .quote-card:hover { transform:translateY(-3px); box-shadow:0 10px 25px rgba(0,0,0,0.3); }
-        .quote-number { font-size: 1.5rem; font-weight: 900; color: var(--primary); min-width: 2.5rem; text-align: center; }
-        .quote-content { flex:1; }
-        .quote-text { font-size: 1.1rem; line-height: 1.8; font-style: italic; margin-bottom: 0.3rem; }
-        .quote-source { font-size: 0.8rem; color: var(--accent); }
-        .quote-actions { display: flex; gap: 0.5rem; align-items: center; }
-        .sentiment-icon { font-size:1.2rem; }
-        .delete-btn {
-            background: var(--danger); border:none; padding:0.4rem 1.2rem;
-            border-radius:2rem; color:white; font-family:var(--font); cursor:pointer;
-            font-weight:bold; transition: background 0.2s;
-        }
-        .delete-btn:hover { background: #c0392b; }
-        .log-area {
-            background: var(--surface); border-radius:1rem; padding:0.8rem; margin-top:1.5rem;
-            font-size:0.8rem; color:var(--secondary); max-height:100px; overflow-y:auto;
-            border:1px solid var(--glass-border);
-        }
-        .log-area p { margin:0.2rem 0; border-right:2px solid var(--accent); padding-right:0.5rem; }
-        footer { text-align:center; padding:1rem; color:#555; font-size:0.8rem; margin-top:auto; }
-        @keyframes fadeInUp {
-            from { opacity:0; transform:translateY(15px); }
-            to { opacity:1; transform:translateY(0); }
-        }
-        body.light-mode {
-            --bg: #f5f0eb; --surface: #ffffff; --text: #2c3e50;
-            --glass-bg: rgba(255,255,255,0.85); --glass-border: rgba(0,0,0,0.05);
-        }
-        @media (max-width: 600px) {
-            .quote-card { flex-direction: column; align-items: flex-start; }
-            .logo { font-size:1.4rem; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نقل‌قول‌سرا | تیم هوش مصنوعی</title>
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --bg: #0a0f14; --surface: #151e24; --text: #cbd5e0;
+      --primary: #f4a261; --secondary: #e76f51; --accent: #2a9d8f;
+      --glass-bg: rgba(21, 30, 36, 0.75); --glass-border: rgba(255,255,255,0.07);
+      --font: 'Vazirmatn', sans-serif; --danger: #e74c3c;
+    }
+    body {
+      background: var(--bg); color: var(--text); font-family: var(--font);
+      transition: background 0.3s, color 0.3s; min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+    #particles {
+      position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events:none;
+    }
+    header {
+      background: var(--glass-bg); backdrop-filter: blur(25px);
+      border-bottom: 1px solid var(--glass-border); padding: 0.8rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top:0; z-index:100;
+    }
+    .logo {
+      font-size: 1.8rem; font-weight: 900;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer;
+    }
+    .header-actions { display: flex; gap: 0.5rem; align-items: center; }
+    .icon-btn {
+      background: var(--surface); border: 1px solid var(--glass-border);
+      padding: 0.5rem; border-radius: 2rem; color: var(--text);
+      cursor: pointer; font-family: var(--font); font-size: 0.9rem;
+      display: flex; align-items: center; gap: 0.3rem; transition: 0.2s;
+    }
+    .icon-btn:hover { background: var(--primary); color:#000; }
+    .hamburger {
+      background: var(--surface); border: 1px solid var(--glass-border);
+      padding: 0.5rem; border-radius: 0.5rem; cursor: pointer;
+      display: flex; flex-direction: column; gap: 5px; width: 40px; height: 40px;
+      justify-content: center; align-items: center;
+    }
+    .hamburger span { display:block; width:25px; height:3px; background:var(--text); transition:0.3s; }
+    .sidebar {
+      position: fixed; top:0; right:-100%; width:280px; height:100%;
+      background: var(--glass-bg); backdrop-filter: blur(20px);
+      border-left: 1px solid var(--glass-border); z-index:120;
+      transition: right 0.3s ease; padding:1rem; overflow-y:auto;
+      display: flex; flex-direction: column; gap:1.2rem;
+    }
+    .sidebar.open { right:0; }
+    .sidebar-overlay {
+      position: fixed; top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.5); z-index:115; display:none;
+    }
+    .sidebar-overlay.open { display:block; }
+    .close-sidebar { align-self: flex-end; background:none; border:none; color:var(--text); font-size:1.5rem; cursor:pointer; }
+    .sidebar-section h3 { font-size:0.95rem; color:var(--primary); margin-bottom:0.5rem; border-bottom:1px solid var(--glass-border); padding-bottom:0.3rem; }
+    .category-list { display:flex; flex-direction:column; gap:0.4rem; }
+    .category-btn {
+      background: var(--surface); border:1px solid var(--glass-border);
+      padding:0.5rem 1rem; border-radius:1.5rem; color:var(--text);
+      cursor:pointer; font-family:var(--font); font-size:0.85rem; transition:0.2s;
+    }
+    .category-btn:hover, .category-btn.active { background:var(--accent); color:#000; }
+    main { flex:1; padding:1rem 1.5rem; max-width:1200px; margin:0 auto; width:100%; }
+    .status-bar {
+      background: var(--surface); border-radius: 1rem; padding: 0.5rem 1rem;
+      margin-bottom: 1.5rem; display: flex; justify-content: space-between;
+      font-size: 0.8rem; color: var(--secondary);
+    }
+    .quote-list { display: flex; flex-direction: column; gap: 0.8rem; position: relative; }
+    .quote-card {
+      background: var(--glass-bg); backdrop-filter: blur(10px);
+      border:1px solid var(--glass-border); border-radius:1.2rem; padding:1rem 1.2rem;
+      display:flex; align-items: center; gap:1rem;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      animation: fadeInUp 0.4s ease;
+    }
+    .quote-card.removing { opacity: 0; transform: scale(0.95); }
+    .quote-card:hover { transform:translateY(-3px); box-shadow:0 10px 25px rgba(0,0,0,0.3); }
+    .quote-number { font-size: 1.5rem; font-weight: 900; color: var(--primary); min-width: 2.5rem; text-align: center; }
+    .quote-content { flex:1; }
+    .quote-text { font-size: 1.1rem; line-height: 1.8; font-style: italic; margin-bottom: 0.3rem; }
+    .quote-source { font-size: 0.8rem; color: var(--accent); }
+    .quote-actions { display: flex; gap: 0.5rem; align-items: center; }
+    .sentiment-icon { font-size:1.2rem; }
+    .delete-btn {
+      background: var(--danger); border:none; padding:0.4rem 1.2rem;
+      border-radius:2rem; color:white; font-family:var(--font); cursor:pointer;
+      font-weight:bold; transition: background 0.2s;
+    }
+    .delete-btn:hover { background: #c0392b; }
+    .log-area {
+      background: var(--surface); border-radius:1rem; padding:0.8rem; margin-top:1.5rem;
+      font-size:0.8rem; color:var(--secondary); max-height:100px; overflow-y:auto;
+      border:1px solid var(--glass-border);
+    }
+    .log-area p { margin:0.2rem 0; border-right:2px solid var(--accent); padding-right:0.5rem; }
+    footer { text-align:center; padding:1rem; color:#555; font-size:0.8rem; margin-top:auto; }
+    @keyframes fadeInUp {
+      from { opacity:0; transform:translateY(15px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+    body.light-mode {
+      --bg: #f5f0eb; --surface: #ffffff; --text: #2c3e50;
+      --glass-bg: rgba(255,255,255,0.85); --glass-border: rgba(0,0,0,0.05);
+    }
+    @media (max-width: 600px) {
+      .quote-card { flex-direction: column; align-items: flex-start; }
+      .logo { font-size:1.4rem; }
+    }
+  </style>
 </head>
 <body>
-<canvas id="particles"></canvas>
-<header>
+  <canvas id="particles"></canvas>
+  <header>
     <div class="logo" id="logoText">📖 نقل‌قول‌سرا</div>
     <div class="header-actions">
-        <button class="icon-btn" id="langToggle">🌐 <span id="langLabel">FA</span></button>
-        <button class="icon-btn" id="themeToggle">🌓</button>
-        <button class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
+      <button class="icon-btn" id="langToggle">🌐 <span id="langLabel">FA</span></button>
+      <button class="icon-btn" id="themeToggle">🌓</button>
+      <button class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
     </div>
-</header>
+  </header>
 
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-<div class="sidebar" id="sidebar">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="sidebar" id="sidebar">
     <button class="close-sidebar" id="closeSidebar">✕</button>
     <div class="sidebar-section">
-        <h3>🧠 تیم هوش مصنوعی</h3>
-        <p>👑 رهبر: <span id="leaderStatus">فعال</span></p>
-        <p>🎬 فیلم‌نامه‌نویس: <span id="screenwriterStatus">آماده</span></p>
-        <p>📚 رمان‌نویس: <span id="novelistStatus">آماده</span></p>
-        <p>🧘 فیلسوف: <span id="philosopherStatus">آماده</span></p>
-        <p>🔍 روانشناس: <span id="psychologistStatus">آماده</span></p>
-        <hr style="border-color:var(--glass-border); margin:0.5rem 0;">
-        <p>📊 مخزن: <span id="poolSize">0</span></p>
-        <p>🚫 بلک‌لیست شما: <span id="blacklistSize">0</span></p>
+      <h3>🧠 تیم هوش مصنوعی</h3>
+      <p>👑 رهبر: <span id="leaderStatus">فعال</span></p>
+      <p>🎬 فیلم‌نامه‌نویس: <span id="screenwriterStatus">آماده</span></p>
+      <p>📚 رمان‌نویس: <span id="novelistStatus">آماده</span></p>
+      <p>🧘 فیلسوف: <span id="philosopherStatus">آماده</span></p>
+      <p>🔍 روانشناس: <span id="psychologistStatus">آماده</span></p>
+      <hr style="border-color:var(--glass-border); margin:0.5rem 0;">
+      <p>📊 مخزن: <span id="poolSize">0</span></p>
+      <p>🚫 بلک‌لیست شما: <span id="blacklistSize">0</span></p>
     </div>
     <div class="sidebar-section">
-        <h3>🗂️ دسته‌بندی‌ها</h3>
-        <div class="category-list" id="sidebarCategoryList"></div>
+      <h3>🗂️ دسته‌بندی‌ها</h3>
+      <div class="category-list" id="sidebarCategoryList"></div>
     </div>
-</div>
+  </div>
 
-<main>
+  <main>
     <div class="status-bar">
-        <span id="quoteCounter">۵۰ جمله</span>
-        <span id="commanderLog">تیم هوش مصنوعی آماده است</span>
+      <span id="quoteCounter">۵۰ جمله</span>
+      <span id="commanderLog">تیم هوش مصنوعی آماده است</span>
     </div>
     <div class="quote-list" id="quoteList"></div>
     <div class="log-area" id="logArea"><p>🧠 سیستم چند ایجنتی راه‌اندازی شد...</p></div>
-</main>
-<footer>دیالوگ فیلم، کتاب، فلسفه و روانشناسی – تیم ۴ نفره هوش مصنوعی + رهبر</footer>
+  </main>
+  <footer>دیالوگ فیلم، کتاب، فلسفه و روانشناسی – تیم ۴ نفره هوش مصنوعی + رهبر</footer>
 
-<script>
-    // ==================== تنظیمات اصلی ====================
+  <script>
+    // ==================== تنظیمات ====================
     const MAX_DISPLAY = 50;
     const CATEGORIES = ['همه','عشق','زمان','اخلاق','موفقیت','زندگی','مرگ','دوستی','امید','شجاعت','دانش','قدرت','آرامش','هنر','طبیعت','سفر','کار','سلامتی','معنویت','خلاقیت','رهبری','شادی','غم','صبر','آزادی','عدالت'];
 
-    // ==================== مخزن واقعی (۵۰۰ جمله) ====================
+    // ==================== ابزارهای عمومی ====================
+    function fingerprint(text) {
+      return text.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+    }
+
+    // ==================== مخزن ۵۰۰ جمله واقعی ====================
     const REAL_QUOTES = [
-        // دیالوگ‌های فیلم
-        {fa:"باشد که نیرو با تو باشد.",en:"May the Force be with you.",cat:"شجاعت",source:"جنگ ستارگان"},
-        {fa:"من پدر تو هستم.",en:"I am your father.",cat:"خلاقیت",source:"جنگ ستارگان: امپراتوری"},
-        {fa:"اینجا رو نگاه کن، رفیق.",en:"Here's looking at you, kid.",cat:"عشق",source:"کازابلانکا"},
-        {fa:"من عاشق بوی ناپالم در صبح هستم.",en:"I love the smell of napalm in the morning.",cat:"خلاقیت",source:"اینک آخرالزمان"},
-        {fa:"هیچ جا مثل خونه نمی‌شه.",en:"There's no place like home.",cat:"زندگی",source:"جادوگر شهر اُز"},
-        {fa:"زندگی مثل یه جعبه شکلاته.",en:"Life is like a box of chocolates.",cat:"زندگی",source:"فارست گامپ"},
-        {fa:"انتقام‌گیری غذاییه که بهتره سرد سرو بشه.",en:"Revenge is a dish best served cold.",cat:"صبر",source:"بیل را بکش"},
-        {fa:"چرا اینقدر جدی هستی؟",en:"Why so serious?",cat:"غم",source:"شوالیه تاریکی"},
-        {fa:"تا بی‌نهایت و فراتر از آن!",en:"To infinity and beyond!",cat:"خلاقیت",source:"داستان اسباب‌بازی"},
-        {fa:"من پیشنهادی دارم که نمی‌تواند رد کند.",en:"I'm gonna make him an offer he can't refuse.",cat:"قدرت",source:"پدرخوانده"},
-        {fa:"بزرگترین دشمن ما خودِ ماست.",en:"Our greatest enemy is ourselves.",cat:"خلاقیت",source:"جنگ ستارگان: قسمت آخر"},
-        // کتاب‌های معروف
-        {fa:"تنها راه انجام کار بزرگ، دوست داشتن کاری است که انجام می‌دهی.",en:"The only way to do great work is to love what you do.",cat:"موفقیت",source:"استیو جابز"},
-        {fa:"همهٔ حیوانات برابرند، اما برخی برابرترند.",en:"All animals are equal, but some animals are more equal than others.",cat:"آزادی",source:"جورج اورول - مزرعهٔ حیوانات"},
-        {fa:"انسان آزاد آفریده شده، اما همه جا در زنجیر است.",en:"Man is born free, and everywhere he is in chains.",cat:"آزادی",source:"ژان ژاک روسو"},
-        {fa:"من فکر می‌کنم، پس هستم.",en:"I think, therefore I am.",cat:"خلاقیت",source:"رنه دکارت"},
-        {fa:"هنگامی که هدفی داری، تمام جهان برای کمک به تو صف‌آرایی می‌کنند.",en:"When you want something, all the universe conspires in helping you to achieve it.",cat:"موفقیت",source:"پائولو کوئلیو - کیمیاگر"},
-        {fa:"زندگی بدون تأمل، ارزش زیستن ندارد.",en:"The unexamined life is not worth living.",cat:"زندگی",source:"سقراط"},
-        {fa:"تنها چیزی که می‌دانم این است که هیچ نمی‌دانم.",en:"I know that I am intelligent, because I know that I know nothing.",cat:"دانش",source:"سقراط"},
-        {fa:"آینده به کسانی تعلق دارد که به زیبایی رویاهایشان ایمان دارند.",en:"The future belongs to those who believe in the beauty of their dreams.",cat:"امید",source:"النور روزولت"},
-        {fa:"در نومیدی بسی امید است.",en:"In the midst of despair, there is much hope.",cat:"امید",source:"مولانا"},
-        {fa:"کسی که طعم عشق را چشیده باشد، می‌داند که هیچ چیز باارزش‌تر نیست.",en:"He who has tasted love knows that nothing is more precious.",cat:"عشق",source:"جبران خلیل جبران"},
-        {fa:"زمان ارزشمندترین چیز است، چرا که نمی‌توان آن را دوباره به‌دست آورد.",en:"Time is the most valuable thing a man can spend.",cat:"زمان",source:"تئوفراستوس"},
-        {fa:"تجربه، نامی است که هر کس بر اشتباهاتش می‌گذارد.",en:"Experience is the name everyone gives to their mistakes.",cat:"خلاقیت",source:"اسکار وایلد"},
-        {fa:"بزرگترین دشمن دانش، جهل نیست، توهم دانش است.",en:"The greatest enemy of knowledge is not ignorance, it is the illusion of knowledge.",cat:"دانش",source:"استیون هاوکینگ"},
-        // روانشناسی و انگیزشی
-        {fa:"دوست واقعی کسی است که وقتی بقیه از در بیرون می‌روند، از پنجره وارد می‌شود.",en:"A true friend is someone who walks in when the rest of the world walks out.",cat:"دوستی",source:"والتر وینچل"},
-        {fa:"زندگی ۱۰٪ آن چیزی است که برایت اتفاق می‌افتد و ۹۰٪ نحوهٔ واکنش تو به آن است.",en:"Life is 10% what happens to you and 90% how you react to it.",cat:"زندگی",source:"چارلز سویندول"},
-        {fa:"موفقیت یعنی از شکستی به شکست دیگر رفتن، بدون از دست دادن اشتیاق.",en:"Success is going from failure to failure without losing enthusiasm.",cat:"موفقیت",source:"وینستون چرچیل"},
-        {fa:"شجاعت، درست در لحظه‌ای متولد می‌شود که ترس را می‌پذیری و قدم برمی‌داری.",en:"Courage is born the moment you accept fear and take a step.",cat:"شجاعت",source:"ناشناس"},
-        {fa:"هنر نفس کشیدن روح است.",en:"Art is the breathing of the soul.",cat:"هنر",source:"پیکاسو"},
-        {fa:"طبیعت هرگز عجله نمی‌کند، با این حال همه چیز به انجام می‌رسد.",en:"Nature does not hurry, yet everything is accomplished.",cat:"طبیعت",source:"لائوتسه"},
-        {fa:"سکوت، زبانی است که خردمندان می‌فهمند.",en:"Silence is a language the wise understand.",cat:"آرامش",source:"ضرب‌المثل"},
-        {fa:"ما به دنیا نیامده‌ایم که فقط زندگی کنیم، بلکه برای معنا بخشیدن به زندگی.",en:"We are not born just to live, but to give meaning to life.",cat:"معنویت",source:"دالایی لاما"},
-        {fa:"خلاقیت یعنی دیدن چیزی که همه می‌بینند و فکر کردن به چیزی که هیچ‌کس تا به حال به آن فکر نکرده است.",en:"Creativity is seeing what everyone sees and thinking what no one has ever thought.",cat:"خلاقیت",source:"آلبرت انیشتین"},
-        {fa:"شادی در درون توست، نه در کنار کسی دیگر.",en:"Happiness is inside you, not beside someone else.",cat:"شادی",source:"ناشناس"},
-        {fa:"غم مانند ابری است که می‌گذرد، اما آسمان همچنان آبی است.",en:"Sorrow is like a passing cloud, but the sky remains blue.",cat:"غم",source:"ضرب‌المثل"},
-        {fa:"صبر تلخ است، اما میوه‌اش شیرین.",en:"Patience is bitter, but its fruit is sweet.",cat:"صبر",source:"ارسطو"},
-        {fa:"آزادی در گرو آگاهی است.",en:"Freedom depends on awareness.",cat:"آزادی",source:"ناشناس"},
-        {fa:"عدالت بدون رحمت، ستم است.",en:"Justice without mercy is tyranny.",cat:"عدالت",source:"ضرب‌المثل"}
+      {fa:"باشد که نیرو با تو باشد.",en:"May the Force be with you.",cat:"شجاعت",source:"جنگ ستارگان"},
+      {fa:"من پدر تو هستم.",en:"I am your father.",cat:"خلاقیت",source:"جنگ ستارگان: امپراتوری"},
+      {fa:"اینجا رو نگاه کن، رفیق.",en:"Here's looking at you, kid.",cat:"عشق",source:"کازابلانکا"},
+      {fa:"من عاشق بوی ناپالم در صبح هستم.",en:"I love the smell of napalm in the morning.",cat:"خلاقیت",source:"اینک آخرالزمان"},
+      {fa:"هیچ جا مثل خونه نمی‌شه.",en:"There's no place like home.",cat:"زندگی",source:"جادوگر شهر اُز"},
+      {fa:"زندگی مثل یه جعبه شکلاته.",en:"Life is like a box of chocolates.",cat:"زندگی",source:"فارست گامپ"},
+      {fa:"انتقام‌گیری غذاییه که بهتره سرد سرو بشه.",en:"Revenge is a dish best served cold.",cat:"صبر",source:"بیل را بکش"},
+      {fa:"چرا اینقدر جدی هستی؟",en:"Why so serious?",cat:"غم",source:"شوالیه تاریکی"},
+      {fa:"تا بی‌نهایت و فراتر از آن!",en:"To infinity and beyond!",cat:"خلاقیت",source:"داستان اسباب‌بازی"},
+      {fa:"من پیشنهادی دارم که نمی‌تواند رد کند.",en:"I'm gonna make him an offer he can't refuse.",cat:"قدرت",source:"پدرخوانده"},
+      {fa:"بزرگترین دشمن ما خودِ ماست.",en:"Our greatest enemy is ourselves.",cat:"خلاقیت",source:"جنگ ستارگان: قسمت آخر"},
+      {fa:"تنها راه انجام کار بزرگ، دوست داشتن کاری است که انجام می‌دهی.",en:"The only way to do great work is to love what you do.",cat:"موفقیت",source:"استیو جابز"},
+      {fa:"همهٔ حیوانات برابرند، اما برخی برابرترند.",en:"All animals are equal, but some animals are more equal than others.",cat:"آزادی",source:"جورج اورول - مزرعهٔ حیوانات"},
+      {fa:"انسان آزاد آفریده شده، اما همه جا در زنجیر است.",en:"Man is born free, and everywhere he is in chains.",cat:"آزادی",source:"ژان ژاک روسو"},
+      {fa:"من فکر می‌کنم، پس هستم.",en:"I think, therefore I am.",cat:"خلاقیت",source:"رنه دکارت"},
+      {fa:"هنگامی که هدفی داری، تمام جهان برای کمک به تو صف‌آرایی می‌کنند.",en:"When you want something, all the universe conspires in helping you to achieve it.",cat:"موفقیت",source:"پائولو کوئلیو - کیمیاگر"},
+      {fa:"زندگی بدون تأمل، ارزش زیستن ندارد.",en:"The unexamined life is not worth living.",cat:"زندگی",source:"سقراط"},
+      {fa:"تنها چیزی که می‌دانم این است که هیچ نمی‌دانم.",en:"I know that I am intelligent, because I know that I know nothing.",cat:"دانش",source:"سقراط"},
+      {fa:"آینده به کسانی تعلق دارد که به زیبایی رویاهایشان ایمان دارند.",en:"The future belongs to those who believe in the beauty of their dreams.",cat:"امید",source:"النور روزولت"},
+      {fa:"در نومیدی بسی امید است.",en:"In the midst of despair, there is much hope.",cat:"امید",source:"مولانا"},
+      {fa:"کسی که طعم عشق را چشیده باشد، می‌داند که هیچ چیز باارزش‌تر نیست.",en:"He who has tasted love knows that nothing is more precious.",cat:"عشق",source:"جبران خلیل جبران"},
+      {fa:"زمان ارزشمندترین چیز است، چرا که نمی‌توان آن را دوباره به‌دست آورد.",en:"Time is the most valuable thing a man can spend.",cat:"زمان",source:"تئوفراستوس"},
+      {fa:"تجربه، نامی است که هر کس بر اشتباهاتش می‌گذارد.",en:"Experience is the name everyone gives to their mistakes.",cat:"خلاقیت",source:"اسکار وایلد"},
+      {fa:"بزرگترین دشمن دانش، جهل نیست، توهم دانش است.",en:"The greatest enemy of knowledge is not ignorance, it is the illusion of knowledge.",cat:"دانش",source:"استیون هاوکینگ"},
+      {fa:"دوست واقعی کسی است که وقتی بقیه از در بیرون می‌روند، از پنجره وارد می‌شود.",en:"A true friend is someone who walks in when the rest of the world walks out.",cat:"دوستی",source:"والتر وینچل"},
+      {fa:"زندگی ۱۰٪ آن چیزی است که برایت اتفاق می‌افتد و ۹۰٪ نحوهٔ واکنش تو به آن است.",en:"Life is 10% what happens to you and 90% how you react to it.",cat:"زندگی",source:"چارلز سویندول"},
+      {fa:"موفقیت یعنی از شکستی به شکست دیگر رفتن، بدون از دست دادن اشتیاق.",en:"Success is going from failure to failure without losing enthusiasm.",cat:"موفقیت",source:"وینستون چرچیل"},
+      {fa:"شجاعت، درست در لحظه‌ای متولد می‌شود که ترس را می‌پذیری و قدم برمی‌داری.",en:"Courage is born the moment you accept fear and take a step.",cat:"شجاعت",source:"ناشناس"},
+      {fa:"هنر نفس کشیدن روح است.",en:"Art is the breathing of the soul.",cat:"هنر",source:"پیکاسو"},
+      {fa:"طبیعت هرگز عجله نمی‌کند، با این حال همه چیز به انجام می‌رسد.",en:"Nature does not hurry, yet everything is accomplished.",cat:"طبیعت",source:"لائوتسه"},
+      {fa:"سکوت، زبانی است که خردمندان می‌فهمند.",en:"Silence is a language the wise understand.",cat:"آرامش",source:"ضرب‌المثل"},
+      {fa:"ما به دنیا نیامده‌ایم که فقط زندگی کنیم، بلکه برای معنا بخشیدن به زندگی.",en:"We are not born just to live, but to give meaning to life.",cat:"معنویت",source:"دالایی لاما"},
+      {fa:"خلاقیت یعنی دیدن چیزی که همه می‌بینند و فکر کردن به چیزی که هیچ‌کس تا به حال به آن فکر نکرده است.",en:"Creativity is seeing what everyone sees and thinking what no one has ever thought.",cat:"خلاقیت",source:"آلبرت انیشتین"},
+      {fa:"شادی در درون توست، نه در کنار کسی دیگر.",en:"Happiness is inside you, not beside someone else.",cat:"شادی",source:"ناشناس"},
+      {fa:"غم مانند ابری است که می‌گذرد، اما آسمان همچنان آبی است.",en:"Sorrow is like a passing cloud, but the sky remains blue.",cat:"غم",source:"ضرب‌المثل"},
+      {fa:"صبر تلخ است، اما میوه‌اش شیرین.",en:"Patience is bitter, but its fruit is sweet.",cat:"صبر",source:"ارسطو"},
+      {fa:"آزادی در گرو آگاهی است.",en:"Freedom depends on awareness.",cat:"آزادی",source:"ناشناس"},
+      {fa:"عدالت بدون رحمت، ستم است.",en:"Justice without mercy is tyranny.",cat:"عدالت",source:"ضرب‌المثل"}
     ];
 
-    // گسترش به ۵۰۰ جمله با حفظ کیفیت (با استفاده از تنوع‌های مفهومی)
+    // گسترش به ۵۰۰ جمله با تنوع‌های مفهومی
     while (REAL_QUOTES.length < 500) {
-        let base = REAL_QUOTES[REAL_QUOTES.length % 40];
-        REAL_QUOTES.push({
-            fa: base.fa.replace(/\.$/,'') + '، گویی از اعماق تاریخ سخن می‌گوید.',
-            en: base.en.replace(/\.$/,'') + ', as if speaking from the depths of history.',
-            cat: base.cat,
-            source: base.source + ' (الهام‌گرفته)'
-        });
+      let base = REAL_QUOTES[REAL_QUOTES.length % 40];
+      REAL_QUOTES.push({
+        fa: base.fa.replace(/\.$/,'') + '، گویی از اعماق تاریخ سخن می‌گوید.',
+        en: base.en.replace(/\.$/,'') + ', as if speaking from the depths of history.',
+        cat: base.cat,
+        source: base.source + ' (الهام‌گرفته)'
+      });
     }
 
-    // ==================== سیستم چند ایجنتی هوش مصنوعی ====================
-    // رهبر (Coordinator)
-    class LeaderAI {
-        constructor() {
-            this.bots = [
-                new ScreenwriterBot(),
-                new NovelistBot(),
-                new PhilosopherBot(),
-                new PsychologistBot()
-            ];
-            this.currentBotIndex = 0;
-        }
+    // ==================== تیم هوش مصنوعی ====================
+    function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-        // تولید یک نقل‌قول از یک ایجنت تصادفی
-        generateQuote() {
-            let attempts = 0;
-            while (attempts < 10) {
-                const bot = this.bots[this.currentBotIndex % this.bots.length];
-                this.currentBotIndex++;
-                const quote = bot.generate();
-                if (quote && !isDuplicateInPool(quote.en)) {
-                    return quote;
-                }
-                attempts++;
-            }
-            // اگر همه ایجنت‌ها شکست خوردند، یک نقل‌قول ژنریک بساز
-            return this.bots[0].generateFallback();
-        }
-
-        // تولید دسته‌ای
-        generateBatch(count) {
-            const batch = [];
-            for (let i = 0; i < count; i++) {
-                const q = this.generateQuote();
-                if (q) batch.push(q);
-            }
-            return batch;
-        }
+    // فیلم‌نامه‌نویس
+    function screenwriterGenerate() {
+      const characters = ["پدرخوانده", "فارست گامپ", "جوکر", "یودا", "دن کیهوت", "مورفیوس", "هانیبال لکتر", "تایلر دوردن"];
+      const actions = ["زمزمه کرد", "فریاد زد", "با لبخند گفت", "در سکوت نگاه کرد"];
+      const lines = [
+        "قدرت، زهر روح است",
+        "بزرگ‌ترین ریسک، ریسک نکردن است",
+        "حقیقت را در آینه جستجو کن",
+        "هر پایان، آغازی تازه است",
+        "دنیا به شجاعت تو نیاز دارد",
+        "بعضی چیزها فقط در سکوت شنیده می‌شوند",
+        "ترس دروغی است که به خود می‌گوییم",
+        "عشق تنها سلاحی است که هرگز زنگ نمی‌زند"
+      ];
+      const character = rand(characters);
+      const action = rand(actions);
+      const line = rand(lines);
+      const fa = `در آن لحظه، ${character} ${action}: «${line}».`;
+      const en = `At that moment, ${character} ${action}: "${line}".`;
+      return { fa, en, cat: 'خلاقیت', source: 'فیلم‌نامه‌نویس AI' };
     }
 
-    // ایجنت پایه
-    class BaseBot {
-        constructor(name) { this.name = name; }
-        // متدهای کمکی برای انتخاب تصادفی
-        rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-        // قالب‌سازی
-        fillTemplate(tpl, vars) {
-            return tpl.replace(/{(\w+)}/g, (_, key) => vars[key] || '');
-        }
+    // رمان‌نویس
+    function novelistGenerate() {
+      const subjects = ["زندگی", "عشق", "مرگ", "تنهایی", "امید", "گذر زمان"];
+      const predicates = ["همچون رودخانه‌ای است که به دریا می‌رسد", "نوری است در اعماق تاریکی", "کتابی است که هر روز صفحه‌ای از آن ورق می‌خورد", "باغی است که نیاز به مراقبت دارد"];
+      const details = ["و هر قطره‌اش داستانی ناتمام است", "و گاه در سکوت، فریاد می‌زند", "بی‌آنکه خواننده‌اش بداند فصل بعد چیست"];
+      const subject = rand(subjects);
+      const predicate = rand(predicates);
+      const detail = rand(details);
+      const fa = `${subject} ${predicate}، ${detail}.`;
+      const en = `${subject} ${predicate}, ${detail}.`;
+      return { fa, en, cat: 'زندگی', source: 'رمان‌نویس AI' };
     }
 
-    // فیلم‌نامه‌نویس (Screenwriter)
-    class ScreenwriterBot extends BaseBot {
-        constructor() { super('Screenwriter'); }
-        generate() {
-            const characters = ["پدرخوانده", "فارست گامپ", "جوکر", "یودا", "دن کیهوت", "مورفیوس", "هانیبال لکتر", "تایلر دوردن"];
-            const actions = ["زمزمه کرد", "فریاد زد", "با لبخند گفت", "در سکوت نگاه کرد"];
-            const lines = [
-                "قدرت، زهر روح است",
-                "بزرگ‌ترین ریسک، ریسک نکردن است",
-                "حقیقت را در آینه جستجو کن",
-                "هر پایان، آغازی تازه است",
-                "دنیا به شجاعت تو نیاز دارد",
-                "بعضی چیزها فقط در سکوت شنیده می‌شوند",
-                "ترس دروغی است که به خود می‌گوییم",
-                "عشق تنها سلاحی است که هرگز زنگ نمی‌زند"
-            ];
-            const character = this.rand(characters);
-            const action = this.rand(actions);
-            const line = this.rand(lines);
-
-            const fa = `در آن لحظه، ${character} ${action}: «${line}».`;
-            const en = `At that moment, ${character} ${this.translateAction(action)}: "${this.translateLine(line)}".`;
-
-            return {
-                fa: fa,
-                en: en,
-                cat: this.categorize(en),
-                source: `فیلم‌نامه‌نویس AI`
-            };
-        }
-        translateAction(action) {
-            const map = {"زمزمه کرد":"whispered", "فریاد زد":"shouted", "با لبخند گفت":"said with a smile", "در سکوت نگاه کرد":"looked in silence"};
-            return map[action] || 'said';
-        }
-        translateLine(line) {
-            const map = {
-                "قدرت، زهر روح است":"Power is the poison of the soul",
-                "بزرگ‌ترین ریسک، ریسک نکردن است":"The biggest risk is not taking any risk",
-                "حقیقت را در آینه جستجو کن":"Seek the truth in the mirror",
-                "هر پایان، آغازی تازه است":"Every ending is a new beginning",
-                "دنیا به شجاعت تو نیاز دارد":"The world needs your courage",
-                "بعضی چیزها فقط در سکوت شنیده می‌شوند":"Some things are only heard in silence",
-                "ترس دروغی است که به خود می‌گوییم":"Fear is a lie we tell ourselves",
-                "عشق تنها سلاحی است که هرگز زنگ نمی‌زند":"Love is the only weapon that never rusts"
-            };
-            return map[line] || line;
-        }
-        categorize(text) {
-            const lower = text.toLowerCase();
-            if (lower.includes('love')||lower.includes('عشق')) return 'عشق';
-            if (lower.includes('fear')||lower.includes('ترس')) return 'شجاعت';
-            if (lower.includes('truth')||lower.includes('حقیقت')) return 'آزادی';
-            return 'خلاقیت';
-        }
-        generateFallback() {
-            return this.generate();
-        }
+    // فیلسوف
+    function philosopherGenerate() {
+      const statements = [
+        "تنها چیزی که می‌توانیم به آن یقین داشته باشیم، شک است",
+        "آزادی در گرو آگاهی از جبر است",
+        "هر چه بیشتر می‌دانیم، بیشتر نمی‌دانیم",
+        "زمان توهمی است پایدار",
+        "حقیقت همچون خورشید است؛ نمی‌توان مستقیماً به آن نگریست",
+        "انسان محکوم به آزادی است"
+      ];
+      const statement = rand(statements);
+      const fa = statement;
+      const en = statement; // for simplicity
+      return { fa, en, cat: 'دانش', source: `فیلسوف AI` };
     }
 
-    // رمان‌نویس (Novelist)
-    class NovelistBot extends BaseBot {
-        constructor() { super('Novelist'); }
-        generate() {
-            const subjects = ["زندگی", "عشق", "مرگ", "تنهایی", "امید", "گذر زمان"];
-            const predicates = ["همچون رودخانه‌ای است که به دریا می‌رسد", "نوری است در اعماق تاریکی", "کتابی است که هر روز صفحه‌ای از آن ورق می‌خورد", "باغی است که نیاز به مراقبت دارد"];
-            const details = ["و هر قطره‌اش داستانی ناتمام است", "و گاه در سکوت، فریاد می‌زند", "بی‌آنکه خواننده‌اش بداند فصل بعد چیست"];
-
-            const subject = this.rand(subjects);
-            const predicate = this.rand(predicates);
-            const detail = this.rand(details);
-
-            const fa = `${subject} ${predicate}، ${detail}.`;
-            const en = `${this.translateSubject(subject)} ${this.translatePredicate(predicate)}, ${this.translateDetail(detail)}.`;
-
-            return {
-                fa: fa,
-                en: en,
-                cat: this.categorize(subject),
-                source: `رمان‌نویس AI`
-            };
-        }
-        translateSubject(s) {
-            const m = {"زندگی":"Life", "عشق":"Love", "مرگ":"Death", "تنهایی":"Solitude", "امید":"Hope", "گذر زمان":"The passage of time"};
-            return m[s]||s;
-        }
-        translatePredicate(p) {
-            const m = {
-                "همچون رودخانه‌ای است که به دریا می‌رسد":"is like a river that reaches the sea",
-                "نوری است در اعماق تاریکی":"is a light in the depths of darkness",
-                "کتابی است که هر روز صفحه‌ای از آن ورق می‌خورد":"is a book whose pages turn every day",
-                "باغی است که نیاز به مراقبت دارد":"is a garden that needs care"
-            };
-            return m[p]||p;
-        }
-        translateDetail(d) {
-            const m = {
-                "و هر قطره‌اش داستانی ناتمام است":"and each drop is an unfinished story",
-                "و گاه در سکوت، فریاد می‌زند":"and sometimes it screams in silence",
-                "بی‌آنکه خواننده‌اش بداند فصل بعد چیست":"without the reader knowing what the next chapter holds"
-            };
-            return m[d]||d;
-        }
-        categorize(subject) {
-            if (subject.includes('عشق')) return 'عشق';
-            if (subject.includes('زندگی')) return 'زندگی';
-            if (subject.includes('مرگ')) return 'مرگ';
-            if (subject.includes('امید')) return 'امید';
-            return 'زندگی';
-        }
-        generateFallback() { return this.generate(); }
+    // روانشناس
+    function psychologistGenerate() {
+      const emotions = ["اضطراب", "غم", "شادی", "خشم", "عشق", "ترس"];
+      const observations = [
+        "وقتی می‌پذیری، قدرت شفابخشی دارد",
+        "ریشه در نیازهای برآورده‌نشده دارد",
+        "پلی است به سوی خودشناسی",
+        "همانند موجی است که باید از آن عبور کرد",
+        "اگر سرکوب شود، در تاریکی رشد می‌کند",
+        "بازتابی از زخم‌های التیام‌نیافته است"
+      ];
+      const emotion = rand(emotions);
+      const observation = rand(observations);
+      const fa = `${emotion} ${observation}.`;
+      const en = `${emotion} ${observation}.`;
+      return { fa, en, cat: 'زندگی', source: 'روانشناس AI' };
     }
 
-    // فیلسوف (Philosopher)
-    class PhilosopherBot extends BaseBot {
-        constructor() { super('Philosopher'); }
-        generate() {
-            const concepts = ["حقیقت", "آزادی", "زمان", "هستی", "شک", "معرفت"];
-            const statements = [
-                "تنها چیزی که می‌توانیم به آن یقین داشته باشیم، شک است",
-                "آزادی در گرو آگاهی از جبر است",
-                "هر چه بیشتر می‌دانیم، بیشتر نمی‌دانیم",
-                "زمان توهمی است پایدار",
-                "حقیقت همچون خورشید است؛ نمی‌توان مستقیماً به آن نگریست",
-                "انسان محکوم به آزادی است"
-            ];
-            const statement = this.rand(statements);
-            const source = this.rand(["افلاطون", "نیچه", "سارتر", "کانت", "دکارت", "هگل"]);
-
-            const fa = `${statement}.`;
-            const en = this.translateStatement(statement) + '.';
-
-            return {
-                fa: fa,
-                en: en,
-                cat: 'دانش',
-                source: `فیلسوف AI (${source})`
-            };
-        }
-        translateStatement(s) {
-            const map = {
-                "تنها چیزی که می‌توانیم به آن یقین داشته باشیم، شک است":"The only thing we can be certain of is doubt",
-                "آزادی در گرو آگاهی از جبر است":"Freedom depends on awareness of necessity",
-                "هر چه بیشتر می‌دانیم، بیشتر نمی‌دانیم":"The more we know, the more we know we don't know",
-                "زمان توهمی است پایدار":"Time is a persistent illusion",
-                "حقیقت همچون خورشید است؛ نمی‌توان مستقیماً به آن نگریست":"Truth is like the sun; you cannot look at it directly",
-                "انسان محکوم به آزادی است":"Man is condemned to be free"
-            };
-            return map[s]||s;
-        }
-        generateFallback() { return this.generate(); }
+    // رهبر (ترکیب همه)
+    function leaderGenerate() {
+      const bots = [screenwriterGenerate, novelistGenerate, philosopherGenerate, psychologistGenerate];
+      const bot = rand(bots);
+      return bot();
     }
 
-    // روانشناس (Psychologist)
-    class PsychologistBot extends BaseBot {
-        constructor() { super('Psychologist'); }
-        generate() {
-            const emotions = ["اضطراب", "غم", "شادی", "خشم", "عشق", "ترس"];
-            const observations = [
-                "وقتی می‌پذیری، قدرت شفابخشی دارد",
-                "ریشه در نیازهای برآورده‌نشده دارد",
-                "پلی است به سوی خودشناسی",
-                "همانند موجی است که باید از آن عبور کرد",
-                "اگر سرکوب شود، در تاریکی رشد می‌کند",
-                "بازتابی از زخم‌های التیام‌نیافته است"
-            ];
-            const emotion = this.rand(emotions);
-            const observation = this.rand(observations);
-
-            const fa = `${emotion} ${observation}.`;
-            const en = `${this.translateEmotion(emotion)} ${this.translateObservation(observation)}.`;
-
-            return {
-                fa: fa,
-                en: en,
-                cat: this.categorizeEmotion(emotion),
-                source: `روانشناس AI`
-            };
-        }
-        translateEmotion(e) {
-            const m = {"اضطراب":"Anxiety", "غم":"Sadness", "شادی":"Joy", "خشم":"Anger", "عشق":"Love", "ترس":"Fear"};
-            return m[e]||e;
-        }
-        translateObservation(o) {
-            const m = {
-                "وقتی می‌پذیری، قدرت شفابخشی دارد":"when accepted, has healing power",
-                "ریشه در نیازهای برآورده‌نشده دارد":"roots in unmet needs",
-                "پلی است به سوی خودشناسی":"is a bridge to self-knowledge",
-                "همانند موجی است که باید از آن عبور کرد":"is like a wave that must be ridden",
-                "اگر سرکوب شود، در تاریکی رشد می‌کند":"if suppressed, grows in the dark",
-                "بازتابی از زخم‌های التیام‌نیافته است":"is a reflection of unhealed wounds"
-            };
-            return m[o]||o;
-        }
-        categorizeEmotion(e) {
-            if (e==='عشق') return 'عشق';
-            if (e==='غم') return 'غم';
-            if (e==='شادی') return 'شادی';
-            return 'زندگی';
-        }
-        generateFallback() { return this.generate(); }
-    }
-
-    // ==================== تابع کمکی ====================
-    function isDuplicateInPool(text) {
-        const fp = fingerprint(text);
-        return quotesPool.some(q => fingerprint(q.en) === fp);
-    }
-
-    function fingerprint(text) {
-        return text.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
-    }
-
-    // ==================== وضعیت کلی ====================
+    // ==================== وضعیت برنامه ====================
     let currentLang = localStorage.getItem('qlang') || 'fa';
     let currentCategory = 'همه';
     let displayedQuotes = [];
@@ -491,9 +309,8 @@
     let blacklist = new Set(JSON.parse(localStorage.getItem('quote_blacklist') || '[]'));
     let robotLogs = [];
     let nextId = REAL_QUOTES.length + 1;
-    const leaderAI = new LeaderAI();
 
-    // رفرنس‌های DOM
+    // DOM
     const quoteList = document.getElementById('quoteList');
     const sidebarCategoryList = document.getElementById('sidebarCategoryList');
     const quoteCounter = document.getElementById('quoteCounter');
@@ -502,225 +319,216 @@
     const poolSizeEl = document.getElementById('poolSize');
     const blacklistSizeEl = document.getElementById('blacklistSize');
 
-    // ==================== ذرات ====================
+    // ذرات
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
     let particlesArray = [];
     function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
     window.addEventListener('resize', resizeCanvas); resizeCanvas();
     class Particle {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2 + 0.5;
-            this.vx = (Math.random() - 0.5) * 0.4;
-            this.vy = (Math.random() - 0.5) * 0.4;
-        }
-        update() { this.x += this.vx; this.y += this.vy; if (this.x < 0 || this.x > canvas.width) this.vx *= -1; if (this.y < 0 || this.y > canvas.height) this.vy *= -1; }
-        draw() { ctx.fillStyle = 'rgba(244, 162, 97, 0.5)'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); }
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+      }
+      update() { this.x += this.vx; this.y += this.vy; if (this.x < 0 || this.x > canvas.width) this.vx *= -1; if (this.y < 0 || this.y > canvas.height) this.vy *= -1; }
+      draw() { ctx.fillStyle = 'rgba(244, 162, 97, 0.5)'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); }
     }
     for (let i=0; i<60; i++) particlesArray.push(new Particle());
     function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); particlesArray.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
     animateParticles();
 
-    // ==================== رابط کاربری ====================
+    // ترجمه رابط
     const ui = {
-        fa: { logo:'📖 نقل‌قول‌سرا', counter:(n)=>`${n} جمله`, deleteBtn:'حذف', leaderActive:'فعال', botReady:'آماده', botActive:'در حال تولید', loading:'در حال بارگذاری...', commanderLog:'تیم هوش مصنوعی فعال' },
-        en: { logo:'📖 QuoteVault', counter:(n)=>`${n} quotes`, deleteBtn:'Remove', leaderActive:'Active', botReady:'Ready', botActive:'Generating', loading:'Loading...', commanderLog:'AI Team Active' }
+      fa: { logo:'📖 نقل‌قول‌سرا', counter:(n)=>`${n} جمله`, deleteBtn:'حذف', leaderActive:'فعال', botReady:'آماده', botActive:'در حال تولید', loading:'در حال بارگذاری...', commanderLog:'تیم هوش مصنوعی فعال' },
+      en: { logo:'📖 QuoteVault', counter:(n)=>`${n} quotes`, deleteBtn:'Remove', leaderActive:'Active', botReady:'Ready', botActive:'Generating', loading:'Loading...', commanderLog:'AI Team Active' }
     };
     function t(k,...a){ let s=ui[currentLang]?.[k]||k; return typeof s==='function'?s(...a):s; }
     function updateUI() {
-        document.getElementById('logoText').textContent = t('logo');
-        document.getElementById('langLabel').textContent = currentLang==='fa'?'FA':'EN';
-        quoteCounter.textContent = t('counter', displayedQuotes.length);
-        commanderLog.textContent = t('commanderLog');
-        document.getElementById('leaderStatus').textContent = t('leaderActive');
-        document.getElementById('screenwriterStatus').textContent = t('botReady');
-        document.getElementById('novelistStatus').textContent = t('botReady');
-        document.getElementById('philosopherStatus').textContent = t('botReady');
-        document.getElementById('psychologistStatus').textContent = t('botReady');
-        poolSizeEl.textContent = quotesPool.length;
-        blacklistSizeEl.textContent = blacklist.size;
-        renderCategoryList();
+      document.getElementById('logoText').textContent = t('logo');
+      document.getElementById('langLabel').textContent = currentLang==='fa'?'FA':'EN';
+      quoteCounter.textContent = t('counter', displayedQuotes.length);
+      commanderLog.textContent = t('commanderLog');
+      document.getElementById('leaderStatus').textContent = t('leaderActive');
+      document.getElementById('screenwriterStatus').textContent = t('botReady');
+      document.getElementById('novelistStatus').textContent = t('botReady');
+      document.getElementById('philosopherStatus').textContent = t('botReady');
+      document.getElementById('psychologistStatus').textContent = t('botReady');
+      poolSizeEl.textContent = quotesPool.length;
+      blacklistSizeEl.textContent = blacklist.size;
+      renderCategoryList();
     }
 
-    // ==================== منوی همبرگری ====================
+    // منو
     function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('open'); }
     document.getElementById('hamburgerBtn').addEventListener('click',toggleSidebar);
     document.getElementById('closeSidebar').addEventListener('click',toggleSidebar);
     document.getElementById('sidebarOverlay').addEventListener('click',toggleSidebar);
 
     function renderCategoryList(){
-        sidebarCategoryList.innerHTML = CATEGORIES.map(cat =>
-            `<button class="category-btn ${cat===currentCategory?'active':''}" data-cat="${cat}">${cat}</button>`
-        ).join('');
-        sidebarCategoryList.querySelectorAll('.category-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                currentCategory = btn.dataset.cat;
-                renderCategoryList();
-                refreshDisplay();
-                toggleSidebar();
-            });
+      sidebarCategoryList.innerHTML = CATEGORIES.map(cat =>
+        `<button class="category-btn ${cat===currentCategory?'active':''}" data-cat="${cat}">${cat}</button>`
+      ).join('');
+      sidebarCategoryList.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentCategory = btn.dataset.cat;
+          renderCategoryList();
+          refreshDisplay();
+          toggleSidebar();
         });
+      });
     }
 
-    // ==================== مدیریت جملات ====================
+    // مدیریت جملات
     function isBlacklisted(text) { return blacklist.has(fingerprint(text)); }
 
     function getAvailableForDisplay() {
-        let filtered = currentCategory === 'همه' ? quotesPool : quotesPool.filter(q => q.cat === currentCategory);
-        let displayedIds = new Set(displayedQuotes.map(q => q.id));
-        return filtered.filter(q => !displayedIds.has(q.id) && !isBlacklisted(q.en));
+      let filtered = currentCategory === 'همه' ? quotesPool : quotesPool.filter(q => q.cat === currentCategory);
+      let displayedIds = new Set(displayedQuotes.map(q => q.id));
+      return filtered.filter(q => !displayedIds.has(q.id) && !isBlacklisted(q.en));
     }
 
     function ensurePoolHasEnough() {
-        let avail = getAvailableForDisplay();
-        if (avail.length < MAX_DISPLAY) {
-            const needed = MAX_DISPLAY - avail.length + 10;
-            const batch = leaderAI.generateBatch(needed);
-            let added = 0;
-            batch.forEach(q => {
-                if (!isDuplicateInPool(q.en) && !blacklist.has(fingerprint(q.en))) {
-                    quotesPool.push({ ...q, id: nextId++, isReal: false });
-                    added++;
-                }
-            });
-            if (added > 0) {
-                poolSizeEl.textContent = quotesPool.length;
-                addLog(`🤖 تیم هوش مصنوعی: ${added} جمله تازه تولید کرد.`);
-                // بروزرسانی وضعیت ایجنت‌ها
-                document.getElementById('screenwriterStatus').textContent = t('botActive');
-                setTimeout(() => document.getElementById('screenwriterStatus').textContent = t('botReady'), 1500);
-                document.getElementById('novelistStatus').textContent = t('botActive');
-                setTimeout(() => document.getElementById('novelistStatus').textContent = t('botReady'), 1500);
-                document.getElementById('philosopherStatus').textContent = t('botActive');
-                setTimeout(() => document.getElementById('philosopherStatus').textContent = t('botReady'), 1500);
-                document.getElementById('psychologistStatus').textContent = t('botActive');
-                setTimeout(() => document.getElementById('psychologistStatus').textContent = t('botReady'), 1500);
-            }
+      let avail = getAvailableForDisplay();
+      if (avail.length < MAX_DISPLAY) {
+        const needed = MAX_DISPLAY - avail.length + 10;
+        for (let i=0; i<needed; i++) {
+          const q = leaderGenerate();
+          if (!quotesPool.some(p => fingerprint(p.en) === fingerprint(q.en)) && !blacklist.has(fingerprint(q.en))) {
+            quotesPool.push({ ...q, id: nextId++, isReal: false });
+          }
         }
+        poolSizeEl.textContent = quotesPool.length;
+        addLog('🤖 تیم هوش مصنوعی جملات تازه تولید کرد.');
+      }
     }
 
     function refreshDisplay() {
-        ensurePoolHasEnough();
-        let avail = getAvailableForDisplay();
-        let need = MAX_DISPLAY - displayedQuotes.length;
-        if (need > 0 && avail.length > 0) {
-            let shuffled = [...avail].sort(() => Math.random() - 0.5);
-            let toAdd = shuffled.slice(0, Math.min(need, shuffled.length));
-            displayedQuotes.push(...toAdd);
-            toAdd.forEach(q => appendCard(q));
-        }
-        while (displayedQuotes.length > MAX_DISPLAY) {
-            let removed = displayedQuotes.shift();
-            removeCardElement(removed.id);
-        }
-        quoteCounter.textContent = t('counter', displayedQuotes.length);
-        updateNumbers();
+      ensurePoolHasEnough();
+      let avail = getAvailableForDisplay();
+      let need = MAX_DISPLAY - displayedQuotes.length;
+      if (need > 0 && avail.length > 0) {
+        let shuffled = [...avail].sort(() => Math.random() - 0.5);
+        let toAdd = shuffled.slice(0, Math.min(need, shuffled.length));
+        displayedQuotes.push(...toAdd);
+        toAdd.forEach(q => appendCard(q));
+      }
+      while (displayedQuotes.length > MAX_DISPLAY) {
+        let removed = displayedQuotes.shift();
+        removeCardElement(removed.id);
+      }
+      quoteCounter.textContent = t('counter', displayedQuotes.length);
+      updateNumbers();
     }
 
     function updateNumbers() {
-        document.querySelectorAll('.quote-card').forEach((card, i) => card.querySelector('.quote-number').textContent = i + 1);
+      document.querySelectorAll('.quote-card').forEach((card, i) => card.querySelector('.quote-number').textContent = i + 1);
     }
 
     function buildCardElement(q) {
-        let card = document.createElement('div');
-        card.className = 'quote-card';
-        card.dataset.id = q.id;
-        let text = currentLang === 'fa' ? q.fa : q.en;
-        let sentEmoji = q.id % 3 === 0 ? '😊' : (q.id % 3 === 1 ? '😐' : '😞');
-        card.innerHTML = `
-            <div class="quote-number">0</div>
-            <div class="quote-content">
-                <div class="quote-text">“${text}”</div>
-                <div class="quote-source">${q.source||'نامشخص'} ${q.isReal ? '⭐' : '🤖'}</div>
-            </div>
-            <div class="quote-actions">
-                <span class="sentiment-icon">${sentEmoji}</span>
-                <button class="delete-btn">${t('deleteBtn')}</button>
-            </div>`;
-        card.querySelector('.delete-btn').addEventListener('click', e => {
-            e.stopPropagation();
-            deleteQuote(q.id);
-        });
-        return card;
+      let card = document.createElement('div');
+      card.className = 'quote-card';
+      card.dataset.id = q.id;
+      let text = currentLang === 'fa' ? q.fa : q.en;
+      let sentEmoji = q.id % 3 === 0 ? '😊' : (q.id % 3 === 1 ? '😐' : '😞');
+      card.innerHTML = `
+        <div class="quote-number">0</div>
+        <div class="quote-content">
+          <div class="quote-text">“${text}”</div>
+          <div class="quote-source">${q.source||'نامشخص'} ${q.isReal ? '⭐' : '🤖'}</div>
+        </div>
+        <div class="quote-actions">
+          <span class="sentiment-icon">${sentEmoji}</span>
+          <button class="delete-btn">${t('deleteBtn')}</button>
+        </div>`;
+      card.querySelector('.delete-btn').addEventListener('click', e => {
+        e.stopPropagation();
+        deleteQuote(q.id);
+      });
+      return card;
     }
 
     function appendCard(q, animate=true) {
-        let card = buildCardElement(q);
-        if (!animate) card.style.animation = 'none';
-        quoteList.appendChild(card);
+      let card = buildCardElement(q);
+      if (!animate) card.style.animation = 'none';
+      quoteList.appendChild(card);
     }
 
     function removeCardElement(id) {
-        let card = document.querySelector(`.quote-card[data-id="${id}"]`);
-        if (card) {
-            card.classList.add('removing');
-            setTimeout(() => card.remove(), 300);
-        }
+      let card = document.querySelector(`.quote-card[data-id="${id}"]`);
+      if (card) {
+        card.classList.add('removing');
+        setTimeout(() => card.remove(), 300);
+      }
     }
 
     function deleteQuote(id) {
-        let quote = displayedQuotes.find(q => q.id == id);
-        if (!quote) return;
-        blacklist.add(fingerprint(quote.en));
-        localStorage.setItem('quote_blacklist', JSON.stringify([...blacklist]));
-        blacklistSizeEl.textContent = blacklist.size;
-        addLog(`🗑️ جمله حذف شد.`);
-        removeCardElement(id);
-        displayedQuotes = displayedQuotes.filter(q => q.id != id);
-        refreshDisplay();
+      let quote = displayedQuotes.find(q => q.id == id);
+      if (!quote) return;
+      blacklist.add(fingerprint(quote.en));
+      localStorage.setItem('quote_blacklist', JSON.stringify([...blacklist]));
+      blacklistSizeEl.textContent = blacklist.size;
+      addLog(`🗑️ جمله حذف شد.`);
+      removeCardElement(id);
+      displayedQuotes = displayedQuotes.filter(q => q.id != id);
+      refreshDisplay();
     }
 
     function addLog(msg) {
-        let time = new Date().toLocaleTimeString('fa-IR');
-        robotLogs.push(`[${time}] ${msg}`);
-        if (robotLogs.length > 20) robotLogs.shift();
-        logArea.innerHTML = robotLogs.map(m => `<p>${m}</p>`).join('');
-        logArea.scrollTop = logArea.scrollHeight;
+      let time = new Date().toLocaleTimeString('fa-IR');
+      robotLogs.push(`[${time}] ${msg}`);
+      if (robotLogs.length > 20) robotLogs.shift();
+      logArea.innerHTML = robotLogs.map(m => `<p>${m}</p>`).join('');
+      logArea.scrollTop = logArea.scrollHeight;
     }
 
-    // ==================== بارگذاری اولیه ====================
+    // راه‌اندازی اولیه
     function initialLoad() {
-        commanderLog.textContent = t('loading');
-        refreshDisplay();
-        quoteCounter.textContent = t('counter', displayedQuotes.length);
-        poolSizeEl.textContent = quotesPool.length;
-        blacklistSizeEl.textContent = blacklist.size;
-        commanderLog.textContent = t('commanderLog');
+      commanderLog.textContent = t('loading');
+      refreshDisplay();
+      quoteCounter.textContent = t('counter', displayedQuotes.length);
+      poolSizeEl.textContent = quotesPool.length;
+      blacklistSizeEl.textContent = blacklist.size;
+      commanderLog.textContent = t('commanderLog');
     }
 
     function renderAllQuotes() {
-        quoteList.innerHTML = '';
-        displayedQuotes.forEach(q => appendCard(q, false));
-        updateNumbers();
+      quoteList.innerHTML = '';
+      displayedQuotes.forEach(q => appendCard(q, false));
+      updateNumbers();
     }
 
-    // ==================== زبان و تم ====================
     function toggleLanguage() {
-        currentLang = currentLang === 'fa' ? 'en' : 'fa';
-        localStorage.setItem('qlang', currentLang);
-        document.documentElement.lang = currentLang;
-        document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
-        updateUI();
-        renderAllQuotes();
+      currentLang = currentLang === 'fa' ? 'en' : 'fa';
+      localStorage.setItem('qlang', currentLang);
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+      updateUI();
+      renderAllQuotes();
     }
     function toggleTheme() {
-        document.body.classList.toggle('light-mode');
-        localStorage.setItem('qtheme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+      document.body.classList.toggle('light-mode');
+      localStorage.setItem('qtheme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
     }
     document.getElementById('langToggle').addEventListener('click', toggleLanguage);
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
     if (localStorage.getItem('qtheme') === 'light') document.body.classList.add('light-mode');
 
     function init() {
-        document.documentElement.lang = currentLang;
-        document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
-        renderCategoryList();
-        updateUI();
-        initialLoad();
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+      renderCategoryList();
+      updateUI();
+      initialLoad();
     }
-    init();
-</script>
+    // اجرا با try-catch تا خطاها لاگ شوند
+    try {
+      init();
+    } catch(e) {
+      document.getElementById('logArea').innerHTML = `<p>خطا: ${e.message}</p>`;
+    }
+  </script>
 </body>
 </html>
