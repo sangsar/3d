@@ -1,46 +1,572 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>استودیوی پادکست Samisaki</title>
-    <style>
-        body { background: #1a1a2e; color: #e0d6ff; font-family: 'Vazirmatn', sans-serif; padding: 30px; max-width: 700px; margin: 0 auto; }
-        h1 { color: #ff99c8; text-align: center; }
-        textarea { width: 100%; height: 200px; background: #0a0a0c; color: #fff; border: 1px solid #333; border-radius: 12px; padding: 15px; font-family: inherit; font-size: 1rem; margin: 20px 0; }
-        button { background: #7209b7; color: #fff; border: none; padding: 12px 30px; border-radius: 25px; font-size: 1rem; cursor: pointer; margin: 5px; }
-        button:hover { background: #ff99c8; color: #0a0a0c; }
-        .status { margin-top: 15px; color: #aaa; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فیلم‌نما | مرجع فیلم و سریال</title>
+  <!-- فونت وزیرمتن از CDN -->
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a2e;
+      --card-bg: #f8f9fa;
+      --primary: #e94560;
+      --secondary: #0f3460;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+      --header-bg: #ffffffcc;
+    }
+
+    body.dark {
+      --bg: #1a1a2e;
+      --text: #eaeaea;
+      --card-bg: #16213e;
+      --primary: #e94560;
+      --secondary: #eaeaea;
+      --shadow: 0 4px 20px rgba(0,0,0,0.3);
+      --header-bg: #1a1a2ecc;
+    }
+
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* هدر */
+    header {
+      background: var(--header-bg);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 15px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow);
+    }
+
+    .logo {
+      font-size: 1.8em;
+      font-weight: 900;
+      color: var(--primary);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      background: var(--card-bg);
+      border-radius: 30px;
+      padding: 5px 15px;
+      box-shadow: var(--shadow);
+      margin: 0 15px;
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .search-container input {
+      border: none;
+      background: transparent;
+      padding: 10px;
+      font-family: inherit;
+      font-size: 1em;
+      width: 100%;
+      color: var(--text);
+      outline: none;
+    }
+
+    .search-container button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: bold;
+    }
+
+    .toggle-theme {
+      background: none;
+      border: 1px solid var(--text);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 1.2em;
+      transition: 0.2s;
+      margin-right: 5px;
+    }
+
+    /* محتوای اصلی */
+    main {
+      flex: 1;
+      padding: 30px 20px;
+      max-width: 1300px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .section-title {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      border-right: 5px solid var(--primary);
+      padding-right: 15px;
+    }
+
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 25px;
+      margin-bottom: 50px;
+    }
+
+    .movie-card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+
+    .movie-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .movie-card img {
+      width: 100%;
+      height: 270px;
+      object-fit: cover;
+      display: block;
+      background: #ccc;
+    }
+
+    .movie-card .info {
+      padding: 12px;
+    }
+
+    .movie-card h3 {
+      font-size: 1em;
+      margin-bottom: 5px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .movie-card .rating {
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    /* صفحه جزئیات */
+    #movie-detail {
+      display: none;
+    }
+
+    .back-btn {
+      background: var(--secondary);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-family: inherit;
+      cursor: pointer;
+      margin-bottom: 20px;
+      font-size: 1em;
+    }
+
+    .detail-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .detail-poster {
+      flex: 0 0 300px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .detail-poster img {
+      width: 100%;
+      display: block;
+    }
+
+    .detail-info {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .detail-info h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .meta {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin: 15px 0;
+      color: #888;
+    }
+
+    .meta span {
+      background: var(--card-bg);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.9em;
+    }
+
+    .overview {
+      line-height: 1.9;
+      margin: 20px 0;
+    }
+
+    .cast-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .cast-item {
+      background: var(--card-bg);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.9em;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: var(--card-bg);
+      color: #888;
+      font-size: 0.9em;
+      margin-top: auto;
+    }
+
+    footer a {
+      color: var(--primary);
+    }
+
+    .loading, .error {
+      text-align: center;
+      padding: 50px;
+      font-size: 1.2em;
+    }
+
+    @media (max-width: 600px) {
+      .detail-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .detail-poster {
+        flex: 0 0 auto;
+        width: 200px;
+      }
+      header {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>🎙️ استودیوی پادکست</h1>
-    <p>متن سناریو رو paste کن و گوش بده—صدای طبیعی فارسی</p>
-    <textarea id="textInput" placeholder="سناریوی پادکست رو اینجا بنویس..."></textarea>
-    <div>
-        <button onclick="speak()">▶️ پخش کن</button>
-        <button onclick="pause()">⏸️ توقف</button>
-        <button onclick="resume()">🔄 ادامه</button>
+
+  <header>
+    <div class="logo" onclick="navigateToHome()">🎬 فیلم‌نما</div>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="جستجوی فیلم یا سریال..." />
+      <button onclick="searchMovies()">جستجو</button>
     </div>
-    <div class="status" id="status">آماده</div>
+    <div class="nav-links">
+      <a href="#" onclick="navigateToHome()">خانه</a>
+      <button class="toggle-theme" onclick="toggleTheme()" title="تغییر حالت تاریک/روشن">🌓</button>
+    </div>
+  </header>
 
-    <script>
-        const synth = window.speechSynthesis;
-        let utterance = null;
+  <main>
+    <!-- نمای خانه -->
+    <div id="home-view">
+      <h2 class="section-title">🔥 فیلم‌های محبوب</h2>
+      <div id="popular-movies" class="movie-grid"></div>
 
-        function speak() {
-            synth.cancel();
-            const text = document.getElementById('textInput').value;
-            utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'fa-IR';
-            utterance.rate = 0.9;  // کمی آهسته‌تر—طبیعی‌تر
-            utterance.pitch = 1.0;
-            utterance.onstart = () => document.getElementById('status').textContent = '🔊 در حال پخش...';
-            utterance.onend = () => document.getElementById('status').textContent = '✅ پخش تموم شد';
-            synth.speak(utterance);
+      <h2 class="section-title">🎥 در حال اکران</h2>
+      <div id="now-playing-movies" class="movie-grid"></div>
+
+      <h2 class="section-title">⭐ برترین‌ها</h2>
+      <div id="top-rated-movies" class="movie-grid"></div>
+
+      <div id="search-results-section" style="display:none;">
+        <h2 class="section-title">نتایج جستجو</h2>
+        <div id="search-results" class="movie-grid"></div>
+      </div>
+    </div>
+
+    <!-- نمای جزئیات فیلم -->
+    <div id="movie-detail">
+      <button class="back-btn" onclick="navigateToHome()">← بازگشت به خانه</button>
+      <div class="detail-container">
+        <div class="detail-poster">
+          <img id="detail-poster-img" src="" alt="پوستر فیلم">
+        </div>
+        <div class="detail-info">
+          <h1 id="detail-title"></h1>
+          <div class="meta">
+            <span id="detail-year"></span>
+            <span id="detail-rating"></span>
+            <span id="detail-runtime"></span>
+          </div>
+          <div id="detail-genres" class="meta"></div>
+          <p class="overview" id="detail-overview"></p>
+          <h3>بازیگران اصلی</h3>
+          <div id="detail-cast" class="cast-list"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    داده‌ها از <a href="https://www.themoviedb.org/" target="_blank">TMDB</a> تأمین می‌شود. 
+    این سایت صرفاً یک نمونه آموزشی/نمایشی است.
+  </footer>
+
+  <script>
+    // ====================== تنظیمات ======================
+    const API_KEY = 'YOUR_TMDB_API_KEY'; // ← کلید خودت را جایگزین کن
+    const BASE_URL = 'https://api.themoviedb.org/3';
+    const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
+    const LANG = 'fa-IR'; // زبان فارسی برای برخی توضیحات (TMDB از فارسی پشتیبانی نسبی دارد)
+
+    // ====================== المان‌های DOM ======================
+    const homeView = document.getElementById('home-view');
+    const movieDetailView = document.getElementById('movie-detail');
+    const popularContainer = document.getElementById('popular-movies');
+    const nowPlayingContainer = document.getElementById('now-playing-movies');
+    const topRatedContainer = document.getElementById('top-rated-movies');
+    const searchResultsSection = document.getElementById('search-results-section');
+    const searchResultsContainer = document.getElementById('search-results');
+    const searchInput = document.getElementById('search-input');
+
+    // ====================== مدیریت حالت تاریک ======================
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        document.body.classList.add('dark');
+      } else {
+        document.body.classList.remove('dark');
+      }
+      localStorage.setItem('theme', theme);
+    }
+
+    function toggleTheme() {
+      const current = document.body.classList.contains('dark') ? 'light' : 'dark';
+      applyTheme(current);
+    }
+
+    // بارگذاری تم ذخیره‌شده
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+
+    // ====================== Navigation ======================
+    function navigateToHome() {
+      homeView.style.display = 'block';
+      movieDetailView.style.display = 'none';
+      searchResultsSection.style.display = 'none';
+      searchInput.value = '';
+      window.location.hash = '';
+    }
+
+    function navigateToMovie(movieId) {
+      homeView.style.display = 'none';
+      movieDetailView.style.display = 'block';
+      window.location.hash = `movie/${movieId}`;
+      loadMovieDetail(movieId);
+    }
+
+    // مدیریت دکمه‌های بازگشت مرورگر
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash;
+      if (!hash || hash === '#') {
+        navigateToHome();
+      } else if (hash.startsWith('#movie/')) {
+        const id = hash.split('/')[1];
+        if (id) {
+          homeView.style.display = 'none';
+          movieDetailView.style.display = 'block';
+          loadMovieDetail(id);
         }
+      }
+    });
 
-        function pause() { synth.pause(); document.getElementById('status').textContent = '⏸️ متوقف شد'; }
-        function resume() { synth.resume(); document.getElementById('status').textContent = '🔊 ادامه...'; }
-    </script>
+    // ====================== توابع کمکی ======================
+    async function fetchFromTMDB(endpoint, params = {}) {
+      const url = new URL(`${BASE_URL}${endpoint}`);
+      url.searchParams.append('api_key', API_KEY);
+      url.searchParams.append('language', LANG);
+      Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, value));
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`خطای API: ${res.status}`);
+      return res.json();
+    }
+
+    function createMovieCard(movie) {
+      const card = document.createElement('div');
+      card.className = 'movie-card';
+      card.onclick = () => navigateToMovie(movie.id);
+      const posterPath = movie.poster_path 
+        ? `${IMG_BASE}${movie.poster_path}` 
+        : 'https://via.placeholder.com/300x450?text=بدون+پوستر';
+      card.innerHTML = `
+        <img src="${posterPath}" alt="${movie.title || movie.name}" loading="lazy">
+        <div class="info">
+          <h3 title="${movie.title || movie.name}">${movie.title || movie.name}</h3>
+          <span class="rating">⭐ ${movie.vote_average?.toFixed(1) || 'N/A'}</span>
+        </div>
+      `;
+      return card;
+    }
+
+    function renderMovies(container, movies) {
+      container.innerHTML = '';
+      if (!movies || movies.length === 0) {
+        container.innerHTML = '<p>فیلمی یافت نشد.</p>';
+        return;
+      }
+      movies.forEach(movie => container.appendChild(createMovieCard(movie)));
+    }
+
+    // ====================== بارگذاری محتوای خانه ======================
+    async function loadHomeMovies() {
+      try {
+        const [popular, nowPlaying, topRated] = await Promise.all([
+          fetchFromTMDB('/movie/popular', { region: 'IR' }),
+          fetchFromTMDB('/movie/now_playing', { region: 'IR' }),
+          fetchFromTMDB('/movie/top_rated', { region: 'IR' })
+        ]);
+        renderMovies(popularContainer, popular.results);
+        renderMovies(nowPlayingContainer, nowPlaying.results);
+        renderMovies(topRatedContainer, topRated.results);
+      } catch (error) {
+        console.error(error);
+        popularContainer.innerHTML = '<p class="error">خطا در بارگذاری داده‌ها. لطفاً API Key خود را بررسی کن.</p>';
+      }
+    }
+
+    // ====================== جستجو ======================
+    async function searchMovies() {
+      const query = searchInput.value.trim();
+      if (!query) return;
+      try {
+        const data = await fetchFromTMDB('/search/multi', { query, include_adult: false });
+        // فیلتر برای فیلم و سریال
+        const results = data.results.filter(item => item.media_type === 'movie' || item.media_type === 'tv');
+        renderMovies(searchResultsContainer, results);
+        searchResultsSection.style.display = 'block';
+        window.scrollTo({ top: searchResultsSection.offsetTop - 80, behavior: 'smooth' });
+        window.location.hash = `search?q=${encodeURIComponent(query)}`;
+      } catch (error) {
+        console.error(error);
+        searchResultsContainer.innerHTML = '<p class="error">خطا در جستجو.</p>';
+      }
+    }
+
+    // امکان جستجو با Enter
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') searchMovies();
+    });
+
+    // ====================== جزئیات فیلم ======================
+    async function loadMovieDetail(movieId) {
+      try {
+        const [details, credits] = await Promise.all([
+          fetchFromTMDB(`/movie/${movieId}`),
+          fetchFromTMDB(`/movie/${movieId}/credits`)
+        ]);
+        document.getElementById('detail-poster-img').src = details.poster_path 
+          ? `${IMG_BASE}${details.poster_path}` 
+          : 'https://via.placeholder.com/300x450?text=بدون+پوستر';
+        document.getElementById('detail-title').textContent = details.title;
+        document.getElementById('detail-year').textContent = details.release_date ? details.release_date.split('-')[0] : 'نامشخص';
+        document.getElementById('detail-rating').textContent = `⭐ ${details.vote_average?.toFixed(1)}`;
+        document.getElementById('detail-runtime').textContent = details.runtime ? `${details.runtime} دقیقه` : '';
+        document.getElementById('detail-overview').textContent = details.overview || 'خلاصه داستان موجود نیست.';
+
+        const genresContainer = document.getElementById('detail-genres');
+        genresContainer.innerHTML = '';
+        details.genres.forEach(genre => {
+          const span = document.createElement('span');
+          span.textContent = genre.name;
+          genresContainer.appendChild(span);
+        });
+
+        const castContainer = document.getElementById('detail-cast');
+        castContainer.innerHTML = '';
+        credits.cast.slice(0, 10).forEach(actor => {
+          const div = document.createElement('div');
+          div.className = 'cast-item';
+          div.textContent = actor.name;
+          castContainer.appendChild(div);
+        });
+      } catch (error) {
+        console.error(error);
+        movieDetailView.innerHTML += '<p class="error">خطا در بارگذاری جزئیات فیلم.</p>';
+      }
+    }
+
+    // ====================== راه‌اندازی اولیه ======================
+    function init() {
+      const hash = window.location.hash;
+      if (hash.startsWith('#movie/')) {
+        const id = hash.split('/')[1];
+        homeView.style.display = 'none';
+        movieDetailView.style.display = 'block';
+        loadMovieDetail(id);
+      } else if (hash.startsWith('#search?q=')) {
+        const query = decodeURIComponent(hash.replace('#search?q=', ''));
+        searchInput.value = query;
+        searchMovies();
+      } else {
+        navigateToHome();
+        loadHomeMovies();
+      }
+    }
+
+    init();
+  </script>
 </body>
 </html>
