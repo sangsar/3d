@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>خبرخوان جهان | اخبار از منابع معتبر</title>
+  <title>خبرخوان هوشمند | بایا</title>
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
   <style>
     * {
@@ -12,336 +12,421 @@
       box-sizing: border-box;
     }
     :root {
-      --bg: #f0f2f5;
-      --text: #1c1e21;
-      --card-bg: #ffffff;
-      --primary: #e63946;
-      --secondary: #1d3557;
-      --shadow: 0 2px 12px rgba(0,0,0,0.06);
-      --header-bg: rgba(255,255,255,0.92);
-      --cat-btn-bg: #e0e0e0;
-    }
-    body.dark {
-      --bg: #18191a;
-      --text: #e4e6eb;
-      --card-bg: #242526;
-      --primary: #e63946;
-      --secondary: #f1f1f1;
-      --shadow: 0 2px 12px rgba(0,0,0,0.3);
-      --header-bg: rgba(24, 25, 26, 0.92);
-      --cat-btn-bg: #3a3b3c;
+      --bg: #0a0f1c;
+      --surface: #141b2b;
+      --text: #e0e6f0;
+      --primary: #00f2fe;
+      --secondary: #4facfe;
+      --danger: #ff4d6d;
+      --glass-bg: rgba(20, 27, 43, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --font: 'Vazirmatn', sans-serif;
     }
     body {
-      font-family: 'Vazirmatn', sans-serif;
       background: var(--bg);
       color: var(--text);
-      transition: background 0.3s, color 0.3s;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      font-family: var(--font);
+      transition: background 0.3s;
+      margin: 0;
+      overflow-x: hidden;
+      position: relative;
+    }
+    /* ذرات پس‌زمینه */
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
     }
     header {
-      background: var(--header-bg);
-      backdrop-filter: blur(10px);
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
       position: sticky;
       top: 0;
       z-index: 100;
-      padding: 15px 20px;
-      box-shadow: var(--shadow);
+      padding: 1rem 2rem;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
     }
     .logo {
-      font-size: 1.8em;
+      font-size: 2rem;
       font-weight: 900;
-      color: var(--primary);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       cursor: pointer;
-      user-select: none;
     }
-    .nav-actions {
+    nav {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    nav a, nav button {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font);
+      font-size: 1rem;
+      transition: color 0.2s;
       display: flex;
       align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
+      gap: 0.3rem;
     }
-    .search-box {
-      display: flex;
-      background: var(--card-bg);
-      border-radius: 30px;
-      padding: 3px 3px 3px 15px;
-      box-shadow: var(--shadow);
+    nav a:hover, nav button:hover {
+      color: var(--primary);
     }
-    .search-box input {
-      border: none;
-      background: transparent;
-      padding: 10px;
-      font-family: inherit;
-      font-size: 0.9em;
-      width: 160px;
-      color: var(--text);
-      outline: none;
-    }
-    .search-box button {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 25px;
-      cursor: pointer;
-      font-family: inherit;
+    .lang-btn {
+      background: var(--surface);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
       font-weight: bold;
     }
     .theme-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--text);
-      color: var(--text);
-      padding: 0;
-      width: 40px;
-      height: 40px;
+      background: var(--surface);
+      width: 2.5rem;
+      height: 2.5rem;
       border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.3em;
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-    #google_translate_element {
-      margin-right: 5px;
+      font-size: 1.2rem;
     }
     main {
-      flex: 1;
-      padding: 25px 20px;
-      max-width: 1200px;
+      padding: 2rem;
+      max-width: 1400px;
       margin: 0 auto;
-      width: 100%;
     }
-    .category-nav {
+    .status-bar {
+      background: var(--surface);
+      padding: 0.8rem 1.5rem;
+      border-radius: 1rem;
+      margin-bottom: 2rem;
       display: flex;
-      gap: 8px;
-      margin-bottom: 25px;
-      flex-wrap: wrap;
-    }
-    .cat-btn {
-      background: var(--cat-btn-bg);
-      border: none;
-      padding: 8px 18px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 0.9em;
-      font-weight: 500;
-      color: var(--text);
-      transition: background 0.2s, color 0.2s;
-    }
-    .cat-btn.active, .cat-btn:hover {
-      background: var(--primary);
-      color: white;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: var(--secondary);
     }
     .news-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 25px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
     }
     .news-card {
-      background: var(--card-bg);
-      border-radius: 16px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 1.2rem;
       overflow: hidden;
-      box-shadow: var(--shadow);
-      transition: transform 0.2s, box-shadow 0.2s;
-      display: flex;
-      flex-direction: column;
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: fadeInUp 0.5s ease;
     }
     .news-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0, 242, 254, 0.15);
     }
     .news-card img {
       width: 100%;
-      height: 190px;
+      height: 200px;
       object-fit: cover;
-      background: #ccc;
     }
-    .news-card .card-body {
-      padding: 15px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
+    .card-body {
+      padding: 1.2rem;
     }
     .card-body .source {
-      font-size: 0.8em;
-      color: #888;
-      margin-bottom: 5px;
+      font-size: 0.8rem;
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
     }
     .card-body h3 {
-      font-size: 1.1em;
-      font-weight: 700;
-      margin-bottom: 10px;
+      font-size: 1.2rem;
+      margin-bottom: 0.8rem;
       line-height: 1.5;
     }
-    .card-body .description {
-      font-size: 0.9em;
-      line-height: 1.7;
-      color: var(--text);
-      flex: 1;
-      margin-bottom: 12px;
+    .card-body .desc {
+      font-size: 0.9rem;
+      line-height: 1.6;
       opacity: 0.9;
+      margin-bottom: 1rem;
     }
     .card-body a {
-      align-self: flex-start;
-      background: var(--secondary);
+      display: inline-block;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white;
-      padding: 8px 16px;
-      border-radius: 8px;
+      padding: 0.5rem 1.2rem;
+      border-radius: 2rem;
       text-decoration: none;
       font-weight: bold;
-      font-size: 0.9em;
-      display: inline-block;
+      font-size: 0.9rem;
     }
-    .load-more {
-      text-align: center;
-      margin: 35px 0;
+    .robot-log {
+      background: var(--surface);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: var(--secondary);
+      max-height: 200px;
+      overflow-y: auto;
     }
-    .load-more button {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 12px 35px;
-      border-radius: 30px;
-      font-family: inherit;
-      font-size: 1.1em;
-      cursor: pointer;
-      font-weight: bold;
-      transition: opacity 0.2s;
-    }
-    .load-more button:hover {
-      opacity: 0.9;
+    .robot-log p {
+      margin: 0.3rem 0;
+      border-right: 2px solid var(--primary);
+      padding-right: 0.5rem;
     }
     footer {
       text-align: center;
-      padding: 20px;
-      background: var(--card-bg);
-      color: #888;
-      font-size: 0.9em;
-      margin-top: auto;
+      padding: 1.5rem;
+      color: #555;
     }
-    @media (max-width: 600px) {
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 768px) {
       header {
         flex-direction: column;
-        gap: 12px;
+        align-items: flex-start;
+        gap: 1rem;
       }
-      .news-grid {
-        grid-template-columns: 1fr;
+      nav {
+        flex-wrap: wrap;
       }
     }
   </style>
 </head>
 <body>
+  <!-- بوم ذرات -->
+  <canvas id="particles"></canvas>
 
   <header>
-    <div class="logo" onclick="resetToHome()">📰 خبرخوان جهان</div>
-    <div class="nav-actions">
-      <div id="google_translate_element"></div>
-      <div class="search-box">
-        <input type="text" id="search-input" placeholder="جستجوی خبر..." />
-        <button onclick="searchNews()">🔍</button>
-      </div>
+    <div class="logo" id="logo-text">📡 خبرخوان هوشمند</div>
+    <nav>
+      <a href="#" data-i18n="home">خانه</a>
+      <a href="#" data-i18n="tech">فناوری</a>
+      <a href="#" data-i18n="sport">ورزش</a>
+      <a href="#" data-i18n="world">جهان</a>
+      <button class="lang-btn" onclick="toggleLanguage()">🌐 <span id="lang-label">FA</span></button>
       <button class="theme-btn" onclick="toggleTheme()">🌓</button>
-    </div>
+    </nav>
   </header>
 
   <main>
-    <div class="category-nav" id="category-nav">
-      <button class="cat-btn active" data-category="all">همه</button>
-      <button class="cat-btn" data-category="world">جهان</button>
-      <button class="cat-btn" data-category="technology">فناوری</button>
-      <button class="cat-btn" data-category="sports">ورزش</button>
-      <button class="cat-btn" data-category="business">کسب‌وکار</button>
-      <button class="cat-btn" data-category="health">سلامت</button>
-      <button class="cat-btn" data-category="science">علم</button>
+    <div class="status-bar" id="status">
+      <span>🤖 ربات هوشمند فعال</span>
+      <span id="last-fetch">آخرین به‌روزرسانی: --</span>
     </div>
-    <div id="news-grid" class="news-grid"></div>
-    <div class="load-more" id="load-more-btn" style="display: none;">
-      <button onclick="loadMore()">بارگذاری اخبار بیشتر</button>
+    <div class="news-grid" id="news-grid">
+      <!-- کارت‌های خبر اینجا -->
+    </div>
+    <div class="robot-log" id="robot-log">
+      <p>🤖 ربات آمادهٔ جمع‌آوری خبر است...</p>
     </div>
   </main>
 
   <footer>
-    اخبار از RSS فیدهای BBC، CNN، Reuters، TechCrunch، ESPN و ... – بدون نیاز به API Key
+    ساخته‌شده با ❤️ | ترجمهٔ خودکار توسط MyMemory (رایگان)
   </footer>
 
-  <!-- Google Translate Widget -->
-  <script type="text/javascript">
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({
-        pageLanguage: 'en',
-        includedLanguages: 'fa,en',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false
-      }, 'google_translate_element');
-    }
-  </script>
-  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
   <script>
-    // ====================== منابع RSS ======================
-    const RSS_FEEDS = {
-      world: [
-        'https://feeds.bbci.co.uk/news/world/rss.xml',
-        'https://rss.nytimes.com/services/xml/rss/nyt/World.xml'
-      ],
-      technology: [
-        'https://feeds.bbci.co.uk/news/technology/rss.xml',
-        'https://techcrunch.com/feed/'
-      ],
-      sports: [
-        'https://feeds.bbci.co.uk/sport/rss.xml',
-        'https://www.espn.com/espn/rss/news'
-      ],
-      business: [
-        'https://feeds.bbci.co.uk/news/business/rss.xml',
-        'https://www.cnbc.com/id/10001147/device/rss/rss.html'
-      ],
-      health: [
-        'https://feeds.bbci.co.uk/news/health/rss.xml',
-        'https://www.medicalnewstoday.com/newsfeeds/rss/health'
-      ],
-      science: [
-        'https://feeds.bbci.co.uk/news/science_and_environment/rss.xml',
-        'https://www.sciencedaily.com/rss/all.xml'
-      ]
+    // ==================== پیکربندی ====================
+    const RSS_SOURCES = [
+      'https://feeds.bbci.co.uk/news/rss.xml',          // BBC News
+      'https://rss.nytimes.com/services/xml/rss/nyt/World.xml', // NYT World
+      'https://feeds.bbci.co.uk/news/technology/rss.xml', // BBC Tech
+      'https://www.espn.com/espn/rss/news'              // ESPN Sports
+    ];
+    const FETCH_INTERVAL = 10 * 60 * 1000; // ۱۰ دقیقه
+    const ARTICLE_TTL = 3 * 60 * 1000;     // ۳ دقیقه
+    const MAX_NEW_PER_FETCH = 5;
+
+    let currentLanguage = localStorage.getItem('lang') || 'fa';
+    let articles = []; // همهٔ مقاله‌ها با addedAt
+    let robotLog = [];
+
+    // ==================== ترجمه ====================
+    const i18n = {
+      fa: {
+        home: 'خانه',
+        tech: 'فناوری',
+        sport: 'ورزش',
+        world: 'جهان',
+        loading: 'در حال بارگذاری اخبار...',
+        empty: 'خبری برای نمایش وجود ندارد.',
+        robot_active: 'ربات هوشمند فعال',
+        last_fetch: 'آخرین به‌روزرسانی',
+        new_article: 'خبر جدید اضافه شد',
+        duplicate_removed: 'خبر تکراری حذف شد',
+        ai_filtered: 'فیلتر هوش مصنوعی: خبر بی‌کیفیت حذف شد',
+      },
+      en: {
+        home: 'Home',
+        tech: 'Technology',
+        sport: 'Sports',
+        world: 'World',
+        loading: 'Loading news...',
+        empty: 'No news to display.',
+        robot_active: 'AI Robot Active',
+        last_fetch: 'Last updated',
+        new_article: 'New article added',
+        duplicate_removed: 'Duplicate removed',
+        ai_filtered: 'AI filter: Low quality removed',
+      }
     };
 
-    let allArticles = [];
-    let displayedArticles = [];
-    let currentCategory = 'all';
-    let currentSearchTerm = '';
-    let pageSize = 12;
-    let currentPage = 0;
+    function t(key) {
+      return i18n[currentLanguage]?.[key] || key;
+    }
 
-    // ====================== Fetch RSS via rss2json ======================
-    async function fetchFeed(url) {
-      const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
-      try {
-        const res = await fetch(apiUrl);
-        if (!res.ok) throw new Error('Network error');
-        const data = await res.json();
-        if (data.status === 'ok') {
-          return data.items.map(item => ({
-            title: item.title,
-            link: item.link,
-            description: item.description,
-            image: item.thumbnail || item.enclosure?.link || extractImage(item.description) || 'https://via.placeholder.com/400x200?text=No+Image',
-            pubDate: item.pubDate,
-            source: data.feed.title,
-            category: currentCategory
-          }));
-        }
-      } catch (e) {
-        console.warn('Could not fetch feed:', url, e);
+    function applyLanguage() {
+      document.documentElement.lang = currentLanguage;
+      document.documentElement.dir = currentLanguage === 'fa' ? 'rtl' : 'ltr';
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        el.textContent = t(el.dataset.i18n);
+      });
+      document.getElementById('lang-label').textContent = currentLanguage === 'fa' ? 'FA' : 'EN';
+      // بروزرسانی لوگو
+      document.getElementById('logo-text').textContent = currentLanguage === 'fa' ? '📡 خبرخوان هوشمند' : '📡 Smart News Reader';
+      // بروزرسانی نوار وضعیت
+      updateStatusBar();
+      // بازسازی نمایش اخبار (با ترجمه)
+      renderNews();
+    }
+
+    function toggleLanguage() {
+      currentLanguage = currentLanguage === 'fa' ? 'en' : 'fa';
+      localStorage.setItem('lang', currentLanguage);
+      applyLanguage();
+    }
+
+    // ==================== ذرات بوم (کانواس) ====================
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particlesArray = [];
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = (Math.random() * 0.3) - 0.15;
+        this.speedY = (Math.random() * 0.3) - 0.15;
       }
-      return [];
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+      draw() {
+        ctx.fillStyle = 'rgba(79, 172, 254, 0.6)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    function initParticles() {
+      particlesArray = [];
+      for (let i = 0; i < 80; i++) {
+        particlesArray.push(new Particle());
+      }
+    }
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particlesArray.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animateParticles);
+    }
+    initParticles();
+    animateParticles();
+
+    // ==================== ربات و مدیریت اخبار ====================
+    function logRobot(msg) {
+      const now = new Date().toLocaleTimeString('fa-IR');
+      robotLog.push(`[${now}] ${msg}`);
+      if (robotLog.length > 50) robotLog.shift();
+      const logDiv = document.getElementById('robot-log');
+      logDiv.innerHTML = robotLog.map(m => `<p>${m}</p>`).join('');
+    }
+
+    function isDuplicate(newArticle) {
+      return articles.some(a => a.link === newArticle.link);
+    }
+
+    function aiQualityFilter(article) {
+      // هوش مصنوعی ساده: حذف مقالات بدون توضیحات یا خیلی کوتاه
+      if (!article.description || article.description.length < 50) {
+        logRobot(t('ai_filtered') + ` : ${article.title.substring(0, 40)}`);
+        return false;
+      }
+      return true;
+    }
+
+    async function fetchAndProcess() {
+      logRobot('🔍 شروع دریافت خبرها...');
+      let fetchedArticles = [];
+      for (let url of RSS_SOURCES) {
+        try {
+          const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
+          const res = await fetch(apiUrl);
+          const data = await res.json();
+          if (data.status === 'ok') {
+            const items = data.items.map(item => ({
+              title: item.title,
+              link: item.link,
+              description: item.description?.replace(/<[^>]+>/g, '').substring(0, 200) + '...',
+              image: item.thumbnail || item.enclosure?.link || extractImage(item.description) || 'https://via.placeholder.com/400x200?text=No+Image',
+              pubDate: item.pubDate,
+              source: data.feed.title
+            }));
+            fetchedArticles.push(...items);
+          }
+        } catch (e) {
+          logRobot(`⚠️ خطا در دریافت ${url}`);
+        }
+      }
+
+      // مرتب‌سازی بر اساس تاریخ انتشار (جدیدترین)
+      fetchedArticles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+
+      let addedCount = 0;
+      for (let article of fetchedArticles) {
+        if (addedCount >= MAX_NEW_PER_FETCH) break;
+        if (!isDuplicate(article) && aiQualityFilter(article)) {
+          article.addedAt = Date.now();
+          articles.unshift(article);
+          addedCount++;
+          logRobot(`✅ ${t('new_article')} : ${article.title.substring(0, 50)}`);
+        } else if (isDuplicate(article)) {
+          logRobot(`♻️ ${t('duplicate_removed')} : ${article.title.substring(0, 50)}`);
+        }
+      }
+
+      document.getElementById('last-fetch').textContent = 
+        `${t('last_fetch')}: ${new Date().toLocaleTimeString('fa-IR')}`;
+      renderNews();
+    }
+
+    function removeOldArticles() {
+      const now = Date.now();
+      const previousLength = articles.length;
+      articles = articles.filter(a => now - a.addedAt < ARTICLE_TTL);
+      if (articles.length < previousLength) {
+        renderNews();
+      }
     }
 
     function extractImage(html) {
@@ -350,110 +435,93 @@
       return match ? match[1] : null;
     }
 
-    async function loadArticles(category = 'all') {
-      currentCategory = category;
-      const feedUrls = category === 'all'
-        ? Object.values(RSS_FEEDS).flat()
-        : RSS_FEEDS[category] || [];
-
-      document.getElementById('news-grid').innerHTML = '<p style="text-align:center; padding:40px;">در حال دریافت اخبار...</p>';
-      document.getElementById('load-more-btn').style.display = 'none';
-
-      const promises = feedUrls.map(url => fetchFeed(url));
-      const results = await Promise.all(promises);
-      allArticles = results.flat().sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-
-      currentPage = 0;
-      displayedArticles = [];
-      applySearchAndDisplay();
-    }
-
-    function applySearchAndDisplay() {
-      let filtered = allArticles;
-      if (currentSearchTerm) {
-        const term = currentSearchTerm.toLowerCase();
-        filtered = filtered.filter(a => a.title.toLowerCase().includes(term) || (a.description && a.description.toLowerCase().includes(term)));
+    // ==================== ترجمه اخبار (MyMemory) ====================
+    const translationCache = JSON.parse(localStorage.getItem('translate_cache') || '{}');
+    async function translateText(text, from = 'en', to = 'fa') {
+      if (!text) return text;
+      const cacheKey = `${text}_${to}`;
+      if (translationCache[cacheKey]) return translationCache[cacheKey];
+      try {
+        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`);
+        const data = await res.json();
+        const translated = data.responseData.translatedText || text;
+        translationCache[cacheKey] = translated;
+        localStorage.setItem('translate_cache', JSON.stringify(translationCache));
+        return translated;
+      } catch (e) {
+        return text;
       }
-      displayedArticles = filtered;
-      renderPage(0);
     }
 
-    function renderPage(page) {
-      currentPage = page;
-      const start = page * pageSize;
-      const end = start + pageSize;
-      const articlesToShow = displayedArticles.slice(start, end);
-
+    async function renderNews() {
       const grid = document.getElementById('news-grid');
-      if (page === 0) grid.innerHTML = '';
-
-      if (articlesToShow.length === 0 && page === 0) {
-        grid.innerHTML = '<p style="text-align:center; padding:40px;">خبری یافت نشد.</p>';
-        document.getElementById('load-more-btn').style.display = 'none';
+      grid.innerHTML = '';
+      if (articles.length === 0) {
+        grid.innerHTML = `<p style="text-align:center; padding:3rem;">${t('empty')}</p>`;
         return;
       }
 
-      articlesToShow.forEach(article => {
+      // نمایش اخبار با ترجمهٔ عنوان و توضیح در صورت نیاز
+      const lang = currentLanguage;
+      for (let article of articles) {
         const card = document.createElement('div');
         card.className = 'news-card';
+
+        let title = article.title;
+        let desc = article.description;
+        if (lang === 'fa') {
+          title = await translateText(title, 'en', 'fa');
+          desc = await translateText(desc, 'en', 'fa');
+        }
+
         card.innerHTML = `
-          <img src="${article.image}" alt="${article.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x200?text=No+Image'">
+          <img src="${article.image}" alt="" onerror="this.src='https://via.placeholder.com/400x200?text=No+Image'">
           <div class="card-body">
             <div class="source">${article.source}</div>
-            <h3>${article.title}</h3>
-            <div class="description">${article.description ? article.description.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : ''}</div>
-            <a href="${article.link}" target="_blank">مشاهده خبر کامل</a>
+            <h3>${title}</h3>
+            <div class="desc">${desc}</div>
+            <a href="${article.link}" target="_blank">${lang === 'fa' ? 'مشاهدهٔ خبر' : 'Read more'}</a>
           </div>
         `;
         grid.appendChild(card);
-      });
-
-      document.getElementById('load-more-btn').style.display = displayedArticles.length > end ? 'block' : 'none';
-    }
-
-    function loadMore() {
-      renderPage(currentPage + 1);
-    }
-
-    function searchNews() {
-      currentSearchTerm = document.getElementById('search-input').value.trim();
-      applySearchAndDisplay();
-    }
-
-    document.getElementById('search-input').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') searchNews();
-    });
-
-    // ====================== دکمه‌های دسته‌بندی ======================
-    document.getElementById('category-nav').addEventListener('click', (e) => {
-      if (e.target.classList.contains('cat-btn')) {
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        const cat = e.target.dataset.category;
-        loadArticles(cat);
       }
-    });
-
-    function resetToHome() {
-      document.getElementById('search-input').value = '';
-      currentSearchTerm = '';
-      document.querySelector('.cat-btn[data-category="all"]').classList.add('active');
-      loadArticles('all');
     }
 
-    // ====================== حالت تاریک ======================
-    function applyTheme(theme) {
-      document.body.classList.toggle('dark', theme === 'dark');
-      localStorage.setItem('news_theme', theme);
+    function updateStatusBar() {
+      document.getElementById('status').innerHTML = `
+        <span>🤖 ${t('robot_active')}</span>
+        <span id="last-fetch">${t('last_fetch')}: ${document.getElementById('last-fetch').textContent.split(':')[1] || '--'}</span>
+      `;
     }
+
+    // ==================== حالت تاریک/روشن ====================
     function toggleTheme() {
-      const next = document.body.classList.contains('dark') ? 'light' : 'dark';
-      applyTheme(next);
+      document.body.classList.toggle('light-mode');
+      localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
     }
-    applyTheme(localStorage.getItem('news_theme') || 'light');
+    // حالت روشن (اختیاری)
+    const style = document.createElement('style');
+    style.textContent = `
+      body.light-mode {
+        --bg: #f0f4f8;
+        --surface: #ffffff;
+        --text: #1a202c;
+        --glass-bg: rgba(255,255,255,0.8);
+      }
+    `;
+    document.head.appendChild(style);
+    if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
 
-    // راه‌اندازی اولیه
-    loadArticles('all');
+    // ==================== راه‌اندازی ====================
+    function init() {
+      applyLanguage();
+      fetchAndProcess(); // نخستین دریافت
+      setInterval(fetchAndProcess, FETCH_INTERVAL);
+      setInterval(removeOldArticles, 10000); // بررسی هر ۱۰ ثانیه
+    }
+
+    // شروع
+    init();
   </script>
 </body>
 </html>
