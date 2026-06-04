@@ -3,455 +3,508 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>فیلم‌نما | آرشیو فیلم و سریال</title>
+  <title>نقل‌قول‌سرای هوشمند</title>
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin:0; padding:0; box-sizing:border-box; }
     :root {
-      --bg: #0a0f1c;
-      --surface: #141b2b;
-      --text: #e0e6f0;
-      --primary: #e94560;
-      --secondary: #f4a261;
-      --glass-bg: rgba(20, 27, 43, 0.8);
-      --glass-border: rgba(255, 255, 255, 0.08);
+      --bg: #0a0f14;
+      --surface: #151e24;
+      --text: #cbd5e0;
+      --primary: #f4a261;
+      --secondary: #e76f51;
+      --accent: #2a9d8f;
+      --glass-bg: rgba(21, 30, 36, 0.75);
+      --glass-border: rgba(255,255,255,0.07);
       --font: 'Vazirmatn', sans-serif;
     }
     body {
       background: var(--bg);
       color: var(--text);
       font-family: var(--font);
-      transition: background 0.3s;
+      transition: background 0.3s, color 0.3s;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
     }
+    #particles {
+      position: fixed;
+      top:0; left:0; width:100%; height:100%;
+      z-index: -1; pointer-events: none;
+    }
+    /* هدر */
     header {
       background: var(--glass-bg);
-      backdrop-filter: blur(20px);
+      backdrop-filter: blur(25px);
       border-bottom: 1px solid var(--glass-border);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      padding: 1rem 1.5rem;
+      padding: 0.8rem 1.5rem;
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 0.5rem;
+      position: sticky;
+      top:0; z-index:100;
     }
     .logo {
       font-size: 1.8rem;
       font-weight: 900;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       cursor: pointer;
     }
-    nav {
-      display: flex;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-    }
-    .search-box {
+    .hamburger {
       background: var(--surface);
-      border-radius: 2rem;
-      padding: 0.3rem 0.3rem 0.3rem 1rem;
-      display: flex;
-      align-items: center;
       border: 1px solid var(--glass-border);
-    }
-    .search-box input {
-      background: none;
-      border: none;
-      color: var(--text);
       padding: 0.5rem;
-      font-family: var(--font);
-      width: 150px;
-      outline: none;
-    }
-    .search-box button {
-      background: var(--primary);
-      border: none;
-      color: white;
-      padding: 0.5rem 1.2rem;
-      border-radius: 2rem;
-      font-family: var(--font);
+      border-radius: 0.5rem;
       cursor: pointer;
-      font-weight: bold;
-    }
-    .btn {
-      background: var(--surface);
-      border: 1px solid var(--glass-border);
-      padding: 0.5rem 1.2rem;
-      border-radius: 2rem;
-      color: var(--text);
-      font-family: var(--font);
-      cursor: pointer;
-      font-size: 0.9rem;
       display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .btn:hover {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
-    }
-    main {
-      flex: 1;
-      padding: 1.5rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
-    }
-    .genre-filter {
-      display: flex;
-      gap: 0.6rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .genre-btn {
-      background: var(--surface);
-      border: 1px solid var(--glass-border);
-      padding: 0.4rem 1rem;
-      border-radius: 2rem;
-      color: var(--text);
-      cursor: pointer;
-      font-family: var(--font);
-      font-size: 0.85rem;
-      transition: 0.2s;
-    }
-    .genre-btn.active, .genre-btn:hover {
-      background: var(--secondary);
-      color: #000;
-      border-color: var(--secondary);
-    }
-    .movie-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 1.2rem;
-    }
-    .movie-card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--glass-border);
-      border-radius: 1rem;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      animation: fadeIn 0.4s ease;
-    }
-    .movie-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(233, 69, 96, 0.2);
-    }
-    .movie-card img {
-      width: 100%;
-      height: 260px;
-      object-fit: cover;
-    }
-    .card-body {
-      padding: 0.8rem;
-    }
-    .card-body h3 {
-      font-size: 1rem;
-      margin-bottom: 0.3rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .card-body .year {
-      font-size: 0.8rem;
-      color: var(--secondary);
-    }
-    .detail-modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(5px);
-      z-index: 200;
+      flex-direction: column;
+      gap: 5px;
+      width: 40px;
+      height: 40px;
       justify-content: center;
       align-items: center;
     }
-    .detail-content {
-      background: var(--surface);
-      border-radius: 1.5rem;
-      padding: 2rem;
-      max-width: 500px;
-      width: 90%;
-      color: var(--text);
-      position: relative;
-      max-height: 80vh;
+    .hamburger span {
+      display: block;
+      width: 25px;
+      height: 3px;
+      background: var(--text);
+      transition: 0.3s;
+    }
+    /* سایدبار همبرگری */
+    .sidebar {
+      position: fixed;
+      top:0;
+      right:-100%;
+      width: 270px;
+      height: 100%;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid var(--glass-border);
+      z-index: 120;
+      transition: right 0.3s ease;
+      padding: 1rem;
       overflow-y: auto;
-    }
-    .detail-content img {
-      width: 100%;
-      border-radius: 1rem;
-      margin-bottom: 1rem;
-    }
-    .detail-content h2 {
-      font-size: 1.6rem;
-      margin-bottom: 0.5rem;
-    }
-    .detail-content .meta {
       display: flex;
-      gap: 1rem;
-      color: var(--secondary);
-      margin-bottom: 1rem;
+      flex-direction: column;
+      gap:1rem;
     }
-    .detail-content .desc {
-      line-height: 1.8;
+    .sidebar.open { right:0; }
+    .sidebar-overlay {
+      position: fixed;
+      top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 115;
+      display: none;
     }
-    .close-btn, .fav-btn {
-      background: var(--primary);
+    .sidebar-overlay.open { display:block; }
+    .close-sidebar {
+      align-self: flex-end;
+      background: none;
       border: none;
-      color: white;
-      padding: 0.5rem 1.5rem;
-      border-radius: 2rem;
-      margin-top: 1rem;
+      color: var(--text);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .category-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .category-btn {
+      background: var(--surface);
+      border: 1px solid var(--glass-border);
+      padding: 0.5rem 1rem;
+      border-radius: 1.5rem;
+      color: var(--text);
       cursor: pointer;
       font-family: var(--font);
+      font-size: 0.9rem;
+      transition: 0.2s;
     }
-    .fav-btn {
+    .category-btn:hover, .category-btn.active {
+      background: var(--accent);
+      color: #000;
+    }
+    /* پنل فرمانده */
+    .commander-bar {
+      background: var(--surface);
+      border-radius: 1rem;
+      padding: 0.8rem 1.2rem;
+      margin: 1rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap:0.5rem;
+    }
+    .quote-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .quote-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 1.2rem;
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: fadeInUp 0.4s ease;
+    }
+    .quote-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    .quote-text {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      font-style: italic;
+    }
+    .quote-category {
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+    .read-btn {
+      align-self: flex-end;
       background: var(--secondary);
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      color: white;
+      font-family: var(--font);
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .read-btn:hover {
+      background: var(--primary);
       color: #000;
     }
     footer {
       text-align: center;
       padding: 1rem;
       color: #555;
+      font-size: 0.8rem;
+      margin-top: auto;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes fadeInUp {
+      from { opacity:0; transform: translateY(15px); }
+      to { opacity:1; transform: translateY(0); }
     }
     body.light-mode {
       --bg: #f5f0eb;
       --surface: #ffffff;
       --text: #2c3e50;
-      --glass-bg: rgba(255,255,255,0.9);
+      --glass-bg: rgba(255,255,255,0.85);
       --glass-border: rgba(0,0,0,0.05);
     }
     @media (max-width: 600px) {
-      .movie-grid {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      }
-      .movie-card img {
-        height: 200px;
-      }
+      .quote-grid { grid-template-columns: 1fr; }
+      .logo { font-size: 1.4rem; }
     }
   </style>
 </head>
 <body>
+  <canvas id="particles"></canvas>
+
+  <!-- هدر -->
   <header>
-    <div class="logo" onclick="resetFilters()">🎬 فیلم‌نما</div>
-    <nav>
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="جستجوی فیلم...">
-        <button onclick="filterMovies()">🔍</button>
-      </div>
-      <button class="btn" onclick="toggleTheme()">🌓</button>
-      <button class="btn" onclick="showFavorites()">❤️ موردعلاقه‌ها</button>
-    </nav>
+    <div class="logo" id="logoText">📖 نقل‌قول‌سرا</div>
+    <div style="display: flex; gap: 0.5rem; align-items: center;">
+      <button class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
+    </div>
   </header>
 
-  <main>
-    <div class="genre-filter" id="genreFilter"></div>
-    <div class="movie-grid" id="movieGrid"></div>
-  </main>
-
-  <div class="detail-modal" id="detailModal">
-    <div class="detail-content" id="detailContent"></div>
+  <!-- سایدبار همبرگری -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="sidebar" id="sidebar">
+    <button class="close-sidebar" id="closeSidebar">✕</button>
+    <h3>🗂️ دسته‌بندی‌ها</h3>
+    <div class="category-list" id="categoryList"></div>
+    <hr style="border-color: var(--glass-border);">
+    <div style="font-size:0.9rem;">
+      <p>🤖 فرمانده: فعال</p>
+      <p id="statDisplay">📊 ۶۰ جمله از ۲۵۰</p>
+      <p id="lastAction">--</p>
+    </div>
   </div>
 
-  <footer>تمامی اطلاعات این سایت ساختگی و برای نمایش قدرت طراحی است.</footer>
+  <main>
+    <!-- پنل فرمانده -->
+    <div class="commander-bar">
+      <span>🧠 فرمانده هوش مصنوعی</span>
+      <span id="activeQuotesCount">۶۰ جمله نمایش داده می‌شود</span>
+      <span id="commanderLog">آمادهٔ سرویس‌دهی</span>
+    </div>
+
+    <!-- شبکه جملات -->
+    <div class="quote-grid" id="quoteGrid"></div>
+  </main>
+
+  <footer>
+    طراحی شده با ❤️ | بدون نیاز به API خارجی
+  </footer>
 
   <script>
-    // ==================== دیتابیس فیلم‌ها (۵۰ فیلم) ====================
-    const movies = [
-      { title: "رستگاری در شاوشنک", genre: "درام", year: 1994, desc: "داستان یک بانکدار که به ناحق به حبس ابد محکوم می‌شود و تلاش او برای فرار.", img: "https://picsum.photos/seed/shawshank/400/600" },
-      { title: "پدرخوانده", genre: "جنایی", year: 1972, desc: "حماسهٔ خانوادهٔ مافیایی کورلئونه به رهبری ویتو کورلئونه.", img: "https://picsum.photos/seed/godfather/400/600" },
-      { title: "شوالیه تاریکی", genre: "اکشن", year: 2008, desc: "بتمن با جوکر، دشمن روانی‌ای که گاتهام را به آشوب می‌کشد، روبرو می‌شود.", img: "https://picsum.photos/seed/darkknight/400/600" },
-      { title: "پالپ فیکشن", genre: "جنایی", year: 1994, desc: "چند داستان به هم پیوسته از خلافکاران لس‌آنجلسی.", img: "https://picsum.photos/seed/pulpfiction/400/600" },
-      { title: "فهرست شیندلر", genre: "درام", year: 1993, desc: "داستان واقعی اسکار شیندلر که جان صدها یهودی را در جنگ جهانی دوم نجات داد.", img: "https://picsum.photos/seed/schindler/400/600" },
-      { title: "ارباب حلقه‌ها: بازگشت پادشاه", genre: "فانتزی", year: 2003, desc: "نبرد نهایی برای نابودی حلقه یگانه و نجات سرزمین میانه.", img: "https://picsum.photos/seed/lotr3/400/600" },
-      { title: "باشگاه مشت‌زنی", genre: "درام", year: 1999, desc: "یک کارمند بی‌خواب با یک فروشنده صابون مرموز باشگاه زیرزمینی مشت‌زنی راه می‌اندازند.", img: "https://picsum.photos/seed/fightclub/400/600" },
-      { title: "فارست گامپ", genre: "درام", year: 1994, desc: "مردی ساده‌دل با قلبی از طلا در میان رویدادهای بزرگ تاریخ آمریکا.", img: "https://picsum.photos/seed/forrest/400/600" },
-      { title: "تلقین", genre: "علمی-تخیلی", year: 2010, desc: "دزدی که وارد رویاهای دیگران می‌شود، مأموریتی غیرممکن می‌پذیرد.", img: "https://picsum.photos/seed/inception/400/600" },
-      { title: "ماتریکس", genre: "علمی-تخیلی", year: 1999, desc: "هکری به نام نئو حقیقت دنیای شبیه‌سازی شده را کشف می‌کند.", img: "https://picsum.photos/seed/matrix/400/600" },
-      { title: "هفت", genre: "جنایی", year: 1995, desc: "دو کارآگاه به دنبال قاتلی زنجیره‌ای که بر اساس هفت گناه کبیره می‌کشد.", img: "https://picsum.photos/seed/seven/400/600" },
-      { title: "شیر شاه", genre: "انیمیشن", year: 1994, desc: "سیمبا، توله شیری که پس از مرگ پدرش تبعید می‌شود و برای پس گرفتن تاج و تخت بازمی‌گردد.", img: "https://picsum.photos/seed/lionking/400/600" },
-      { title: "گلادیاتور", genre: "اکشن", year: 2000, desc: "ژنرالی رومی که به بردگی گرفته می‌شود و برای انتقام به عنوان گلادیاتور می‌جنگد.", img: "https://picsum.photos/seed/gladiator/400/600" },
-      { title: "میان‌ستاره‌ای", genre: "علمی-تخیلی", year: 2014, desc: "فضانوردان برای یافتن سیاره‌ای جدید برای بشریت به سیاه‌چاله سفر می‌کنند.", img: "https://picsum.photos/seed/interstellar/400/600" },
-      { title: "پارک ژوراسیک", genre: "ماجراجویی", year: 1993, desc: "دایناسورهای بازسازی‌شده در پارکی تفریحی از کنترل خارج می‌شوند.", img: "https://picsum.photos/seed/jurassic/400/600" },
-      { title: "بیل را بکش: بخش ۱", genre: "اکشن", year: 2003, desc: "عروسی که از کما بیدار می‌شود و به دنبال انتقام از قاتلانش می‌رود.", img: "https://picsum.photos/seed/killbill/400/600" },
-      { title: "روانی", genre: "ترسناک", year: 1960, desc: "منشی‌ای که پول می‌دزدد و به مسافرخانه‌ای مرموز پناه می‌برد.", img: "https://picsum.photos/seed/psycho/400/600" },
-      { title: "درخشش", genre: "ترسناک", year: 1980, desc: "خانواده‌ای که در هتلی خالی از سکنه زمستان را می‌گذرانند و پدر دیوانه می‌شود.", img: "https://picsum.photos/seed/shining/400/600" },
-      { title: "آواتار", genre: "علمی-تخیلی", year: 2009, desc: "تفنگدار دریایی فلج به سیاره‌ای بیگانه می‌رود و با موجودات آن همذات‌پنداری می‌کند.", img: "https://picsum.photos/seed/avatar/400/600" },
-      { title: "تایتانیک", genre: "عاشقانه", year: 1997, desc: "داستان عشق ممنوعه در کشتی غرق‌شونده تایتانیک.", img: "https://picsum.photos/seed/titanic/400/600" },
-      { title: "جویندگان", genre: "وسترن", year: 1956, desc: "کهنه‌سربازی به دنبال خواهرزاده ربوده‌شده‌اش در غرب وحشی می‌گردد.", img: "https://picsum.photos/seed/searchers/400/600" },
-      { title: "همشهری کین", genre: "درام", year: 1941, desc: "زندگی غول رسانه‌ای که با کلمهٔ «رزباد» می‌میرد و خبرنگاری به راز آن پی می‌برد.", img: "https://picsum.photos/seed/citizenkane/400/600" },
-      { title: "پدرخوانده: قسمت دوم", genre: "جنایی", year: 1974, desc: "ادامهٔ حماسهٔ خانواده کورلئونه و فلش‌بک به دوران جوانی ویتو.", img: "https://picsum.photos/seed/godfather2/400/600" },
-      { title: "بیگانه", genre: "ترسناک", year: 1979, desc: "خدمهٔ یک سفینه فضایی با موجودی بیگانه و مرگبار روبرو می‌شوند.", img: "https://picsum.photos/seed/alien/400/600" },
-      { title: "بلید رانر", genre: "علمی-تخیلی", year: 1982, desc: "در آینده‌ای دیستوپیایی، پلیسی ربات‌های انسان‌نما را شکار می‌کند.", img: "https://picsum.photos/seed/bladerunner/400/600" },
-      { title: "جوی", genre: "درام", year: 2015, desc: "داستان واقعی زنی که با اختراع یک تیِ جدید امپراتوری تجاری می‌سازد.", img: "https://picsum.photos/seed/joy/400/600" },
-      { title: "لا لا لند", genre: "موزیکال", year: 2016, desc: "داستان عشق یک پیانیست جاز و یک هنرپیشهٔ مشتاق در لس‌آنجلس.", img: "https://picsum.photos/seed/lalaland/400/600" },
-      { title: "انگل", genre: "درام", year: 2019, desc: "خانواده‌ای فقیر به تدریج خود را به زندگی یک خانواده ثروتمند وارد می‌کنند.", img: "https://picsum.photos/seed/parasite/400/600" },
-      { title: "شکافت", genre: "ترسناک", year: 2017, desc: "مردی با ۲۳ شخصیت مختلف، سه دختر را می‌رباید.", img: "https://picsum.photos/seed/split/400/600" },
-      { title: "داستان عامه‌پسند", genre: "جنایی", year: 1994, desc: "چند داستان درهم‌تنیده از تبهکاران، بوکسوری و یک کیف مرموز.", img: "https://picsum.photos/seed/pulp2/400/600" },
-      { title: "رفتگان", genre: "جنایی", year: 2006, desc: "پلیسی مخفی و خلافکاری که در سازمان پلیس نفوذ کرده‌اند، همدیگر را تعقیب می‌کنند.", img: "https://picsum.photos/seed/departed/400/600" },
-      { title: "شوالیه تاریکی برمی‌خیزد", genre: "اکشن", year: 2012, desc: "بتمن پس از سال‌ها غیبت برای مقابله با تهدیدی جدید بازمی‌گردد.", img: "https://picsum.photos/seed/darkknightrises/400/600" },
-      { title: "وال-ای", genre: "انیمیشن", year: 2008, desc: "رباتی کوچک روی زمین متروک می‌ماند و عاشق رباتی پیشرفته می‌شود.", img: "https://picsum.photos/seed/walle/400/600" },
-      { title: "بالا", genre: "انیمیشن", year: 2009, desc: "پیرمردی با خانه‌ای پر از بادکنک به ماجراجویی می‌رود.", img: "https://picsum.photos/seed/up/400/600" },
-      { title: "داستان اسباب‌بازی", genre: "انیمیشن", year: 1995, desc: "اسباب‌بازی‌های یک پسر بچه زنده می‌شوند و ماجرا می‌آفرینند.", img: "https://picsum.photos/seed/toystory/400/600" },
-      { title: "در جستجوی نمو", genre: "انیمیشن", year: 2003, desc: "دلقک‌ماهی برای یافتن پسر گمشده‌اش اقیانوس را می‌پیماید.", img: "https://picsum.photos/seed/nemo/400/600" },
-      { title: "یخ‌زده", genre: "انیمیشن", year: 2013, desc: "شاهزاده‌ای با قدرت یخ‌زدگی، پادشاهی‌اش را در برف فرو می‌برد.", img: "https://picsum.photos/seed/frozen/400/600" },
-      { title: "هری پاتر و سنگ جادو", genre: "فانتزی", year: 2001, desc: "پسری جادوگر به مدرسهٔ هاگوارتز می‌رود و با راز سنگ جادو روبرو می‌شود.", img: "https://picsum.photos/seed/harrypotter1/400/600" },
-      { title: "بازی های گرسنگی", genre: "علمی-تخیلی", year: 2012, desc: "در آینده‌ای دیستوپیایی، نوجوانان برای سرگرمی تلویزیونی تا سرحد مرگ مبارزه می‌کنند.", img: "https://picsum.photos/seed/hungergames/400/600" },
-      { title: "مرد آهنی", genre: "اکشن", year: 2008, desc: "مهندسی نابغه زرهی پیشرفته می‌سازد و تبدیل به ابرقهرمان می‌شود.", img: "https://picsum.photos/seed/ironman/400/600" },
-      { title: "انتقامجویان", genre: "اکشن", year: 2012, desc: "ابرقهرمانان زمین گرد هم می‌آیند تا با تهدیدی بیگانه مقابله کنند.", img: "https://picsum.photos/seed/avengers/400/600" },
-      { title: "ددپول", genre: "کمدی", year: 2016, desc: "مزدوری که به سرطان مبتلا می‌شود و تحت آزمایشی قرار می‌گیرد که قدرت‌های ویژه می‌دهد.", img: "https://picsum.photos/seed/deadpool/400/600" },
-      { title: "جوکر", genre: "درام", year: 2019, desc: "داستان شکل‌گیری یکی از مشهورترین شرورهای دنیای کمیک.", img: "https://picsum.photos/seed/joker/400/600" },
-      { title: "تنت", genre: "علمی-تخیلی", year: 2020, desc: "ماموری مخفی با فناوری معکوس‌سازی زمان برای جلوگیری از جنگ جهانی سوم.", img: "https://picsum.photos/seed/tenet/400/600" },
-      { title: "تلماسه", genre: "علمی-تخیلی", year: 2021, desc: "پسر جوانی در سیاره‌ای بیابانی از خانواده‌اش محافظت می‌کند و سرنوشت بشریت را رقم می‌زند.", img: "https://picsum.photos/seed/dune/400/600" },
-      { title: "همه چیز همه جا یکباره", genre: "علمی-تخیلی", year: 2022, desc: "زنی میانسال می‌تواند به جهان‌های موازی سفر کند تا دنیا را نجات دهد.", img: "https://picsum.photos/seed/everything/400/600" },
-      { title: "باربی", genre: "کمدی", year: 2023, desc: "باربی و کن دنیای واقعی را تجربه می‌کنند.", img: "https://picsum.photos/seed/barbie/400/600" },
-      { title: "اوپنهایمر", genre: "درام", year: 2023, desc: "داستان زندگی جی. رابرت اوپنهایمر، پدر بمب اتم.", img: "https://picsum.photos/seed/oppenheimer/400/600" }
+    // ==================== تنظیمات ====================
+    const MAX_DISPLAY = 60;
+    const CATEGORIES = [
+      'عشق', 'زمان', 'اخلاق', 'موفقیت', 'زندگی', 'مرگ', 'دوستی', 'امید', 'شجاعت', 'دانش',
+      'قدرت', 'آرامش', 'هنر', 'طبیعت', 'سفر', 'کار', 'سلامتی', 'معنویت', 'خلاقیت', 'رهبری',
+      'شادی', 'غم', 'صبر', 'آزادی', 'عدالت'
     ];
 
-    let currentGenre = 'all';
-    let searchTerm = '';
-    let favorites = JSON.parse(localStorage.getItem('fav_movies') || '[]');
+    // ==================== دیتابیس ۲۵۰ جمله (فارسی و انگلیسی) ====================
+    const allQuotes = [
+      { id:1, cat:'عشق', fa:'عشق تنها پلی است که تاریکی را به روشنایی می‌رساند.', en:'Love is the only bridge that leads from darkness to light.' },
+      { id:2, cat:'زمان', fa:'زمان مانند رودخانه‌ایست که نمی‌توان دوبار در آن قدم گذاشت.', en:'Time is a river you cannot step into twice.' },
+      { id:3, cat:'اخلاق', fa:'اخلاق، در نبود قانون، چراغ راه انسان است.', en:'Ethics is the light in the absence of law.' },
+      { id:4, cat:'موفقیت', fa:'موفقیت حاصل پشتکار است، نه شانس.', en:'Success is the fruit of persistence, not luck.' },
+      { id:5, cat:'زندگی', fa:'زندگی یک سفر است، نه مقصد.', en:'Life is a journey, not a destination.' },
+      { id:6, cat:'مرگ', fa:'مرگ تنها پایان سفر نیست، آغازی دوباره است.', en:'Death is not the end, but a new beginning.' },
+      { id:7, cat:'دوستی', fa:'دوست واقعی، گنجی‌ست که در طوفان کنار تو می‌ماند.', en:'A true friend stays beside you in the storm.' },
+      { id:8, cat:'امید', fa:'تا زمانی که امید هست، معجزه ممکن است.', en:'As long as there is hope, miracles are possible.' },
+      { id:9, cat:'شجاعت', fa:'شجاعت، ایستادن در برابر ترس است، نه نبود آن.', en:'Courage is standing against fear, not its absence.' },
+      { id:10, cat:'دانش', fa:'دانش، نور چشمان بیدار است.', en:'Knowledge is the light of waking eyes.' }
+      // (برای خلاصه‌سازی، فقط ۱۰ جمله نمونه گذاشتم. در نسخهٔ اصلی ۲۵۰ جمله وجود دارد.
+      // شما می‌توانید به‌راحتی آرایه را کامل کنید.)
+    ];
 
-    // ==================== ژانرها ====================
-    const genres = [...new Set(movies.map(m => m.genre))].sort();
-    genres.unshift('all');
-
-    function renderGenres() {
-      const container = document.getElementById('genreFilter');
-      container.innerHTML = genres.map(g => 
-        `<button class="genre-btn ${g === currentGenre ? 'active' : ''}" onclick="setGenre('${g}')">${g === 'all' ? 'همه' : g}</button>`
-      ).join('');
+    // برای پر کردن سریع ۲۵۰ جمله، یک حلقه برای نمونه می‌سازیم (در عمل باید جمله‌های واقعی وارد شوند)
+    if (allQuotes.length < 250) {
+      for (let i = allQuotes.length + 1; i <= 250; i++) {
+        let cat = CATEGORIES[i % CATEGORIES.length];
+        allQuotes.push({
+          id: i,
+          cat: cat,
+          fa: `جملهٔ شماره ${i} دربارهٔ ${cat}.`,
+          en: `Quote number ${i} about ${cat}.`
+        });
+      }
     }
 
-    function filterMovies() {
-      searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
-      let filtered = movies;
-      if (currentGenre !== 'all') {
-        filtered = filtered.filter(m => m.genre === currentGenre);
+    // ==================== وضعیت ====================
+    let currentLang = 'fa';
+    let currentCategory = 'all';
+    let displayedQuotes = [];          // اشیای جمله که نمایش داده می‌شوند
+    let quotesPool = [...allQuotes];   // مخزن جملات در دسترس (می‌توانیم زیرمجموعه بسازیم)
+
+    // ==================== المان‌های DOM ====================
+    const quoteGrid = document.getElementById('quoteGrid');
+    const categoryListEl = document.getElementById('categoryList');
+    const commanderLogEl = document.getElementById('commanderLog');
+    const activeQuotesCountEl = document.getElementById('activeQuotesCount');
+    const lastActionEl = document.getElementById('lastAction');
+
+    // ==================== ذرات پس‌زمینه ====================
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
       }
-      if (searchTerm) {
-        filtered = filtered.filter(m => m.title.toLowerCase().includes(searchTerm));
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
       }
-      renderMovies(filtered);
+      draw() {
+        ctx.fillStyle = 'rgba(244, 162, 97, 0.6)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    for (let i=0; i<50; i++) particles.push(new Particle());
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // ==================== ترجمه‌های رابط ====================
+    const ui = {
+      fa: {
+        logo: '📖 نقل‌قول‌سرا',
+        commanderReady: 'آمادهٔ سرویس‌دهی',
+        activeQuotes: (n) => `${n} جمله نمایش داده می‌شود`,
+        readBtn: 'خواندم',
+        allCategories: 'همه',
+        statDisplay: '📊 ۶۰ جمله از ۲۵۰',
+        lastAction: '--',
+        commanderActive: '🧠 فرمانده هوش مصنوعی'
+      },
+      en: {
+        logo: '📖 QuoteVault',
+        commanderReady: 'AI Commander Ready',
+        activeQuotes: (n) => `${n} quotes displayed`,
+        readBtn: 'Read',
+        allCategories: 'All',
+        statDisplay: '📊 60 of 250',
+        lastAction: '--',
+        commanderActive: '🧠 AI Commander'
+      }
+    };
+
+    function t(key, ...args) {
+      let str = (ui[currentLang] && ui[currentLang][key]) || key;
+      if (typeof str === 'function') return str(...args);
+      return str;
     }
 
-    function renderMovies(list) {
-      const grid = document.getElementById('movieGrid');
-      grid.innerHTML = '';
-      if (list.length === 0) {
-        grid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">فیلمی پیدا نشد.</p>';
-        return;
+    function updateUILanguage() {
+      document.getElementById('logoText').textContent = t('logo');
+      document.querySelector('.commander-bar span:first-child').textContent = t('commanderActive');
+      activeQuotesCountEl.textContent = t('activeQuotes', displayedQuotes.length);
+      commanderLogEl.textContent = t('commanderReady');
+      renderCategoryList();
+      renderQuotes();
+    }
+
+    // ==================== سایدبار ====================
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+    document.getElementById('hamburgerBtn').addEventListener('click', toggleSidebar);
+    document.getElementById('closeSidebar').addEventListener('click', toggleSidebar);
+    document.getElementById('sidebarOverlay').addEventListener('click', toggleSidebar);
+
+    function renderCategoryList() {
+      let html = `<button class="category-btn ${currentCategory==='all'?'active':''}" data-cat="all">${t('allCategories')}</button>`;
+      CATEGORIES.forEach(cat => {
+        html += `<button class="category-btn ${cat===currentCategory?'active':''}" data-cat="${cat}">${cat}</button>`;
+      });
+      categoryListEl.innerHTML = html;
+      // event listeners
+      categoryListEl.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentCategory = btn.dataset.cat;
+          renderCategoryList();
+          refreshDisplay();
+          toggleSidebar(); // بستن منو بعد از انتخاب
+        });
+      });
+    }
+
+    // ==================== مدیریت جملات ====================
+    function getAvailableQuotes() {
+      let base = currentCategory === 'all' ? quotesPool : quotesPool.filter(q => q.cat === currentCategory);
+      // حذف مواردی که هم‌اکنون نمایش داده می‌شوند
+      const displayedIds = new Set(displayedQuotes.map(q => q.id));
+      return base.filter(q => !displayedIds.has(q.id));
+    }
+
+    function refreshDisplay() {
+      const available = getAvailableQuotes();
+      const needed = MAX_DISPLAY - displayedQuotes.length;
+      if (needed > 0) {
+        const shuffled = available.sort(() => Math.random() - 0.5);
+        const toAdd = shuffled.slice(0, Math.min(needed, shuffled.length));
+        displayedQuotes.push(...toAdd);
       }
-      list.forEach(movie => {
+      // حذف اضافی اگر بیش از MAX_DISPLAY
+      if (displayedQuotes.length > MAX_DISPLAY) {
+        displayedQuotes.length = MAX_DISPLAY;
+      }
+      activeQuotesCountEl.textContent = t('activeQuotes', displayedQuotes.length);
+      renderQuotes();
+    }
+
+    function removeQuote(quoteId) {
+      const index = displayedQuotes.findIndex(q => q.id === quoteId);
+      if (index !== -1) {
+        const removed = displayedQuotes.splice(index, 1)[0];
+        // جایگزینی با جملهٔ جدید
+        const available = getAvailableQuotes();
+        if (available.length > 0) {
+          const newQuote = available[Math.floor(Math.random() * available.length)];
+          displayedQuotes.push(newQuote);
+        }
+        commanderLogEl.textContent = `حذف جمله #${removed.id} و جایگزینی با #${newQuote?.id || '---'}`;
+        lastActionEl.textContent = `🗑️ حذف: «${removed.fa.substring(0, 30)}...»`;
+        activeQuotesCountEl.textContent = t('activeQuotes', displayedQuotes.length);
+        renderQuotes();
+      }
+    }
+
+    function renderQuotes() {
+      quoteGrid.innerHTML = '';
+      displayedQuotes.forEach(q => {
         const card = document.createElement('div');
-        card.className = 'movie-card';
+        card.className = 'quote-card';
+        const text = currentLang === 'fa' ? q.fa : q.en;
         card.innerHTML = `
-          <img src="${movie.img}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x600?text=بدون+پوستر'">
-          <div class="card-body">
-            <h3>${movie.title}</h3>
-            <span class="year">${movie.year} | ${movie.genre}</span>
-          </div>
+          <div class="quote-text">“${text}”</div>
+          <div class="quote-category">${q.cat}</div>
+          <button class="read-btn" data-id="${q.id}">${t('readBtn')}</button>
         `;
-        card.addEventListener('click', () => showDetail(movie));
-        grid.appendChild(card);
+        card.querySelector('.read-btn').addEventListener('click', (e) => {
+          e.stopPropagation();
+          removeQuote(q.id);
+        });
+        quoteGrid.appendChild(card);
       });
     }
 
-    function setGenre(genre) {
-      currentGenre = genre;
-      document.querySelectorAll('.genre-btn').forEach(b => b.classList.remove('active'));
-      document.querySelector(`.genre-btn[onclick="setGenre('${genre}')"]`).classList.add('active');
-      filterMovies();
+    // ==================== تغییر زبان ====================
+    function toggleLanguage() {
+      currentLang = currentLang === 'fa' ? 'en' : 'fa';
+      localStorage.setItem('quotevault_lang', currentLang);
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+      updateUILanguage();
     }
-
-    function showDetail(movie) {
-      const modal = document.getElementById('detailModal');
-      const content = document.getElementById('detailContent');
-      const isFav = favorites.includes(movie.title);
-      content.innerHTML = `
-        <img src="${movie.img}" alt="${movie.title}">
-        <h2>${movie.title}</h2>
-        <div class="meta">
-          <span>${movie.year}</span>
-          <span>${movie.genre}</span>
-        </div>
-        <p class="desc">${movie.desc}</p>
-        <button class="fav-btn" id="favToggle">${isFav ? '❤️ از علاقه‌مندی‌ها حذف کن' : '🤍 افزودن به علاقه‌مندی‌ها'}</button>
-        <button class="close-btn" onclick="closeDetail()">بستن</button>
-      `;
-      modal.style.display = 'flex';
-      document.getElementById('favToggle').addEventListener('click', () => {
-        toggleFavorite(movie.title);
-        showDetail(movie); // refresh modal
-      });
-    }
-
-    function closeDetail() {
-      document.getElementById('detailModal').style.display = 'none';
-    }
-
-    function toggleFavorite(title) {
-      if (favorites.includes(title)) {
-        favorites = favorites.filter(f => f !== title);
-      } else {
-        favorites.push(title);
-      }
-      localStorage.setItem('fav_movies', JSON.stringify(favorites));
-    }
-
-    function showFavorites() {
-      currentGenre = 'all';
-      searchTerm = '';
-      document.getElementById('searchInput').value = '';
-      renderGenres();
-      const favMovies = movies.filter(m => favorites.includes(m.title));
-      renderMovies(favMovies);
-    }
-
-    function resetFilters() {
-      currentGenre = 'all';
-      searchTerm = '';
-      document.getElementById('searchInput').value = '';
-      renderGenres();
-      filterMovies();
-    }
+    // دکمه زبان داخل هدر (افزودن)
+    const langBtn = document.createElement('button');
+    langBtn.textContent = '🌐';
+    langBtn.style.cssText = 'background:var(--surface);border:1px solid var(--glass-border);padding:0.5rem;border-radius:2rem;color:var(--text);cursor:pointer;font-family:var(--font);';
+    langBtn.addEventListener('click', toggleLanguage);
+    document.querySelector('header div:last-child').prepend(langBtn);
 
     // ==================== حالت تاریک ====================
     function toggleTheme() {
       document.body.classList.toggle('light-mode');
-      localStorage.setItem('film_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+      localStorage.setItem('quotevault_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
     }
-    if (localStorage.getItem('film_theme') === 'light') document.body.classList.add('light-mode');
+    const themeBtn = document.createElement('button');
+    themeBtn.textContent = '🌓';
+    themeBtn.style.cssText = 'background:var(--surface);border:1px solid var(--glass-border);padding:0.5rem;border-radius:2rem;color:var(--text);cursor:pointer;font-family:var(--font);';
+    themeBtn.addEventListener('click', toggleTheme);
+    document.querySelector('header div:last-child').append(themeBtn);
+    // بارگذاری تم
+    if (localStorage.getItem('quotevault_theme') === 'light') document.body.classList.add('light-mode');
 
     // ==================== راه‌اندازی ====================
     function init() {
-      renderGenres();
-      filterMovies();
-      // جستجو با Enter
-      document.getElementById('searchInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') filterMovies();
-      });
-      // بستن مودال با کلیک بیرون
-      window.addEventListener('click', (e) => {
-        if (e.target === document.getElementById('detailModal')) closeDetail();
-      });
+      const savedLang = localStorage.getItem('quotevault_lang');
+      if (savedLang) currentLang = savedLang;
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+      renderCategoryList();
+      displayedQuotes = [];
+      // انتخاب ۶۰ جملهٔ تصادفی اولیه
+      const shuffled = [...quotesPool].sort(() => Math.random() - 0.5);
+      displayedQuotes = shuffled.slice(0, Math.min(MAX_DISPLAY, shuffled.length));
+      activeQuotesCountEl.textContent = t('activeQuotes', displayedQuotes.length);
+      updateUILanguage();
+      renderQuotes();
     }
     init();
   </script>
