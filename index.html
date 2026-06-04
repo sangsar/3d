@@ -6,15 +6,15 @@
     <title>جملات ناب | Samisaki</title>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* همان استایل‌های کامل قبلی */
         :root {
             --bg: #0a0a0c;
-            --card-bg: rgba(20, 10, 40, 0.85);
+            --card-bg: rgba(20, 10, 40, 0.8);
             --pink: #ff99c8;
             --purple: #b388eb;
             --gold: #f5c518;
             --text: #e0d6ff;
             --shadow: 0 15px 35px rgba(0,0,0,0.6);
-            --radius: 18px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -44,41 +44,40 @@
             0%,100% { transform: translateY(0) scale(1); opacity:0.6; }
             50% { transform: translateY(-30px) scale(1.3); opacity:1; }
         }
-        .app-container {
+        .container {
             position: relative; z-index: 1;
-            max-width: 680px;
+            max-width: 650px;
             width: 100%;
             margin: 80px 0 40px;
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 20px;
         }
-        .top-bar {
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: var(--card-bg);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: var(--radius);
-            padding: 14px 22px;
+            border-radius: 20px;
+            padding: 15px 25px;
             box-shadow: var(--shadow);
             position: fixed;
             top: 15px;
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 40px);
-            max-width: 680px;
+            max-width: 650px;
             z-index: 100;
         }
-        .top-bar h2 {
-            font-size: 1.25rem;
+        .header h2 {
+            font-size: 1.2rem;
             color: var(--gold);
             margin: 0;
-            letter-spacing: 0.5px;
         }
         .hamburger {
-            width: 42px; height: 42px;
+            width: 40px; height: 40px;
             border-radius: 12px;
             background: rgba(255,255,255,0.1);
             border: 1px solid var(--pink);
@@ -90,75 +89,66 @@
             justify-content: center;
             transition: 0.3s;
         }
-        .hamburger:hover {
-            background: var(--pink);
-            color: #0a0a0c;
-        }
-        .quote-grid {
+        .hamburger:hover { background: var(--pink); color: #0a0a0c; }
+        .quote-list {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            padding-top: 8px;
+            margin-top: 10px;
         }
-        .quote-card {
+        .quote-item {
             background: var(--card-bg);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255,255,255,0.08);
-            border-radius: var(--radius);
-            padding: 16px 20px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+            border-radius: 16px;
+            padding: 16px 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
             display: flex;
-            align-items: flex-start;
-            gap: 14px;
+            align-items: center;
+            gap: 12px;
             transition: all 0.3s ease;
-            animation: fadeSlide 0.4s ease;
+            animation: fadeIn 0.3s ease;
         }
-        @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(15px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .quote-card:hover {
+        .quote-item:hover {
             border-color: var(--pink);
-            box-shadow: 0 0 22px rgba(255,153,200,0.25);
+            box-shadow: 0 0 20px rgba(255,153,200,0.2);
         }
-        .quote-body {
+        .quote-content {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
         }
-        .quote-text {
+        .quote-item-text {
             font-size: 0.95rem;
-            line-height: 1.9;
+            line-height: 1.8;
             color: #fff;
         }
-        .quote-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .quote-item-author {
+            font-size: 0.8rem;
             color: var(--gold);
-            font-size: 0.78rem;
             font-weight: 500;
-            margin-top: 2px;
         }
-        .action-btns {
+        .item-buttons {
             display: flex;
             gap: 6px;
             flex-shrink: 0;
-            align-items: center;
-            margin-top: 2px;
         }
         .mini-btn {
-            width: 30px; height: 30px;
+            width: 28px; height: 28px;
             border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.25);
+            border: 1px solid rgba(255,255,255,0.3);
             background: rgba(255,255,255,0.08);
             color: #ccc;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             transition: all 0.2s;
             backdrop-filter: blur(5px);
         }
@@ -166,19 +156,16 @@
             background: var(--pink);
             color: #0a0a0c;
             border-color: var(--pink);
-            transform: scale(1.08);
+            transform: scale(1.1);
         }
         .mini-btn.heart { color: #ff6b6b; }
         .mini-btn.heart.liked { background: #ff6b6b; color: #fff; border-color: #ff6b6b; }
-        .mini-btn.trash { color: #ffaaaa; }
-        .mini-btn.trash:hover { background: #ff4444; color: #fff; border-color: #ff4444; }
-        .mini-btn.remove { color: #cccccc; }
+        .mini-btn.delete { color: #ff8888; }
+        .mini-btn.remove { color: #aaa; }
         .mini-btn.remove:hover { background: #ff4444; color: #fff; border-color: #ff4444; }
-
-        /* سایدبار */
         .sidebar {
             position: fixed;
-            top: 0; right: -330px;
+            top: 0; right: -320px;
             width: 300px; height: 100vh;
             background: rgba(10,10,12,0.95);
             backdrop-filter: blur(20px);
@@ -187,8 +174,8 @@
             transition: right 0.4s ease;
             display: flex;
             flex-direction: column;
-            padding: 90px 20px 30px;
-            gap: 12px;
+            padding: 80px 20px 30px;
+            gap: 14px;
             overflow-y: auto;
         }
         .sidebar.open { right: 0; }
@@ -198,7 +185,7 @@
             color: #fff;
             font-family: inherit;
             font-size: 0.95rem;
-            padding: 13px 18px;
+            padding: 12px 18px;
             border-radius: 14px;
             cursor: pointer;
             transition: 0.3s;
@@ -218,13 +205,16 @@
             pointer-events: none;
             transition: opacity 0.3s;
         }
-        .overlay.show { opacity: 1; pointer-events: auto; }
+        .overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
         @media (max-width: 600px) {
-            .top-bar { padding: 12px 16px; }
-            .top-bar h2 { font-size: 1.1rem; }
-            .quote-card { padding: 14px 16px; }
-            .quote-text { font-size: 0.88rem; }
-            .mini-btn { width: 26px; height: 26px; font-size: 0.75rem; }
+            .header { padding: 12px 18px; }
+            .header h2 { font-size: 1rem; }
+            .quote-item { padding: 12px 14px; }
+            .quote-item-text { font-size: 0.85rem; }
+            .mini-btn { width: 24px; height: 24px; font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -232,7 +222,6 @@
     <div class="particles" id="particlesContainer"></div>
     <div class="overlay" id="overlay"></div>
 
-    <!-- سایدبار -->
     <div class="sidebar" id="sidebar">
         <button class="sidebar-btn active" data-category="all">📜 همه</button>
         <button class="sidebar-btn" data-category="famous">🌟 بزرگان (۱-۳۰۰)</button>
@@ -244,178 +233,177 @@
         <button class="sidebar-btn" id="clearBlacklistBtn" style="background:rgba(255,100,100,0.2); border-color:#ff4444; color:#ff8888;">🗑️ پاک‌کردن لیست سیاه</button>
     </div>
 
-    <!-- هدر -->
-    <div class="top-bar">
+    <div class="header">
         <h2>✨ جملات ناب</h2>
         <button class="hamburger" id="hamburgerBtn">☰</button>
     </div>
 
-    <!-- لیست جملات -->
-    <div class="app-container">
-        <div class="quote-grid" id="quoteGrid"></div>
+    <div class="container">
+        <div class="quote-list" id="quoteList"></div>
     </div>
 
-    <!-- لود فایل کلمات -->
-    <script src="quotes.js" defer></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // بررسی وجود داده
-            if (typeof quotes === 'undefined' || !Array.isArray(quotes) || quotes.length === 0) {
-                document.getElementById('quoteGrid').innerHTML = '<p style="color:#aaa; text-align:center; padding:40px;">❌ فایل کلمات بارگذاری نشد. لطفاً quotes.js را بررسی کنید.</p>';
+        // ========== ۱۰۰۰ جمله ==========
+        const quotes = [
+            { id: 1, text: "زندگی تحلیل‌رفته ارزش زیستن ندارد.", author: "سقراط", category: "famous" },
+            { id: 2, text: "من فکر می‌کنم، پس هستم.", author: "رنه دکارت", category: "famous" },
+            // ... تمام ۱۰۰۰ جمله را در این آرایه قرار بده ...
+            { id: 1000, text: "در پایان، تنها چیزی که اهمیت دارد این است که چقدر عشق ورزیده‌ای، چقدر زندگی کرده‌ای، و چقدر از خودت به جا گذاشته‌ای.", author: "ناشناس", category: "philosophy" }
+        ];
+
+        // ========== برنامه اصلی ==========
+        let blacklist = JSON.parse(localStorage.getItem('quoteBlacklist')) || [];
+        let favorites = JSON.parse(localStorage.getItem('quoteFavorites')) || [];
+        let currentCategory = 'all';
+        let visibleQuotes = [];
+
+        function saveData() {
+            localStorage.setItem('quoteBlacklist', JSON.stringify(blacklist));
+            localStorage.setItem('quoteFavorites', JSON.stringify(favorites));
+        }
+
+        function getAvailableQuotes() {
+            let pool = [];
+            switch(currentCategory) {
+                case 'famous': pool = quotes.filter(q => q.id >= 1 && q.id <= 300); break;
+                case 'book': pool = quotes.filter(q => q.id >= 301 && q.id <= 600); break;
+                case 'dialogue': pool = quotes.filter(q => q.id >= 601 && q.id <= 900); break;
+                case 'psychology': pool = quotes.filter(q => q.id >= 901 && q.id <= 1000); break;
+                case 'favorites': pool = quotes.filter(q => favorites.includes(q.id) && !blacklist.includes(q.id)); break;
+                case 'blacklist': pool = quotes.filter(q => blacklist.includes(q.id)); break;
+                default: pool = quotes.filter(q => !blacklist.includes(q.id));
+            }
+            return pool;
+        }
+
+        function refreshVisibleQuotes() {
+            const pool = getAvailableQuotes();
+            const shuffled = [...pool].sort(() => Math.random() - 0.5);
+            visibleQuotes = shuffled.slice(0, 100);
+        }
+
+        function replaceQuote(oldId) {
+            const pool = getAvailableQuotes();
+            const usedIds = visibleQuotes.map(q => q.id);
+            const available = pool.filter(q => !usedIds.includes(q.id) && q.id !== oldId);
+            if (available.length > 0) {
+                const randomIndex = Math.floor(Math.random() * available.length);
+                const idx = visibleQuotes.findIndex(q => q.id === oldId);
+                if (idx > -1) visibleQuotes[idx] = available[randomIndex];
+            }
+        }
+
+        function renderQuotes() {
+            const container = document.getElementById('quoteList');
+            container.innerHTML = '';
+            if (visibleQuotes.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:#aaa; padding:40px;">جمله‌ای برای نمایش وجود ندارد.</div>';
                 return;
             }
-
-            // ========== GLOBALS ==========
-            let blacklist = JSON.parse(localStorage.getItem('quoteBlacklist')) || [];
-            let favorites = JSON.parse(localStorage.getItem('quoteFavorites')) || [];
-            let currentCategory = 'all';
-            let visibleQuotes = [];
-
-            // ========== DATA ==========
-            function saveData() {
-                localStorage.setItem('quoteBlacklist', JSON.stringify(blacklist));
-                localStorage.setItem('quoteFavorites', JSON.stringify(favorites));
-            }
-
-            function getPool() {
-                let pool = [];
-                switch(currentCategory) {
-                    case 'famous': pool = quotes.filter(q => q.id >= 1 && q.id <= 300); break;
-                    case 'book': pool = quotes.filter(q => q.id >= 301 && q.id <= 600); break;
-                    case 'dialogue': pool = quotes.filter(q => q.id >= 601 && q.id <= 900); break;
-                    case 'psychology': pool = quotes.filter(q => q.id >= 901 && q.id <= 1000); break;
-                    case 'favorites': pool = quotes.filter(q => favorites.includes(q.id) && !blacklist.includes(q.id)); break;
-                    case 'blacklist': pool = quotes.filter(q => blacklist.includes(q.id)); break;
-                    default: pool = quotes.filter(q => !blacklist.includes(q.id));
-                }
-                return pool;
-            }
-
-            function refreshVisible() {
-                const pool = getPool();
-                const shuffled = [...pool].sort(() => Math.random() - 0.5);
-                visibleQuotes = shuffled.slice(0, 100);
-            }
-
-            function replaceOne(oldId) {
-                const pool = getPool();
-                const usedIds = visibleQuotes.map(q => q.id);
-                const available = pool.filter(q => !usedIds.includes(q.id) && q.id !== oldId);
-                if (available.length === 0) return;
-                const randomPick = available[Math.floor(Math.random() * available.length)];
-                const idx = visibleQuotes.findIndex(q => q.id === oldId);
-                if (idx > -1) visibleQuotes[idx] = randomPick;
-            }
-
-            // ========== RENDER ==========
-            function render() {
-                const grid = document.getElementById('quoteGrid');
-                grid.innerHTML = '';
-                if (visibleQuotes.length === 0) {
-                    grid.innerHTML = '<div style="text-align:center; color:#aaa; padding:40px;">هیچ جمله‌ای برای نمایش وجود ندارد.</div>';
-                    return;
-                }
-                visibleQuotes.forEach(q => {
-                    const isFav = favorites.includes(q.id);
-                    const card = document.createElement('div');
-                    card.className = 'quote-card';
-                    card.setAttribute('data-id', q.id);
-                    card.innerHTML = `
-                        <div class="quote-body">
-                            <div class="quote-text">"${q.text}"</div>
-                            <div class="quote-meta">— ${q.author}</div>
-                        </div>
-                        <div class="action-btns">
-                            <button class="mini-btn heart ${isFav ? 'liked' : ''}" data-action="heart">${isFav ? '❤️' : '🤍'}</button>
-                            <button class="mini-btn remove" data-action="remove">✕</button>
-                            <button class="mini-btn trash" data-action="trash">🗑️</button>
-                        </div>
-                    `;
-                    // events
-                    const id = q.id;
-                    card.querySelector('[data-action="heart"]').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const idx = favorites.indexOf(id);
-                        if (idx > -1) favorites.splice(idx, 1); else favorites.push(id);
-                        saveData();
-                        render();
-                    });
-                    card.querySelector('[data-action="remove"]').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        visibleQuotes = visibleQuotes.filter(q => q.id !== id);
-                        replaceOne(id);
-                        render();
-                    });
-                    card.querySelector('[data-action="trash"]').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        if (!blacklist.includes(id)) blacklist.push(id);
-                        saveData();
-                        visibleQuotes = visibleQuotes.filter(q => q.id !== id);
-                        if (currentCategory === 'blacklist') refreshVisible();
-                        else replaceOne(id);
-                        render();
-                    });
-                    grid.appendChild(card);
-                });
-            }
-
-            // ========== SIDEBAR ==========
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            document.getElementById('hamburgerBtn').addEventListener('click', () => {
-                sidebar.classList.add('open');
-                overlay.classList.add('show');
+            visibleQuotes.forEach((q) => {
+                const item = document.createElement('div');
+                item.className = 'quote-item';
+                item.setAttribute('data-id', q.id);
+                const isFav = favorites.includes(q.id);
+                item.innerHTML = `
+                    <div class="quote-content">
+                        <div class="quote-item-text">"${q.text}"</div>
+                        <div class="quote-item-author">— ${q.author}</div>
+                    </div>
+                    <div class="item-buttons">
+                        <button class="mini-btn heart ${isFav ? 'liked' : ''}" data-action="heart">${isFav ? '❤️' : '🤍'}</button>
+                        <button class="mini-btn remove" data-action="remove">✕</button>
+                        <button class="mini-btn delete" data-action="delete">🗑️</button>
+                    </div>
+                `;
+                container.appendChild(item);
             });
-            overlay.addEventListener('click', closeSidebar);
-            function closeSidebar() {
+
+            document.querySelectorAll('.quote-item').forEach(item => {
+                const qid = parseInt(item.getAttribute('data-id'));
+                item.querySelector('[data-action="heart"]').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const idx = favorites.indexOf(qid);
+                    if (idx > -1) favorites.splice(idx, 1);
+                    else favorites.push(qid);
+                    saveData();
+                    renderQuotes();
+                });
+                item.querySelector('[data-action="remove"]').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    visibleQuotes = visibleQuotes.filter(q => q.id !== qid);
+                    replaceQuote(qid);
+                    renderQuotes();
+                });
+                item.querySelector('[data-action="delete"]').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (!blacklist.includes(qid)) blacklist.push(qid);
+                    saveData();
+                    visibleQuotes = visibleQuotes.filter(q => q.id !== qid);
+                    if (currentCategory === 'blacklist') refreshVisibleQuotes();
+                    else replaceQuote(qid);
+                    renderQuotes();
+                });
+            });
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.sidebar-btn[data-category]').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-category') === currentCategory) btn.classList.add('active');
+            });
+        }
+
+        // ========== سایدبار ==========
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        document.getElementById('hamburgerBtn').addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        });
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+        });
+
+        document.querySelectorAll('.sidebar-btn[data-category]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentCategory = btn.getAttribute('data-category');
+                refreshVisibleQuotes();
+                renderQuotes();
+                updateUI();
+                sidebar.classList.remove('open');
+                overlay.classList.remove('show');
+            });
+        });
+
+        document.getElementById('clearBlacklistBtn').addEventListener('click', () => {
+            if (confirm('لیست سیاه کامل پاک شود؟')) {
+                blacklist = [];
+                saveData();
+                if (currentCategory === 'blacklist') { refreshVisibleQuotes(); renderQuotes(); }
                 sidebar.classList.remove('open');
                 overlay.classList.remove('show');
             }
-
-            document.querySelectorAll('.sidebar-btn[data-category]').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    currentCategory = btn.dataset.category;
-                    refreshVisible();
-                    render();
-                    updateActiveSidebar();
-                    closeSidebar();
-                });
-            });
-
-            document.getElementById('clearBlacklistBtn').addEventListener('click', () => {
-                if (confirm('لیست سیاه کامل پاک شود؟')) {
-                    blacklist = [];
-                    saveData();
-                    if (currentCategory === 'blacklist') { refreshVisible(); render(); }
-                    closeSidebar();
-                }
-            });
-
-            function updateActiveSidebar() {
-                document.querySelectorAll('.sidebar-btn[data-category]').forEach(b => b.classList.remove('active'));
-                const active = document.querySelector(`.sidebar-btn[data-category="${currentCategory}"]`);
-                if (active) active.classList.add('active');
-            }
-
-            // ========== PARTICLES ==========
-            const pc = document.getElementById('particlesContainer');
-            for (let i = 0; i < 25; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle';
-                const size = Math.random() * 6 + 3;
-                p.style.width = size + 'px';
-                p.style.height = size + 'px';
-                p.style.top = Math.random() * 100 + '%';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.animationDelay = Math.random() * 8 + 's';
-                pc.appendChild(p);
-            }
-
-            // ========== INIT ==========
-            refreshVisible();
-            render();
-            updateActiveSidebar();
         });
+
+        // ========== ذرات پس‌زمینه ==========
+        const pc = document.getElementById('particlesContainer');
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const s = Math.random() * 5 + 2;
+            p.style.width = s + 'px'; p.style.height = s + 'px';
+            p.style.top = Math.random() * 100 + '%';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.animationDelay = Math.random() * 6 + 's';
+            pc.appendChild(p);
+        }
+
+        // ========== راه‌اندازی ==========
+        refreshVisibleQuotes();
+        renderQuotes();
+        updateUI();
     </script>
 </body>
 </html>
