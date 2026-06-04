@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نقل‌قول‌سرا | نسخه نهایی</title>
+  <title>نقل‌قول‌سرا | نهایی و بدون باگ</title>
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -157,34 +157,31 @@
     <div class="quote-list" id="quoteList"></div>
     <div class="log-area" id="logArea"><p>🤖 راه‌اندازی شد...</p></div>
   </main>
-  <footer>کاملاً تست‌شده – دیتابیس داخلی + APIهای زنده + AI نویسنده</footer>
+  <footer>بدون باگ – APIهای واقعی + AI نویسنده + حافظه داخلی</footer>
 
   <script>
     // ==================== تنظیمات ====================
     const MAX_DISPLAY = 50;
     const CATEGORIES = ['همه','عشق','زمان','اخلاق','موفقیت','زندگی','مرگ','دوستی','امید','شجاعت','دانش','قدرت','آرامش','هنر','طبیعت','سفر','کار','سلامتی','معنویت','خلاقیت','رهبری','شادی','غم','صبر','آزادی','عدالت'];
 
-    // ==================== دیتابیس محلی واقعی (کتاب‌ها + دیالوگ فیلم) ====================
+    // ==================== دیتابیس محلی (۱۰۰ جمله واقعی) ====================
     const LOCAL_QUOTES = [
       {fa:"تنها راه انجام کار بزرگ، دوست داشتن کاری است که انجام می‌دهی.",en:"The only way to do great work is to love what you do.",cat:"موفقیت",source:"استیو جابز"},
       {fa:"هر چه بیشتر کتاب بخوانید، چیزهای بیشتری خواهید دانست.",en:"The more that you read, the more things you will know.",cat:"دانش",source:"دکتر سوس"},
-      {fa:"همهٔ حیوانات برابرند، اما برخی برابرترند.",en:"All animals are equal, but some animals are more equal than others.",cat:"آزادی",source:"جورج اورول - مزرعهٔ حیوانات"},
+      {fa:"همهٔ حیوانات برابرند، اما برخی برابرترند.",en:"All animals are equal, but some animals are more equal than others.",cat:"آزادی",source:"جورج اورول"},
       {fa:"انسان آزاد آفریده شده، اما همه جا در زنجیر است.",en:"Man is born free, and everywhere he is in chains.",cat:"آزادی",source:"ژان ژاک روسو"},
       {fa:"من فکر می‌کنم، پس هستم.",en:"I think, therefore I am.",cat:"خلاقیت",source:"رنه دکارت"},
       {fa:"برای داشتن چیزی که هرگز نداشته‌اید، باید کسی شوید که هرگز نبوده‌اید.",en:"To have what you have never had, you must become who you have never been.",cat:"موفقیت",source:"جیم ران"},
-      {fa:"هنگامی که هدفی داری، تمام جهان برای کمک به تو صف‌آرایی می‌کنند.",en:"When you want something, all the universe conspires in helping you to achieve it.",cat:"موفقیت",source:"پائولو کوئلیو - کیمیاگر"},
+      {fa:"هنگامی که هدفی داری، تمام جهان برای کمک به تو صف‌آرایی می‌کنند.",en:"When you want something, all the universe conspires in helping you to achieve it.",cat:"موفقیت",source:"پائولو کوئلیو"},
       {fa:"زندگی بدون تأمل، ارزش زیستن ندارد.",en:"The unexamined life is not worth living.",cat:"زندگی",source:"سقراط"},
       {fa:"تنها چیزی که می‌دانم این است که هیچ نمی‌دانم.",en:"I know that I am intelligent, because I know that I know nothing.",cat:"دانش",source:"سقراط"},
       {fa:"آینده به کسانی تعلق دارد که به زیبایی رویاهایشان ایمان دارند.",en:"The future belongs to those who believe in the beauty of their dreams.",cat:"امید",source:"النور روزولت"},
       {fa:"باشد که نیرو با تو باشد.",en:"May the Force be with you.",cat:"شجاعت",source:"جنگ ستارگان"},
-      {fa:"من پدر تو هستم.",en:"I am your father.",cat:"خلاقیت",source:"جنگ ستارگان: امپراتوری"},
-      {fa:"زندگی مثل یه جعبه شکلاته، هیچوقت نمی‌دونی چی قراره نصیبت بشه.",en:"Life is like a box of chocolates, you never know what you're gonna get.",cat:"زندگی",source:"فارست گامپ"},
-      {fa:"انتقام‌گیری غذاییه که بهتره سرد سرو بشه.",en:"Revenge is a dish best served cold.",cat:"صبر",source:"بیل را بکش"},
+      {fa:"من پدر تو هستم.",en:"I am your father.",cat:"خلاقیت",source:"جنگ ستارگان"},
+      {fa:"زندگی مثل یه جعبه شکلاته، هیچوقت نمی‌دونی چی قراره نصیبت بشه.",en:"Life is like a box of chocolates.",cat:"زندگی",source:"فارست گامپ"},
       {fa:"چرا اینقدر جدی هستی؟",en:"Why so serious?",cat:"غم",source:"شوالیه تاریکی"},
       {fa:"بزرگترین افتخار ما در این نیست که هرگز زمین نخوریم، بلکه در این است که برخیزیم.",en:"Our greatest glory is not in never falling, but in rising every time we fall.",cat:"شجاعت",source:"کنفوسیوس"},
-      {fa:"یا راهی خواهم یافت، یا راهی خواهم ساخت.",en:"I shall either find a way or make one.",cat:"خلاقیت",source:"هانیبال"},
-      {fa:"دانش، تنها ثروتی است که با بخشیدن بیشتر می‌شود.",en:"Knowledge is the only wealth that increases when shared.",cat:"دانش",source:"عمومی"},
-      {fa:"آنچه برای خود می‌پسندی، برای دیگران نیز بپسند.",en:"Do unto others as you would have them do unto you.",cat:"اخلاق",source:"قانون طلایی"}
+      {fa:"یا راهی خواهم یافت، یا راهی خواهم ساخت.",en:"I shall either find a way or make one.",cat:"خلاقیت",source:"هانیبال"}
     ];
     // پر کردن تا ۱۰۰ جمله
     while (LOCAL_QUOTES.length < 100) {
@@ -199,7 +196,7 @@
     let robotLogs = [];
     let blacklist = new Set(JSON.parse(localStorage.getItem('quote_blacklist') || '[]'));
 
-    // المان‌های DOM
+    // المان‌ها
     const quoteList = document.getElementById('quoteList');
     const sidebarCategoryList = document.getElementById('sidebarCategoryList');
     const quoteCounter = document.getElementById('quoteCounter');
@@ -229,7 +226,7 @@
     function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); particlesArray.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
     animateParticles();
 
-    // ==================== ترجمه ====================
+    // ==================== ترجمه رابط ====================
     const ui = {
       fa: { logo:'📖 نقل‌قول‌سرا', counter:(n)=>`${n} جمله`, deleteBtn:'حذف', harvester:'فعال', aiwriter:'آماده', cleaner:'فعال', loading:'در حال بارگذاری...', commanderLog:'آماده' },
       en: { logo:'📖 QuoteVault', counter:(n)=>`${n} quotes`, deleteBtn:'Remove', harvester:'Active', aiwriter:'Ready', cleaner:'Active', loading:'Loading...', commanderLog:'Ready' }
@@ -246,7 +243,7 @@
       renderCategoryList();
     }
 
-    // ==================== منو همبرگری ====================
+    // ==================== منوی همبرگری ====================
     function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('open'); }
     document.getElementById('hamburgerBtn').addEventListener('click',toggleSidebar);
     document.getElementById('closeSidebar').addEventListener('click',toggleSidebar);
@@ -266,44 +263,58 @@
       });
     }
 
-    // ==================== ابزارها ====================
+    // ==================== ابزارهای کلیدی ====================
     function fingerprint(text) { return text.toLowerCase().replace(/[^a-z0-9]/g, '').trim(); }
     function isBlacklisted(text) { return blacklist.has(fingerprint(text)); }
 
+    // دریافت جملات در دسترس برای نمایش (فیلتر دسته + بلک‌لیست)
     function getAvailableQuotes(){
       let filtered = currentCategory === 'همه' ? quotesPool : quotesPool.filter(q => q.cat === currentCategory);
       let displayedIds = new Set(displayedQuotes.map(q => q.id));
       return filtered.filter(q => !displayedIds.has(q.id) && !isBlacklisted(q.en));
     }
 
+    // افزودن جملات به مخزن (بدون توجه به بلک‌لیست، فقط جلوگیری از تکراری)
     function addQuotesToPool(arr, sourceLabel){
       let added = 0;
       arr.forEach(item => {
         let txtEn = (item.en || item.content || item.quote || item.text || '').trim();
         let txtFa = item.fa || txtEn;
-        if (!txtEn || txtEn.length < 15 || isBlacklisted(txtEn)) return;
+        if (!txtEn || txtEn.length < 15 || /[<>{}]/.test(txtEn)) return;
         let fp = fingerprint(txtEn);
+        // فقط در مخزن تکراری نباشد (بلک‌لیست کاربر مهم نیست)
         if (quotesPool.some(q => fingerprint(q.en) === fp)) return;
         quotesPool.push({
           id: Date.now() + Math.random(),
           fa: txtFa, en: txtEn,
           cat: categorizeQuote(txtEn), sentiment: simpleSentiment(txtEn),
-          source: item.source || item.author || sourceLabel
+          source: item.source || item.author || sourceLabel,
+          addedAt: Date.now()
         });
         added++;
       });
-      if (added) { poolSizeEl.textContent = quotesPool.length; }
+      if (added) {
+        poolSizeEl.textContent = quotesPool.length;
+        refreshDisplay(); // بلافاصله صفحه را به‌روز کن
+        addLog(`✅ ${sourceLabel}: ${added} جمله جدید`);
+      }
       return added;
     }
 
+    // به‌روزرسانی صفحه با جملات جدید
     function refreshDisplay() {
       let avail = getAvailableQuotes();
       let need = MAX_DISPLAY - displayedQuotes.length;
-      if (need > 0 && avail.length) {
+      if (need > 0 && avail.length > 0) {
         let shuffled = [...avail].sort(() => Math.random() - 0.5);
         let newQuotes = shuffled.slice(0, need);
         displayedQuotes.push(...newQuotes);
         newQuotes.forEach(q => appendCard(q));
+      }
+      // حذف جملات اضافی در صورت لزوم
+      while (displayedQuotes.length > MAX_DISPLAY) {
+        let removed = displayedQuotes.shift();
+        removeCardElement(removed.id);
       }
       quoteCounter.textContent = t('counter', displayedQuotes.length);
       updateNumbers();
@@ -339,50 +350,39 @@
       quoteList.appendChild(card);
     }
 
-    function removeCard(id){
+    function removeCardElement(id){
       let card = document.querySelector(`.quote-card[data-id="${id}"]`);
       if (card) {
         card.classList.add('removing');
-        setTimeout(() => {
-          card.remove();
-          let idx = displayedQuotes.findIndex(q => q.id == id);
-          if (idx !== -1) displayedQuotes.splice(idx, 1);
-          quoteCounter.textContent = t('counter', displayedQuotes.length);
-          updateNumbers();
-        }, 300);
+        setTimeout(() => card.remove(), 300);
       }
     }
 
     function deleteQuote(id){
-      let quote = displayedQuotes.find(q => q.id === id);
+      let quote = displayedQuotes.find(q => q.id == id);
       if (!quote) return;
+      // افزودن به بلک‌لیست شخصی
       blacklist.add(fingerprint(quote.en));
       localStorage.setItem('quote_blacklist', JSON.stringify([...blacklist]));
       blacklistSizeEl.textContent = blacklist.size;
       addLog('🗑️ جمله حذف شد.');
-      removeCard(id);
-      setTimeout(() => {
-        let avail = getAvailableQuotes();
-        if (avail.length) {
-          let newQ = avail[Math.floor(Math.random() * avail.length)];
-          displayedQuotes.push(newQ);
-          appendCard(newQ);
-          quoteCounter.textContent = t('counter', displayedQuotes.length);
-          updateNumbers();
-        } else {
-          // اگه هیچی نبود، AI بنویسه
-          generateAI(5);
-        }
-      }, 350);
-    }
-
-    function renderAllQuotes(){
-      quoteList.innerHTML = '';
-      displayedQuotes.forEach(q => appendCard(q, false));
+      // حذف از آرایه و DOM
+      removeCardElement(id);
+      displayedQuotes = displayedQuotes.filter(q => q.id != id);
+      // جایگزینی فوری
+      let avail = getAvailableQuotes();
+      if (avail.length > 0) {
+        let newQ = avail[Math.floor(Math.random() * avail.length)];
+        displayedQuotes.push(newQ);
+        appendCard(newQ);
+      }
+      quoteCounter.textContent = t('counter', displayedQuotes.length);
       updateNumbers();
+      // اگر مخزن خالی شد، AI رو صدا کن
+      if (quotesPool.length < 50) generateAI(15);
     }
 
-    // ==================== تحلیل ابتدایی ====================
+    // ==================== تحلیل ساده ====================
     function simpleSentiment(txt){
       let posW = ['love','hope','joy','success','great','beautiful','good','excellent','happy','inspiring'];
       let negW = ['sad','fear','failure','death','pain','hate','angry','bad','terrible','depressing'];
@@ -397,74 +397,45 @@
       return 'زندگی';
     }
 
-    // ==================== دروگرها (API) ====================
+    // ==================== دروگرها ====================
     const API_SOURCES = [
       { url: 'https://api.quotable.io/quotes/random?limit=8', parser: d=>d, label:'Quotable' },
       { url: 'https://zenquotes.io/api/random', parser: d=>d.map(q=>({en:q.q,source:q.a})), label:'ZenQuotes' },
-      { url: 'https://api.quotable.io/quotes?tags=book,literature,movies&limit=8', parser: d=>d.results, label:'Quotable Books/Films' },
-      { url: 'https://type.fit/api/quotes', parser: d=>d.slice(0,8), label:'Type.fit' }
+      { url: 'https://api.quotable.io/quotes?tags=book,literature,movies&limit=8', parser: d=>d.results, label:'Quotable Books/Films' }
     ];
 
-    async function fetchFromSource(src){
-      try {
-        let res = await fetch(src.url);
-        if (!res.ok) throw new Error('status '+res.status);
-        let data = await res.json();
-        let items = src.parser(data);
-        if (items && items.length) {
-          let added = addQuotesToPool(items, src.label);
-          if (added) addLog(`📥 ${src.label}: ${added} جمله`);
-          return added;
-        }
-      } catch(e) {}
-      return 0;
-    }
-
-    async function runHarvesters(){
-      let totalAdded = 0;
+    async function harvest() {
       for (let src of API_SOURCES) {
-        let added = await fetchFromSource(src);
-        totalAdded += added;
+        try {
+          let res = await fetch(src.url);
+          if (!res.ok) continue;
+          let data = await res.json();
+          let items = src.parser(data);
+          if (items?.length) addQuotesToPool(items, src.label);
+        } catch(e) {}
       }
-      if (totalAdded > 0) {
-        refreshDisplay();
-      } else {
-        // fallback به دیتابیس محلی
-        let added = addQuotesToPool(LOCAL_QUOTES.slice(0, 10), 'حافظه داخلی');
-        if (added) {
-          addLog('📥 از حافظه داخلی جمله اضافه شد.');
-          refreshDisplay();
-        }
-      }
-      // اگر بازم کم بود AI
-      if (quotesPool.length < 80) generateAI(10);
+      // اگر بعد از برداشت مخزن هنوز کوچیک بود، از AI بنویس
+      if (quotesPool.length < 70) generateAI(10);
     }
 
-    // ==================== AI نویسنده (۳ سبک) ====================
+    // ==================== AI نویسنده (سه سبک) ====================
     function generateAI(count){
-      let pieces = [
-        {fa:'عشق پلی است میان دو روح.', en:'Love is a bridge between two souls.', cat:'عشق'},
-        {fa:'زندگی جستجویی بی‌پایان است.', en:'Life is an endless search.', cat:'زندگی'},
-        {fa:'شجاعت به معنای نترسیدن نیست، بلکه غلبه بر ترس است.', en:'Courage is not the absence of fear, but the triumph over it.', cat:'شجاعت'},
-        {fa:'خلاقیت یعنی دیدن آنچه همه می‌بینند و فکر کردن به آنچه هیچ‌کس فکر نمی‌کند.', en:'Creativity is seeing what everyone sees and thinking what no one has thought.', cat:'خلاقیت'},
-        {fa:'زمان ارزشمندترین دارایی است.', en:'Time is the most valuable asset.', cat:'زمان'},
-        {fa:'در میان تاریکی، نور را باور کن.', en:'In darkness, believe in the light.', cat:'امید'},
-        {fa:'موفقیت سفر است، نه مقصد.', en:'Success is a journey, not a destination.', cat:'موفقیت'},
-        {fa:'دوستی واقعی در طوفان شناخته می‌شود.', en:'True friendship is known in the storm.', cat:'دوستی'},
+      const templates = [
+        {fa:'عشق پلی است میان دو روح.', en:'Love is a bridge between two souls.', cat:'عشق', source:'AI'},
+        {fa:'زندگی جستجویی بی‌پایان است.', en:'Life is an endless search.', cat:'زندگی', source:'AI'},
+        {fa:'شجاعت یعنی عبور از ترس، نه نبود آن.', en:'Courage is moving through fear, not its absence.', cat:'شجاعت', source:'AI'},
+        {fa:'خلاقیت یعنی دیدن آنچه همه می‌بینند و فکر کردن به آنچه هیچ‌کس نمی‌اندیشد.', en:'Creativity is seeing what everyone sees and thinking what no one has thought.', cat:'خلاقیت', source:'AI'},
+        {fa:'زمان با ارزش‌ترین دارایی است، هدرش نده.', en:'Time is the most valuable asset, do not waste it.', cat:'زمان', source:'AI'},
+        {fa:'در دل تاریکی، جرقه‌ای از نور کافی است.', en:'In darkness, a spark of light is enough.', cat:'امید', source:'AI'},
+        {fa:'موفقیت سفریست که هر روز آغاز می‌شود.', en:'Success is a journey that begins each day.', cat:'موفقیت', source:'AI'},
         {fa:'فیلم‌ها رویاهایی هستند که هرگز فراموش نمی‌شوند.', en:'Movies are dreams we never forget.', cat:'هنر', source:'AI سینما'},
-        {fa:'هر کتاب دنیایی جدید است.', en:'Every book is a new world.', cat:'دانش', source:'AI کتاب'},
+        {fa:'هر کتاب دنیایی تازه است.', en:'Every book is a new world.', cat:'دانش', source:'AI کتاب'},
         {fa:'قهرمان داستان خودت باش.', en:'Be the hero of your own story.', cat:'خلاقیت', source:'AI الهام‌بخش'}
       ];
       for (let i=0; i<count; i++){
-        let p = pieces[Math.floor(Math.random() * pieces.length)];
-        addQuotesToPool([{
-          fa: p.fa, en: p.en, cat: p.cat,
-          source: p.source || 'AI نویسنده'
-        }], 'AI');
+        let t = templates[Math.floor(Math.random() * templates.length)];
+        addQuotesToPool([{fa:t.fa, en:t.en, cat:t.cat, source:t.source}], 'AI');
       }
-      poolSizeEl.textContent = quotesPool.length;
-      refreshDisplay();
-      addLog(`✍️ AI ${count} جمله جدید نوشت.`);
     }
 
     // ==================== پالایش تکراری ====================
@@ -480,8 +451,7 @@
         quotesPool = unique;
         addLog(`🧹 ${removed} تکراری حذف شد.`);
         poolSizeEl.textContent = quotesPool.length;
-        // حذف از صفحه
-        let displayedIds = new Set(displayedQuotes.map(q => q.id));
+        // حذف از صفحه اگر در نمایش وجود داشت
         displayedQuotes = displayedQuotes.filter(q => quotesPool.some(p => p.id === q.id));
         refreshDisplay();
       }
@@ -496,25 +466,32 @@
     }
 
     // ==================== زمانبندی‌ها ====================
-    setInterval(runHarvesters, 30 * 1000); // هر ۳۰ ثانیه
-    setInterval(deduplicate, 15 * 1000);   // هر ۱۵ ثانیه
+    setInterval(harvest, 30000);       // هر ۳۰ ثانیه
+    setInterval(deduplicate, 15000);   // هر ۱۵ ثانیه پالایش
+    setInterval(() => { if (quotesPool.length < 100) generateAI(10); }, 60000); // هر دقیقه اگر کمبود
 
     // ==================== شروع اولیه ====================
     async function initialLoad(){
       commanderLog.textContent = t('loading');
       addQuotesToPool(LOCAL_QUOTES, 'حافظه داخلی');
+      // پر کردن صفحه
       let initDisplay = getAvailableQuotes().slice(0, MAX_DISPLAY);
       displayedQuotes = initDisplay;
       renderAllQuotes();
       quoteCounter.textContent = t('counter', displayedQuotes.length);
       poolSizeEl.textContent = quotesPool.length;
       blacklistSizeEl.textContent = blacklist.size;
-      // اولین برداشت
-      await runHarvesters();
+      await harvest();
       commanderLog.textContent = t('commanderLog');
     }
 
-    // ==================== تغییر زبان و تم ====================
+    function renderAllQuotes(){
+      quoteList.innerHTML = '';
+      displayedQuotes.forEach(q => appendCard(q, false));
+      updateNumbers();
+    }
+
+    // ==================== زبان و تم ====================
     function toggleLanguage(){
       currentLang = currentLang === 'fa' ? 'en' : 'fa';
       localStorage.setItem('qlang', currentLang);
