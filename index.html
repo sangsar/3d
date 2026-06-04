@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>momento | جملات ماندگار</title>
+    <!-- فونت فرانسوی + فارسی -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
     <style>
@@ -153,11 +155,10 @@
             --text-color-on-bg: #f5efe8;
         }
 
-        /* ==================== ریست و بیس ==================== */
         * { margin:0; padding:0; box-sizing:border-box; }
 
         body {
-            font-family: 'Vazirmatn', sans-serif;
+            font-family: 'Playfair Display', 'Vazirmatn', serif;
             background: var(--bg);
             background-image: var(--bg-image);
             color: var(--text);
@@ -165,6 +166,27 @@
             line-height: 2;
             position: relative;
             transition: background 0.5s, color 0.5s;
+            overflow-x: hidden;
+        }
+
+        /* پس‌زمینهٔ متحرک ستاره و ابر */
+        #sky {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .sky-element {
+            position: absolute;
+            opacity: 0.6;
+            animation: floatSky linear infinite;
+            will-change: transform;
+        }
+        @keyframes floatSky {
+            0% { transform: translateY(105vh) rotate(0deg); opacity: 0.3; }
+            20% { opacity: 0.7; }
+            80% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
 
         /* هدر */
@@ -270,7 +292,7 @@
         .sidebar .close-btn:hover { color:#fff; border-color:#fff; }
 
         /* محتوای اصلی */
-        .main-container { padding: 24px 16px 60px; max-width:1500px; margin:0 auto; }
+        .main-container { padding: 24px 16px 60px; max-width:1500px; margin:0 auto; position: relative; z-index: 2; }
         .quotes-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -324,13 +346,14 @@
         }
 
         .quote-text {
-            font-size: 1.25rem;
-            line-height: 2.3;
+            font-size: 1.15rem;
+            line-height: 2.1;
             color: var(--text-color-on-bg);
             font-weight: 400;
             max-width: 90%;
             z-index: 1;
             transition: color 0.5s;
+            font-style: italic;
         }
 
         .quote-author {
@@ -388,20 +411,15 @@
         }
         .empty-state .icon-big { font-size:4rem; display:block; margin-bottom:16px; opacity:0.4; }
 
-        .toast {
-            position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
-            background: rgba(18,16,28,0.95); border:1px solid var(--border); color:var(--text);
-            padding:12px 28px; border-radius:30px; z-index:300; backdrop-filter:blur(20px);
-            font-size:0.95rem; opacity:0; pointer-events:none; transition:opacity 0.4s, transform 0.4s;
-        }
-        .toast.show { opacity:1; transform:translateX(-50%) translateY(-6px); }
-
         ::-webkit-scrollbar { width:5px; }
         ::-webkit-scrollbar-track { background:transparent; }
         ::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius:10px; }
     </style>
 </head>
 <body data-theme="purple">
+
+    <!-- پس‌زمینهٔ ستاره‌ها و ابرها -->
+    <div id="sky"></div>
 
     <header class="header">
         <div class="header-left">
@@ -447,8 +465,6 @@
         <div class="quotes-grid" id="quotesGrid"></div>
     </main>
 
-    <div class="toast" id="toast"></div>
-
     <script src="quotes.js"></script>
     <script>
         (function() {
@@ -458,7 +474,6 @@
             const hamburgerBtn = document.getElementById('hamburgerBtn');
             const closeSidebarBtn = document.getElementById('closeSidebar');
             const themeBtn = document.getElementById('themeBtn');
-            const toast = document.getElementById('toast');
             const favCountEl = document.getElementById('favCount');
             const blacklistCountEl = document.getElementById('blacklistCount');
             const showFavoritesBtn = document.getElementById('showFavorites');
@@ -488,6 +503,23 @@
                 allQuotes = [...quotes];
             } else {
                 console.error('quotes.js یافت نشد.');
+            }
+
+            // پس‌زمینهٔ ستاره و ابر
+            function createSky() {
+                const sky = document.getElementById('sky');
+                const symbols = ['★', '☁️'];
+                for (let i = 0; i < 35; i++) {
+                    const el = document.createElement('span');
+                    el.className = 'sky-element';
+                    el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                    el.style.left = Math.random() * 100 + '%';
+                    el.style.fontSize = (Math.random() * 24 + 14) + 'px';
+                    el.style.animationDuration = (Math.random() * 12 + 12) + 's';
+                    el.style.animationDelay = Math.random() * 15 + 's';
+                    el.style.opacity = Math.random() * 0.5 + 0.2;
+                    sky.appendChild(el);
+                }
             }
 
             function loadState() {
@@ -536,7 +568,6 @@
             function cycleTheme() {
                 const next = (currentThemeIndex + 1) % themes.length;
                 applyTheme(next);
-                showToast(`🎨 تم ${themeNames[themes[next]]} فعال شد`);
             }
 
             themeBtn.addEventListener('click', cycleTheme);
@@ -560,13 +591,6 @@
             }
 
             function findQuoteById(id) { return allQuotes.find(q => q.id === id); }
-
-            function showToast(msg) {
-                clearTimeout(window.toastTimer);
-                toast.textContent = msg;
-                toast.classList.add('show');
-                window.toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
-            }
 
             function initDisplayedIds(cat) {
                 const available = getAvailableQuoteIds(cat);
@@ -649,10 +673,8 @@
             function toggleFavorite(id) {
                 if (favorites.has(id)) {
                     favorites.delete(id);
-                    showToast('🤍 از علاقه‌مندی‌ها حذف شد');
                 } else {
                     favorites.add(id);
-                    showToast('❤️ به علاقه‌مندی‌ها اضافه شد');
                 }
                 updateCounts();
                 if (currentCategory === 'favorites') displayedIds = [...favorites];
@@ -675,12 +697,10 @@
                 updateCounts();
                 renderGrid();
                 saveState();
-                showToast('🗑️ جمله به بلک‌لیست رفت و جملهٔ جدید جایگزین شد');
             }
 
             function clearBlacklistAction() {
-                if (blacklist.size === 0) { showToast('🚫 بلک‌لیست خالی است'); return; }
-                const count = blacklist.size;
+                if (blacklist.size === 0) return;
                 blacklist.clear();
                 if (currentCategory === 'blacklist') displayedIds = [];
                 else if (currentCategory !== 'favorites') {
@@ -690,7 +710,6 @@
                 updateCounts();
                 renderGrid();
                 saveState();
-                showToast(`🔓 ${count} جمله آزاد شد`);
             }
 
             grid.addEventListener('click', e => {
@@ -717,6 +736,7 @@
             document.addEventListener('keydown', e => { if (e.key === 'Escape' && sidebar.classList.contains('active')) closeSidebar(); });
 
             function init() {
+                createSky();
                 loadState();
                 applyTheme(currentThemeIndex);
                 if (displayedIds.length === 0 && currentCategory !== 'favorites' && currentCategory !== 'blacklist') {
