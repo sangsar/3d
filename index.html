@@ -3,13 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اتاق قرن شانزدهم</title>
+    <title>آپارتمان مدرن | Samisaki</title>
     <style>
-        body { margin: 0; overflow: hidden; background: #000; }
+        body { margin: 0; overflow: hidden; background: #000; font-family: 'Vazirmatn', sans-serif; }
         canvas { display: block; }
+        .ui {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+            background: rgba(20, 20, 30, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .ui button {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #e0d6ff;
+            font-family: inherit;
+            font-size: 0.85rem;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .ui button:hover, .ui button.active {
+            background: #7209b7;
+            border-color: #ff99c8;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(114,9,183,0.5);
+        }
+        .ui button.active {
+            background: #ff99c8;
+            color: #0a0a0c;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
+    <div class="ui" id="ui">
+        <button class="active" data-room="living">نشیمن</button>
+        <button data-room="kitchen">آشپزخانه</button>
+        <button data-room="bedroom">اتاق خواب</button>
+        <button data-room="bathroom">حمام</button>
+    </div>
+
     <script type="importmap">
         {
             "imports": {
@@ -24,264 +68,403 @@
 
         // --- صحنه، دوربین، رندرر ---
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x1a0f07); // پس‌زمینه خیلی تاریک
-        scene.fog = new THREE.Fog(0x1a0f07, 3, 10); // مه برای حس مرموز
+        scene.background = new THREE.Color(0x1a1a24);
+        scene.fog = new THREE.Fog(0x1a1a24, 15, 40);
 
-        const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 20);
-        camera.position.set(1.5, 1.5, 4.5);
-        camera.lookAt(0, 1.2, 0);
+        const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 50);
+        camera.position.set(0, 1.7, 6);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.2;
+        renderer.toneMappingExposure = 1.1;
         document.body.appendChild(renderer.domElement);
 
-        // --- کنترل چرخش با موس ---
         const controls = new OrbitControls(camera, renderer.domElement);
-        controls.target.set(0, 1.2, 0);
+        controls.target.set(0, 1.3, 0);
         controls.enableDamping = true;
         controls.dampingFactor = 0.08;
-        controls.minDistance = 1.8;
-        controls.maxDistance = 7;
-        controls.maxPolarAngle = Math.PI / 2.1;
+        controls.minDistance = 1.5;
+        controls.maxDistance = 8;
+        controls.maxPolarAngle = Math.PI / 2.2;
         controls.update();
 
-        // --- نورپردازی (نور شمع و نور پنجره) ---
-        // نور محیطی خیلی کم (مثل نور مهتاب)
-        const ambientLight = new THREE.AmbientLight(0x332244, 0.4);
-        scene.add(ambientLight);
+        // --- نورپردازی ---
+        const ambient = new THREE.AmbientLight(0x334455, 0.7);
+        scene.add(ambient);
 
-        // نور اصلی گرم (مثل نور شمع از مرکز اتاق)
-        const candleLight = new THREE.PointLight(0xffaa55, 50, 8, 0.8);
-        candleLight.position.set(0, 1.8, 0);
-        candleLight.castShadow = true;
-        candleLight.shadow.mapSize.width = 512;
-        candleLight.shadow.mapSize.height = 512;
-        candleLight.shadow.camera.near = 0.1;
-        candleLight.shadow.camera.far = 10;
-        scene.add(candleLight);
-
-        // نور سرد از پنجره (آبی کمرنگ)
-        const windowLight = new THREE.DirectionalLight(0xaaccff, 2.5);
-        windowLight.position.set(-3.8, 2.2, 0);
-        windowLight.target.position.set(-2.2, 1.5, 0);
-        windowLight.castShadow = true;
-        windowLight.shadow.mapSize.width = 1024;
-        windowLight.shadow.mapSize.height = 1024;
-        windowLight.shadow.camera.near = 0.5;
-        windowLight.shadow.camera.far = 12;
-        windowLight.shadow.bias = -0.0001;
-        scene.add(windowLight);
-        scene.add(windowLight.target);
+        const sunLight = new THREE.DirectionalLight(0xffeedd, 4.5);
+        sunLight.position.set(8, 12, 2);
+        sunLight.castShadow = true;
+        sunLight.shadow.mapSize.width = 2048;
+        sunLight.shadow.mapSize.height = 2048;
+        sunLight.shadow.camera.near = 0.5;
+        sunLight.shadow.camera.far = 30;
+        sunLight.shadow.camera.left = -10;
+        sunLight.shadow.camera.right = 10;
+        sunLight.shadow.camera.top = 10;
+        sunLight.shadow.camera.bottom = -10;
+        sunLight.shadow.bias = -0.0001;
+        scene.add(sunLight);
 
         // --- مصالح (متریال‌ها) ---
-        // سنگ خشن برای دیوارها
-        const stoneMat = new THREE.MeshStandardMaterial({
-            color: 0x887766,
-            roughness: 0.95,
-            metalness: 0.05,
-            flatShading: false
+        const wallMat = new THREE.MeshStandardMaterial({ color: 0xe8e4df, roughness: 0.85 });
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x3a3028, roughness: 0.6, metalness: 0.05 });
+        const woodMat = new THREE.MeshStandardMaterial({ color: 0x5a4030, roughness: 0.5, metalness: 0.1 });
+        const marbleMat = new THREE.MeshStandardMaterial({ color: 0xeeebe6, roughness: 0.2, metalness: 0.3 });
+        const metalMat = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.25, metalness: 0.9 });
+        const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xccddff, roughness: 0.1, metalness: 0.1, transparent: true, opacity: 0.4 });
+        const fabricMat = new THREE.MeshStandardMaterial({ color: 0x3a3a4a, roughness: 0.9, metalness: 0.0 });
+        const plantMat = new THREE.MeshStandardMaterial({ color: 0x2d5a27, roughness: 0.7 });
+
+        // --- تابع‌های کمکی ---
+        function createBox(w, h, d, mat, x, y, z, castShadow = true, receiveShadow = true) {
+            const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+            mesh.position.set(x, y, z);
+            mesh.castShadow = castShadow;
+            mesh.receiveShadow = receiveShadow;
+            return mesh;
+        }
+
+        function createCylinder(rTop, rBot, h, mat, x, y, z) {
+            const mesh = new THREE.Mesh(new THREE.CylinderGeometry(rTop, rBot, h, 32), mat);
+            mesh.position.set(x, y, z);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            return mesh;
+        }
+
+        // --- گروه‌های اتاق ---
+        const rooms = {};
+        const roomGroups = {};
+        ['living', 'kitchen', 'bedroom', 'bathroom'].forEach(name => {
+            const group = new THREE.Group();
+            group.name = name;
+            scene.add(group);
+            roomGroups[name] = group;
+            rooms[name] = group;
         });
 
-        // چوب تیره برای کف و تیرها
-        const woodMat = new THREE.MeshStandardMaterial({
-            color: 0x4a3822,
-            roughness: 0.7,
-            metalness: 0.1
-        });
+        // ==================== نشیمن ====================
+        const living = rooms.living;
 
-        // پارچه برای فرش یا رومیزی
-        const clothMat = new THREE.MeshStandardMaterial({
-            color: 0x8b4513,
-            roughness: 0.9,
-            metalness: 0.0
-        });
-
-        // فلز برای شمعدان
-        const metalMat = new THREE.MeshStandardMaterial({
-            color: 0x333333,
-            roughness: 0.3,
-            metalness: 0.9
-        });
-
-        // --- هندسه (ساختن اتاق) ---
         // کف
-        const floor = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), woodMat);
-        floor.rotation.x = -Math.PI / 2;
-        floor.position.y = 0;
-        floor.receiveShadow = true;
-        scene.add(floor);
+        living.add(createBox(8, 0.15, 8, floorMat, 0, -0.075, -1));
 
-        // دیوار پشتی (با پنجره)
-        const backWall = new THREE.Mesh(new THREE.BoxGeometry(6, 3.5, 0.3), stoneMat);
-        backWall.position.set(0, 1.75, -3);
-        backWall.receiveShadow = true;
-        backWall.castShadow = true;
-        scene.add(backWall);
+        // دیوارها
+        living.add(createBox(8, 3, 0.2, wallMat, 0, 1.5, -5));
+        living.add(createBox(0.2, 3, 8, wallMat, -4, 1.5, -1));
+        living.add(createBox(0.2, 3, 8, wallMat, 4, 1.5, -1));
+        // دیوار جلو با بازشوی ورودی
+        living.add(createBox(2.5, 3, 0.2, wallMat, -2.75, 1.5, 3));
+        living.add(createBox(2.5, 3, 0.2, wallMat, 2.75, 1.5, 3));
+        // ستون کنار درگاه
+        living.add(createBox(0.3, 2.4, 0.2, woodMat, -1.2, 1.2, 2.9));
+        living.add(createBox(0.3, 2.4, 0.2, woodMat, 1.2, 1.2, 2.9));
+        // تیر بالای درگاه
+        living.add(createBox(2.7, 0.15, 0.3, woodMat, 0, 2.35, 2.9));
 
-        // دیوار چپ
-        const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.3, 3.5, 6), stoneMat);
-        leftWall.position.set(-3, 1.75, 0);
-        leftWall.receiveShadow = true;
-        leftWall.castShadow = true;
-        scene.add(leftWall);
+        // سقف
+        living.add(createBox(8, 0.1, 8, new THREE.MeshStandardMaterial({ color: 0xf0ece6, roughness: 0.9 }), 0, 2.95, -1));
 
-        // دیوار راست
-        const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.3, 3.5, 6), stoneMat);
-        rightWall.position.set(3, 1.75, 0);
-        rightWall.receiveShadow = true;
-        rightWall.castShadow = true;
-        scene.add(rightWall);
-
-        // دیوار جلو (نیمه‌کاره – حس ویرانه یا قرن ۱۶)
-        const frontWall = new THREE.Mesh(new THREE.BoxGeometry(6, 3.5, 0.3), stoneMat);
-        frontWall.position.set(0, 1.75, 2.5);
-        frontWall.receiveShadow = true;
-        frontWall.castShadow = true;
-        // سوراخ برای ورود (حذف بخشی از دیوار با CSG سخت است؛ اینجا دیوار کوتاه‌تر می‌کنیم یا درگاه می‌سازیم)
-        // راه ساده: دیوار جلو را نیمه رها کنیم (فقط نیمه پایینی باشد یا با یک درگاه فرضی)
-        frontWall.scale.set(0.6, 1, 1); // فقط وسط
-        frontWall.position.x = 0;
-        scene.add(frontWall);
-
-        // --- درگاه ورودی (قوس سنگی) ---
-        const archPillar1 = new THREE.Mesh(new THREE.BoxGeometry(0.3, 2.2, 0.3), stoneMat);
-        archPillar1.position.set(-1.2, 1.1, 2.35);
-        archPillar1.castShadow = true;
-        archPillar1.receiveShadow = true;
-        scene.add(archPillar1);
-
-        const archPillar2 = new THREE.Mesh(new THREE.BoxGeometry(0.3, 2.2, 0.3), stoneMat);
-        archPillar2.position.set(1.2, 1.1, 2.35);
-        archPillar2.castShadow = true;
-        archPillar2.receiveShadow = true;
-        scene.add(archPillar2);
-
-        const archTop = new THREE.Mesh(new THREE.BoxGeometry(2.7, 0.2, 0.3), stoneMat);
-        archTop.position.set(0, 2.2, 2.35);
-        archTop.castShadow = true;
-        archTop.receiveShadow = true;
-        scene.add(archTop);
-
-        // --- پنجره (پشت دیوار عقب) ---
-        // قاب پنجره
-        const windowFrame = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.8, 0.15), new THREE.MeshStandardMaterial({ color: 0x3a2a1a, roughness: 0.6, metalness: 0.2 }));
-        windowFrame.position.set(0, 1.9, -2.85);
-        windowFrame.receiveShadow = true;
-        windowFrame.castShadow = true;
-        scene.add(windowFrame);
-
-        // شیشه پنجره (نیمه شفاف با رنگ آبی)
-        const glassPane = new THREE.Mesh(
-            new THREE.PlaneGeometry(1.2, 1.6),
-            new THREE.MeshPhysicalMaterial({ color: 0xaaccff, roughness: 0.1, metalness: 0.1, transparent: true, opacity: 0.3 })
-        );
-        glassPane.position.set(0, 1.9, -2.77);
-        scene.add(glassPane);
-
-        // --- تیرهای سقف (چوبی) ---
-        for (let i = -2; i <= 2; i += 2) {
-            const beam = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 5.8), new THREE.MeshStandardMaterial({ color: 0x3b2b1a, roughness: 0.8, metalness: 0.1 }));
-            beam.position.set(i, 3.3, 0);
-            beam.castShadow = true;
-            beam.receiveShadow = true;
-            scene.add(beam);
+        // --- مبلمان نشیمن ---
+        // مبل (سه‌تکه)
+        const sofaBase = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.5, 0.9), fabricMat);
+        sofaBase.position.set(-1.8, 0.4, -2.5);
+        sofaBase.castShadow = true; sofaBase.receiveShadow = true;
+        living.add(sofaBase);
+        const sofaBack = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.6, 0.25), fabricMat);
+        sofaBack.position.set(-1.8, 0.9, -2.85);
+        sofaBack.castShadow = true; sofaBack.receiveShadow = true;
+        living.add(sofaBack);
+        // کوسن‌ها
+        for (let i = 0; i < 3; i++) {
+            const cushion = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.15, 0.55), new THREE.MeshStandardMaterial({ color: 0x5a4a6a, roughness: 0.8 }));
+            cushion.position.set(-2.3 + i * 0.5, 0.7, -2.5);
+            cushion.castShadow = true; cushion.receiveShadow = true;
+            living.add(cushion);
         }
 
-        // --- لوستر ساده (چند شمع روی یک حلقه) ---
-        const chandelierRing = new THREE.Mesh(new THREE.TorusGeometry(0.4, 0.05, 8, 16), metalMat);
-        chandelierRing.position.set(0, 3.0, 0);
-        chandelierRing.rotation.x = Math.PI / 2;
-        chandelierRing.castShadow = true;
-        chandelierRing.receiveShadow = true;
-        scene.add(chandelierRing);
+        // میز جلو مبلی
+        living.add(createBox(1.2, 0.35, 0.6, woodMat, -1.8, 0.35, -1.6));
+        // گلدان روی میز
+        const vase = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.06, 0.25, 16), new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.2, metalness: 0.8 }));
+        vase.position.set(-1.8, 0.65, -1.6);
+        vase.castShadow = true;
+        living.add(vase);
+        const plant = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 8), plantMat);
+        plant.position.set(-1.8, 0.85, -1.6);
+        plant.castShadow = true;
+        living.add(plant);
 
-        // شمع‌های روی لوستر
-        for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 3) {
-            const candle = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.25, 8), new THREE.MeshStandardMaterial({ color: 0xffeedd, roughness: 0.5, emissive: 0x220000 }));
-            candle.position.set(Math.cos(angle) * 0.35, 3.12, Math.sin(angle) * 0.35);
-            candle.castShadow = true;
-            candle.receiveShadow = true;
-            scene.add(candle);
+        // تلویزیون روی دیوار
+        const tvPanel = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.95, 0.06), new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.1, metalness: 0.9 }));
+        tvPanel.position.set(2.5, 1.6, -4.75);
+        tvPanel.castShadow = true;
+        living.add(tvPanel);
+        const tvScreen = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 0.8), new THREE.MeshBasicMaterial({ color: 0x001122 }));
+        tvScreen.position.set(2.5, 1.6, -4.71);
+        living.add(tvScreen);
+        // پایه تلویزیون
+        living.add(createBox(1.8, 0.45, 0.5, woodMat, 2.5, 0.5, -3.8));
 
-            // شعله (نقطه نورانی)
-            const flame = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 8), new THREE.MeshBasicMaterial({ color: 0xff6600 }));
-            flame.position.set(Math.cos(angle) * 0.35, 3.25, Math.sin(angle) * 0.35);
-            scene.add(flame);
-        }
-
-        // --- میز چوبی ساده ---
-        const tableTop = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.1, 0.8), woodMat);
-        tableTop.position.set(0, 0.9, -0.5);
-        tableTop.castShadow = true;
-        tableTop.receiveShadow = true;
-        scene.add(tableTop);
-
-        const tableLeg1 = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.9, 8), woodMat);
-        tableLeg1.position.set(-0.5, 0.45, -0.3);
-        tableLeg1.castShadow = true;
-        tableLeg1.receiveShadow = true;
-        scene.add(tableLeg1);
-
-        const tableLeg2 = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.9, 8), woodMat);
-        tableLeg2.position.set(0.5, 0.45, -0.3);
-        tableLeg2.castShadow = true;
-        tableLeg2.receiveShadow = true;
-        scene.add(tableLeg2);
-
-        const tableLeg3 = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.9, 8), woodMat);
-        tableLeg3.position.set(-0.5, 0.45, -0.7);
-        tableLeg3.castShadow = true;
-        tableLeg3.receiveShadow = true;
-        scene.add(tableLeg3);
-
-        const tableLeg4 = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.9, 8), woodMat);
-        tableLeg4.position.set(0.5, 0.45, -0.7);
-        tableLeg4.castShadow = true;
-        tableLeg4.receiveShadow = true;
-        scene.add(tableLeg4);
-
-        // شمع روی میز
-        const tableCandle = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.08, 0.3, 8), new THREE.MeshStandardMaterial({ color: 0xffeedd, roughness: 0.5 }));
-        tableCandle.position.set(0, 1.05, -0.5);
-        tableCandle.castShadow = true;
-        tableCandle.receiveShadow = true;
-        scene.add(tableCandle);
-        const tableFlame = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), new THREE.MeshBasicMaterial({ color: 0xff8800 }));
-        tableFlame.position.set(0, 1.22, -0.5);
-        scene.add(tableFlame);
-
-        // --- صندلی ساده (فقط یکی برای سادگی) ---
-        const chairSeat = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.1, 0.5), woodMat);
-        chairSeat.position.set(0.7, 0.55, -1.2);
-        chairSeat.castShadow = true;
-        chairSeat.receiveShadow = true;
-        scene.add(chairSeat);
-
-        for (let lx = -0.2; lx <= 0.2; lx += 0.4) {
-            for (let lz = -0.2; lz <= 0.2; lz += 0.4) {
-                const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.55, 8), woodMat);
-                leg.position.set(0.7 + lx, 0.28, -1.2 + lz);
-                leg.castShadow = true;
-                leg.receiveShadow = true;
-                scene.add(leg);
+        // کتابخانه کنار دیوار
+        for (let row = 0; row < 3; row++) {
+            living.add(createBox(0.9, 0.05, 0.35, woodMat, -3.5, 0.7 + row * 0.6, -3.5));
+            for (let col = 0; col < 2; col++) {
+                const book = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.3 + Math.random() * 0.2, 0.2), new THREE.MeshStandardMaterial({ color: new THREE.Color().setHSL(Math.random() * 0.1 + 0.05, 0.6, 0.3 + Math.random() * 0.4), roughness: 0.7 }));
+                book.position.set(-3.5 - 0.25 + col * 0.25, 0.75 + row * 0.6, -3.45);
+                book.rotation.z = (Math.random() - 0.5) * 0.1;
+                book.castShadow = true; book.receiveShadow = true;
+                living.add(book);
             }
         }
-        const chairBack = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.08), woodMat);
-        chairBack.position.set(0.7, 0.85, -1.44);
-        chairBack.castShadow = true;
-        chairBack.receiveShadow = true;
-        scene.add(chairBack);
 
-        // --- قالیچه کوچک (زیر میز) ---
-        const rug = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 2.0), clothMat);
+        // فرش
+        const rug = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 3.5), new THREE.MeshStandardMaterial({ color: 0x5a4a6a, roughness: 0.95 }));
         rug.rotation.x = -Math.PI / 2;
-        rug.position.set(0, 0.01, -0.5);
+        rug.position.set(-1.8, 0.01, -1.5);
         rug.receiveShadow = true;
-        scene.add(rug);
+        living.add(rug);
+
+        // لوستر سقفی
+        const chandelier = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.03, 8, 16), new THREE.MeshStandardMaterial({ color: 0xffccaa, roughness: 0.2, metalness: 0.9, emissive: 0x331100 }));
+        chandelier.position.set(0, 2.8, -1);
+        chandelier.rotation.x = Math.PI / 2;
+        living.add(chandelier);
+        const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffeedd }));
+        bulb.position.set(0, 2.7, -1);
+        living.add(bulb);
+
+
+        // ==================== آشپزخانه ====================
+        const kitchen = rooms.kitchen;
+        kitchen.add(createBox(8, 0.15, 8, floorMat, 0, -0.075, -1));
+        kitchen.add(createBox(8, 3, 0.2, wallMat, 0, 1.5, -5));
+        kitchen.add(createBox(0.2, 3, 8, wallMat, -4, 1.5, -1));
+        kitchen.add(createBox(0.2, 3, 8, wallMat, 4, 1.5, -1));
+        kitchen.add(createBox(8, 0.1, 8, new THREE.MeshStandardMaterial({ color: 0xf0ece6, roughness: 0.9 }), 0, 2.95, -1));
+        // دیوار جداکننده با نشیمن
+        kitchen.add(createBox(6.5, 3, 0.2, wallMat, 0.75, 1.5, 3));
+
+        // کابینت‌ها
+        for (let i = 0; i < 4; i++) {
+            const cabinet = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.9, 0.6), woodMat);
+            cabinet.position.set(-3 + i * 1, 0.7, -4.2);
+            cabinet.castShadow = true; cabinet.receiveShadow = true;
+            kitchen.add(cabinet);
+            // دستگیره
+            const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.15, 8), metalMat);
+            handle.position.set(-3 + i * 1, 0.85, -3.88);
+            handle.rotation.x = Math.PI / 2;
+            kitchen.add(handle);
+        }
+        // کانتر
+        kitchen.add(createBox(3.8, 0.06, 0.65, marbleMat, -1.5, 1.16, -4.2));
+
+        // سینک
+        const sink = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.15, 0.5), metalMat);
+        sink.position.set(2.5, 1.1, -4.1);
+        sink.castShadow = true;
+        kitchen.add(sink);
+        const faucet = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.4, 8), metalMat);
+        faucet.position.set(2.5, 1.35, -3.95);
+        kitchen.add(faucet);
+
+        // اجاق گاز
+        const stove = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.1, 0.5), new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.1, metalness: 0.9 }));
+        stove.position.set(-3, 1.1, -4.1);
+        stove.castShadow = true;
+        kitchen.add(stove);
+        for (let j = 0; j < 2; j++) {
+            const burner = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.03, 16), new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.2, metalness: 0.8 }));
+            burner.position.set(-3.15 + j * 0.3, 1.16, -4.1);
+            kitchen.add(burner);
+        }
+
+        // میز غذاخوری
+        const diningTable = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.7, 0.06, 32), woodMat);
+        diningTable.position.set(2, 0.9, -1.5);
+        diningTable.castShadow = true; diningTable.receiveShadow = true;
+        kitchen.add(diningTable);
+        const tableLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.9, 8), metalMat);
+        tableLeg.position.set(2, 0.45, -1.5);
+        tableLeg.castShadow = true;
+        kitchen.add(tableLeg);
+        // صندلی‌ها
+        for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 2) {
+            const chair = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.1, 0.4), fabricMat);
+            chair.position.set(2 + Math.cos(angle) * 1, 0.55, -1.5 + Math.sin(angle) * 1);
+            chair.castShadow = true; chair.receiveShadow = true;
+            kitchen.add(chair);
+            const chairLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.55, 8), metalMat);
+            chairLeg.position.set(2 + Math.cos(angle) * 1, 0.28, -1.5 + Math.sin(angle) * 1);
+            chairLeg.castShadow = true;
+            kitchen.add(chairLeg);
+        }
+
+        // یخچال
+        const fridge = new THREE.Mesh(new THREE.BoxGeometry(0.9, 2, 0.7), new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.15, metalness: 0.9 }));
+        fridge.position.set(-3.2, 1.2, 3.8);
+        fridge.castShadow = true; fridge.receiveShadow = true;
+        kitchen.add(fridge);
+
+        // لوستر بالای میز
+        const pendant = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 16), new THREE.MeshStandardMaterial({ color: 0xffccaa, roughness: 0.2, emissive: 0x331100 }));
+        pendant.position.set(2, 2.6, -1.5);
+        kitchen.add(pendant);
+
+
+        // ==================== اتاق خواب ====================
+        const bedroom = rooms.bedroom;
+        bedroom.add(createBox(6, 0.15, 7, floorMat, 0, -0.075, -0.5));
+        bedroom.add(createBox(6, 3, 0.2, wallMat, 0, 1.5, -4));
+        bedroom.add(createBox(0.2, 3, 7, wallMat, -3, 1.5, -0.5));
+        bedroom.add(createBox(0.2, 3, 7, wallMat, 3, 1.5, -0.5));
+        bedroom.add(createBox(6, 0.1, 7, new THREE.MeshStandardMaterial({ color: 0xf0ece6, roughness: 0.9 }), 0, 2.95, -0.5));
+        bedroom.add(createBox(6, 3, 0.2, wallMat, 0, 1.5, 3));
+
+        // تخت
+        const bedBase = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.4, 2.2), woodMat);
+        bedBase.position.set(0, 0.45, -2);
+        bedBase.castShadow = true; bedBase.receiveShadow = true;
+        bedroom.add(bedBase);
+        const mattress = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.2, 2.1), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8 }));
+        mattress.position.set(0, 0.75, -2);
+        mattress.castShadow = true; mattress.receiveShadow = true;
+        bedroom.add(mattress);
+        // بالش
+        const pillow = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.12, 1.2), new THREE.MeshStandardMaterial({ color: 0xeeeeff, roughness: 0.9 }));
+        pillow.position.set(0, 0.9, -2.9);
+        pillow.castShadow = true; pillow.receiveShadow = true;
+        bedroom.add(pillow);
+        // پتو
+        const blanket = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.08, 1.2), new THREE.MeshStandardMaterial({ color: 0x5a4a6a, roughness: 0.9 }));
+        blanket.position.set(0, 0.9, -1.3);
+        blanket.castShadow = true; blanket.receiveShadow = true;
+        bedroom.add(blanket);
+
+        // کمد
+        const wardrobe = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2.4, 0.6), woodMat);
+        wardrobe.position.set(2.2, 1.4, -3);
+        wardrobe.castShadow = true; wardrobe.receiveShadow = true;
+        bedroom.add(wardrobe);
+        // دستگیره کمد
+        const wHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.3, 8), metalMat);
+        wHandle.position.set(2.2, 1.5, -2.68);
+        wHandle.rotation.x = Math.PI / 2;
+        bedroom.add(wHandle);
+
+        // میز آرایش
+        bedroom.add(createBox(1, 0.05, 0.4, woodMat, -2.2, 0.8, 2.2));
+        bedroom.add(createBox(0.05, 0.8, 0.4, woodMat, -2.7, 0.4, 2.2));
+        bedroom.add(createBox(0.05, 0.8, 0.4, woodMat, -1.7, 0.4, 2.2));
+        const mirror = new THREE.Mesh(new THREE.PlaneGeometry(0.6, 0.8), new THREE.MeshStandardMaterial({ color: 0xccccff, roughness: 0.05, metalness: 0.9 }));
+        mirror.position.set(-2.2, 1.3, 2.38);
+        bedroom.add(mirror);
+
+        // چراغ خواب
+        const nightstand = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.25, 0.5, 16), woodMat);
+        nightstand.position.set(-2, 0.5, -3.2);
+        nightstand.castShadow = true; nightstand.receiveShadow = true;
+        bedroom.add(nightstand);
+        const lampShade = new THREE.Mesh(new THREE.ConeGeometry(0.15, 0.3, 16), new THREE.MeshStandardMaterial({ color: 0xddccaa, roughness: 0.7 }));
+        lampShade.position.set(-2, 0.9, -3.2);
+        lampShade.castShadow = true;
+        bedroom.add(lampShade);
+        const lampBulb = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffaa66 }));
+        lampBulb.position.set(-2, 0.8, -3.2);
+        bedroom.add(lampBulb);
+
+
+        // ==================== حمام ====================
+        const bathroom = rooms.bathroom;
+        bathroom.add(createBox(5, 0.15, 5, new THREE.MeshStandardMaterial({ color: 0xd0ccc8, roughness: 0.3 }), 0, -0.075, 0));
+        bathroom.add(createBox(5, 3, 0.2, new THREE.MeshStandardMaterial({ color: 0xd8e8e8, roughness: 0.2 }), 0, 1.5, -2.5));
+        bathroom.add(createBox(0.2, 3, 5, new THREE.MeshStandardMaterial({ color: 0xd8e8e8, roughness: 0.2 }), -2.5, 1.5, 0));
+        bathroom.add(createBox(0.2, 3, 5, new THREE.MeshStandardMaterial({ color: 0xd8e8e8, roughness: 0.2 }), 2.5, 1.5, 0));
+        bathroom.add(createBox(5, 0.1, 5, new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 }), 0, 2.95, 0));
+        bathroom.add(createBox(5, 3, 0.2, new THREE.MeshStandardMaterial({ color: 0xd8e8e8, roughness: 0.2 }), 0, 1.5, 2.5));
+
+        // وان
+        const tub = new THREE.Mesh(new THREE.CapsuleGeometry(0.6, 1.2, 8, 16), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1, metalness: 0.2 }));
+        tub.position.set(1.2, 0.4, -0.8);
+        tub.rotation.z = Math.PI / 2;
+        tub.castShadow = true; tub.receiveShadow = true;
+        bathroom.add(tub);
+        // شیر وان
+        const tubFaucet = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.5, 8), metalMat);
+        tubFaucet.position.set(0.5, 0.85, -0.8);
+        bathroom.add(tubFaucet);
+
+        // روشویی
+        const vanity = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.15, 0.5), marbleMat);
+        vanity.position.set(-1.5, 0.9, 1.5);
+        vanity.castShadow = true; vanity.receiveShadow = true;
+        bathroom.add(vanity);
+        const vanityBase = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.7, 0.4), woodMat);
+        vanityBase.position.set(-1.5, 0.5, 1.5);
+        vanityBase.castShadow = true; vanityBase.receiveShadow = true;
+        bathroom.add(vanityBase);
+        const sinkBowl = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.18, 0.15, 16), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 }));
+        sinkBowl.position.set(-1.5, 0.95, 1.5);
+        bathroom.add(sinkBowl);
+        const mirrorBath = new THREE.Mesh(new THREE.PlaneGeometry(0.6, 0.8), new THREE.MeshStandardMaterial({ color: 0xccccff, roughness: 0.05, metalness: 0.9 }));
+        mirrorBath.position.set(-1.5, 1.5, 1.73);
+        bathroom.add(mirrorBath);
+
+        // توالت
+        const toiletBase = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.3, 0.5, 16), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 }));
+        toiletBase.position.set(-1.5, 0.35, -1.8);
+        toiletBase.castShadow = true; toiletBase.receiveShadow = true;
+        bathroom.add(toiletBase);
+        const toiletTank = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.5, 0.25), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 }));
+        toiletTank.position.set(-1.5, 0.75, -1.95);
+        toiletTank.castShadow = true; toiletTank.receiveShadow = true;
+        bathroom.add(toiletTank);
+
+
+        // --- مخفی کردن همه اتاق‌ها در ابتدا ---
+        Object.values(rooms).forEach(group => group.visible = false);
+        rooms.living.visible = true;
+
+        // --- کنترل UI ---
+        document.querySelectorAll('.ui button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const roomName = btn.dataset.room;
+                // مخفی کردن همه
+                Object.values(rooms).forEach(g => g.visible = false);
+                // نمایش اتاق انتخاب‌شده
+                rooms[roomName].visible = true;
+
+                // تنظیم موقعیت دوربین متناسب با اتاق
+                switch (roomName) {
+                    case 'living':
+                        camera.position.set(0, 1.7, 6);
+                        controls.target.set(0, 1.3, -1);
+                        break;
+                    case 'kitchen':
+                        camera.position.set(0, 1.7, 6);
+                        controls.target.set(0, 1.3, -1);
+                        break;
+                    case 'bedroom':
+                        camera.position.set(0, 1.7, 6);
+                        controls.target.set(0, 1.3, -0.5);
+                        break;
+                    case 'bathroom':
+                        camera.position.set(0, 1.7, 5.5);
+                        controls.target.set(0, 1.3, 0);
+                        break;
+                }
+                controls.update();
+
+                // به‌روزرسانی دکمهٔ فعال
+                document.querySelectorAll('.ui button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
 
         // --- انیمیشن ---
         function animate() {
