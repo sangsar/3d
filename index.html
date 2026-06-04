@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نقل‌قول‌سرا | ۳۰ منبع + ۴ دروگر + بلک‌لیست</title>
+  <title>نقل‌قول‌سرا | کتاب‌ها و ضرب‌المثل‌ها</title>
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -75,12 +75,16 @@
       margin-bottom: 1.5rem; display: flex; justify-content: space-between;
       font-size: 0.8rem; color: var(--secondary);
     }
-    .quote-list { display: flex; flex-direction: column; gap: 0.8rem; }
+    .quote-list { display: flex; flex-direction: column; gap: 0.8rem; position: relative; }
     .quote-card {
       background: var(--glass-bg); backdrop-filter: blur(10px);
       border:1px solid var(--glass-border); border-radius:1.2rem; padding:1rem 1.2rem;
       display:flex; align-items: center; gap:1rem;
-      transition: transform 0.2s, box-shadow 0.2s; animation: fadeInUp 0.4s ease;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      animation: fadeInUp 0.4s ease;
+    }
+    .quote-card.removing {
+      opacity: 0; transform: scale(0.95);
     }
     .quote-card:hover { transform:translateY(-3px); box-shadow:0 10px 25px rgba(0,0,0,0.3); }
     .quote-number { font-size: 1.5rem; font-weight: 900; color: var(--primary); min-width: 2.5rem; text-align: center; }
@@ -127,16 +131,15 @@
     </div>
   </header>
 
-  <!-- سایدبار همبرگری -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <div class="sidebar" id="sidebar">
     <button class="close-sidebar" id="closeSidebar">✕</button>
     <div class="sidebar-section">
-      <h3>🤖 وضعیت ربات‌ها</h3>
-      <p>📥 دروگر ۱: <span id="h1Status">فعال</span></p>
-      <p>📥 دروگر ۲: <span id="h2Status">فعال</span></p>
-      <p>📥 دروگر ۳: <span id="h3Status">فعال</span></p>
-      <p>📥 دروگر ۴: <span id="h4Status">فعال</span></p>
+      <h3>🤖 ربات‌های تخصصی</h3>
+      <p>📚 شکارچی کتاب: <span id="bookHunterStatus">فعال</span></p>
+      <p>🌍 ضرب‌المثل‌یاب: <span id="proverbHunterStatus">فعال</span></p>
+      <p>🏛️ نقل‌قول تاریخی: <span id="historicalHunterStatus">فعال</span></p>
+      <p>📥 دروگر عمومی: <span id="generalHarvesterStatus">فعال</span></p>
       <p>🧹 پالایشگر: <span id="cleanerStatus">آماده</span></p>
       <p>✍️ نویسنده AI: <span id="aiwriterStatus">آماده</span></p>
       <hr style="border-color:var(--glass-border); margin:0.5rem 0;">
@@ -152,38 +155,68 @@
   <main>
     <div class="status-bar">
       <span id="quoteCounter">۵۰ جمله</span>
-      <span id="commanderLog">ربات‌ها فعال</span>
+      <span id="commanderLog">ربات‌های تخصصی فعال</span>
     </div>
     <div class="quote-list" id="quoteList"></div>
-    <div class="log-area" id="logArea"><p>🤖 راه‌اندازی با ۳۰ منبع و ۴ دروگر...</p></div>
+    <div class="log-area" id="logArea"><p>🤖 آمادهٔ شکار جملات ارزشمند...</p></div>
   </main>
-  <footer>۳۰ منبع + ۴ دروگر + بلک‌لیست هوشمند | قدرت گرفته از وب</footer>
+  <footer>منابع: کتاب‌ها، ضرب‌المثل‌ها، نقل‌قول‌های تاریخی و فلسفی</footer>
 
   <script>
     // ==================== تنظیمات ====================
     const MAX_DISPLAY = 50;
     const CATEGORIES = ['همه','عشق','زمان','اخلاق','موفقیت','زندگی','مرگ','دوستی','امید','شجاعت','دانش','قدرت','آرامش','هنر','طبیعت','سفر','کار','سلامتی','معنویت','خلاقیت','رهبری','شادی','غم','صبر','آزادی','عدالت'];
 
-    // ==================== ۱۰۰ جملهٔ داخلی (فال‌بک) ====================
+    // ==================== دیتابیس محلی قدرتمند ====================
     const LOCAL_QUOTES = [
+      // جملات معروف کتاب‌ها
       {fa:"تنها راه انجام کار بزرگ، دوست داشتن کاری است که انجام می‌دهی.",en:"The only way to do great work is to love what you do.",cat:"موفقیت",source:"استیو جابز"},
-      {fa:"زندگی آن چیزی است که وقتی مشغول برنامه‌ریزی‌های دیگر هستی، اتفاق می‌افتد.",en:"Life is what happens when you're busy making other plans.",cat:"زندگی",source:"جان لنون"},
-      {fa:"در میان مشکلات، فرصت‌ها نهفته است.",en:"In the middle of difficulty lies opportunity.",cat:"موفقیت",source:"آلبرت انیشتین"},
-      {fa:"آینده متعلق به کسانی است که به زیبایی رویاهایشان باور دارند.",en:"The future belongs to those who believe in the beauty of their dreams.",cat:"امید",source:"النور روزولت"},
-      {fa:"شجاعت تنها نبود ترس نیست، بلکه پیروزی بر آن است.",en:"Courage is not the absence of fear, but the triumph over it.",cat:"شجاعت",source:"نلسون ماندلا"},
-      {fa:"تخیل مهم‌تر از دانش است.",en:"Imagination is more important than knowledge.",cat:"خلاقیت",source:"آلبرت انیشتین"},
-      {fa:"موفقیت یعنی از شکستی به شکست دیگر رفتن، بدون از دست دادن اشتیاق.",en:"Success is going from failure to failure without losing enthusiasm.",cat:"موفقیت",source:"وینستون چرچیل"},
-      {fa:"دوست واقعی کسی است که وقتی بقیه از در بیرون می‌روند، از پنجره وارد می‌شود.",en:"A true friend is someone who walks in when the rest of the world walks out.",cat:"دوستی",source:"والتر وینچل"},
-      {fa:"زندگی ۱۰٪ آن چیزی است که برایت اتفاق می‌افتد و ۹۰٪ نحوهٔ واکنش تو به آن است.",en:"Life is 10% what happens to you and 90% how you react to it.",cat:"زندگی",source:"چارلز سویندول"},
-      {fa:"بزرگ‌ترین افتخار در زندگی، زمین نخوردن نیست، بلکه برخاستن هر بار پس از زمین خوردن است.",en:"The greatest glory in living lies not in never falling, but in rising every time we fall.",cat:"شجاعت",source:"نلسون ماندلا"}
+      {fa:"هر چه بیشتر کتاب بخوانید، چیزهای بیشتری خواهید دانست. هر چه بیشتر یاد بگیرید، به جاهای بیشتری خواهید رفت.",en:"The more that you read, the more things you will know. The more that you learn, the more places you'll go.",cat:"دانش",source:"دکتر سوس"},
+      // ضرب‌المثل‌های فارسی
+      {fa:"مشک آن است که خود ببوید، نه آنکه عطار بگوید.",en:"Musk is what smells by itself, not what the perfumer says.",cat:"اخلاق",source:"ضرب‌المثل فارسی"},
+      {fa:"آب که یکجا ماند، می‌گندد.",en:"Water that stays in one place becomes stagnant.",cat:"زندگی",source:"ضرب‌المثل فارسی"},
+      {fa:"کار نیکو کردن از پر کردن است.",en:"Doing a good deed is better than filling the world with words.",cat:"اخلاق",source:"ضرب‌المثل فارسی"},
+      // نقل‌قول‌های تاریخی
+      {fa:"من آمده‌ام که با ستمگران بجنگم، نه آنکه شاهد ستم باشم.",en:"I came to fight the oppressors, not to witness oppression.",cat:"شجاعت",source:"امام حسین (ع)"},
+      {fa:"خرد، چراغ راه است و جهل، تاریکی بی‌انتها.",en:"Wisdom is the light on the path; ignorance is endless darkness.",cat:"دانش",source:"سقراط"},
+      // جملات فلسفی
+      {fa:"زندگی بدون تأمل، ارزش زیستن ندارد.",en:"The unexamined life is not worth living.",cat:"زندگی",source:"سقراط"},
+      {fa:"تنها چیزی که می‌دانم این است که هیچ نمی‌دانم.",en:"I know that I am intelligent, because I know that I know nothing.",cat:"دانش",source:"سقراط"},
+      // ضرب‌المثل‌های انگلیسی
+      {fa:"جوینده یابنده است.",en:"Seek and you shall find.",cat:"موفقیت",source:"انجیل"},
+      {fa:"یک سیب در روز، دکتر را دور نگه می‌دارد.",en:"An apple a day keeps the doctor away.",cat:"سلامتی",source:"ضرب‌المثل انگلیسی"},
+      {fa:"زود خواستن، زود راندن.",en:"Haste makes waste.",cat:"صبر",source:"ضرب‌المثل انگلیسی"},
+      // کتاب‌های بزرگ
+      {fa:"همهٔ حیوانات برابرند، اما برخی برابرترند.",en:"All animals are equal, but some animals are more equal than others.",cat:"آزادی",source:"جورج اورول - مزرعهٔ حیوانات"},
+      {fa:"انسان آزاد آفریده شده، اما همه جا در زنجیر است.",en:"Man is born free, and everywhere he is in chains.",cat:"آزادی",source:"ژان ژاک روسو"},
+      {fa:"من فکر می‌کنم، پس هستم.",en:"I think, therefore I am.",cat:"خلاقیت",source:"رنه دکارت"},
+      {fa:"برای داشتن چیزی که هرگز نداشته‌اید، باید کسی شوید که هرگز نبوده‌اید.",en:"To have what you have never had, you must become who you have never been.",cat:"موفقیت",source:"جیم ران"},
+      {fa:"در نومیدی بسی امید است.",en:"In the midst of despair, there is much hope.",cat:"امید",source:"مولانا"},
+      {fa:"هیچ گاه اجازه نده ترس از شکست، تو را از بازی کردن باز دارد.",en:"Never let the fear of striking out keep you from playing the game.",cat:"شجاعت",source:"بیب روث"},
+      {fa:"یا راهی خواهم یافت، یا راهی خواهم ساخت.",en:"I shall either find a way or make one.",cat:"خلاقیت",source:"هانیبال"},
+      {fa:"بزرگترین افتخار ما در این نیست که هرگز زمین نخوریم، بلکه در این است که هر بار که زمین می‌خوریم، برخیزیم.",en:"Our greatest glory is not in never falling, but in rising every time we fall.",cat:"شجاعت",source:"کنفوسیوس"},
+      {fa:"آینده به کسانی تعلق دارد که به زیبایی رویاهایشان ایمان دارند.",en:"The future belongs to those who believe in the beauty of their dreams.",cat:"آینده",source:"النور روزولت"},
+      {fa:"اگر می‌خواهید دشمنانتان را مجازات کنید، خودتان را اصلاح کنید.",en:"If you want to punish your enemies, improve yourself.",cat:"موفقیت",source:"ضرب‌المثل چینی"},
+      {fa:"یک سفر هزار مایلی با یک قدم آغاز می‌شود.",en:"A journey of a thousand miles begins with a single step.",cat:"صبر",source:"لائوتسه"},
+      {fa:"دانش، تنها ثروتی است که با بخشیدن بیشتر می‌شود.",en:"Knowledge is the only wealth that increases when shared.",cat:"دانش",source:"ضرب‌المثل"},
+      {fa:"آنچه برای خود می‌پسندی، برای دیگران نیز بپسند.",en:"Do unto others as you would have them do unto you.",cat:"اخلاق",source:"قانون طلایی"},
+      {fa:"همواره آن سوی کوه را سبزتر می‌بینند.",en:"The grass is always greener on the other side.",cat:"زندگی",source:"ضرب‌المثل انگلیسی"},
+      {fa:"مردی که کوه را جابجا کرد، با جابجا کردن سنگ‌های کوچک شروع کرد.",en:"The man who moved a mountain began by carrying away small stones.",cat:"صبر",source:"کنفوسیوس"},
+      {fa:"هر لحظه از خشم، شصت ثانیه از شادی را از دست می‌دهی.",en:"For every minute of anger, you lose sixty seconds of happiness.",cat:"صبر",source:"رالف والدو امرسون"},
+      {fa:"هنگامی که هدفی داری، تمام جهان برای کمک به تو صف‌آرایی می‌کنند.",en:"When you want something, all the universe conspires in helping you to achieve it.",cat:"موفقیت",source:"پائولو کوئلیو - کیمیاگر"},
+      {fa:"زمان ارزشمندترین چیز است، چرا که نمی‌توان آن را دوباره به‌دست آورد.",en:"Time is the most valuable thing a man can spend.",cat:"زمان",source:"تئوفراستوس"},
+      {fa:"تجربه، نامی است که هر کس بر اشتباهاتش می‌گذارد.",en:"Experience is the name everyone gives to their mistakes.",cat:"خلاقیت",source:"اسکار وایلد"},
+      {fa:"حقیقت همیشه پیروز است، اگر چه گاهی دیر.",en:"Truth always wins, though sometimes late.",cat:"آزادی",source:"ضرب‌المثل"},
+      {fa:"کسی که طعم عشق را چشیده باشد، می‌داند که هیچ چیز باارزش‌تر نیست.",en:"He who has tasted love knows that nothing is more precious.",cat:"عشق",source:"جبران خلیل جبران"}
     ];
-    while (LOCAL_QUOTES.length < 100) LOCAL_QUOTES.push({...LOCAL_QUOTES[LOCAL_QUOTES.length % 10], id: LOCAL_QUOTES.length});
+    // پر کردن تا ۱۰۰ جمله
+    while (LOCAL_QUOTES.length < 100) LOCAL_QUOTES.push({...LOCAL_QUOTES[LOCAL_QUOTES.length % LOCAL_QUOTES.length], id: LOCAL_QUOTES.length});
 
     // ==================== حالت ====================
     let currentLang = localStorage.getItem('qlang') || 'fa';
     let currentCategory = 'همه';
     let displayedQuotes = [];
-    let quotesPool = [...LOCAL_QUOTES];
+    let quotesPool = [];
     let robotLogs = [];
     let blacklist = new Set(JSON.parse(localStorage.getItem('quote_blacklist') || '[]'));
 
@@ -219,8 +252,12 @@
 
     // ==================== ترجمه رابط ====================
     const ui = {
-      fa: { logo:'📖 نقل‌قول‌سرا', counter:(n)=>`${n} جمله`, deleteBtn:'حذف', harvester:'فعال', cleaner:'آماده', aiwriter:'آماده', loading:'راه‌اندازی...', commanderLog:'۴ دروگر فعال' },
-      en: { logo:'📖 QuoteVault', counter:(n)=>`${n} quotes`, deleteBtn:'Remove', harvester:'Active', cleaner:'Ready', aiwriter:'Ready', loading:'Initializing...', commanderLog:'4 harvesters active' }
+      fa: { logo:'📖 نقل‌قول‌سرا', counter:(n)=>`${n} جمله`, deleteBtn:'حذف', 
+            bookHunter:'فعال', proverbHunter:'فعال', historicalHunter:'فعال', generalHarvester:'فعال',
+            cleaner:'آماده', aiwriter:'آماده', loading:'در حال شکار...', commanderLog:'همهٔ ربات‌ها فعال' },
+      en: { logo:'📖 QuoteVault', counter:(n)=>`${n} quotes`, deleteBtn:'Remove',
+            bookHunter:'Active', proverbHunter:'Active', historicalHunter:'Active', generalHarvester:'Active',
+            cleaner:'Ready', aiwriter:'Ready', loading:'Hunting...', commanderLog:'All bots active' }
     };
     function t(k,...a){ let s=ui[currentLang]?.[k]||k; return typeof s==='function'?s(...a):s; }
     function updateUI() {
@@ -228,25 +265,25 @@
       document.getElementById('langLabel').textContent=currentLang==='fa'?'FA':'EN';
       quoteCounter.textContent=t('counter',displayedQuotes.length);
       commanderLog.textContent=t('commanderLog');
-      document.getElementById('h1Status').textContent=t('harvester');
-      document.getElementById('h2Status').textContent=t('harvester');
-      document.getElementById('h3Status').textContent=t('harvester');
-      document.getElementById('h4Status').textContent=t('harvester');
+      document.getElementById('bookHunterStatus').textContent=t('bookHunter');
+      document.getElementById('proverbHunterStatus').textContent=t('proverbHunter');
+      document.getElementById('historicalHunterStatus').textContent=t('historicalHunter');
+      document.getElementById('generalHarvesterStatus').textContent=t('generalHarvester');
       document.getElementById('cleanerStatus').textContent=t('cleaner');
       document.getElementById('aiwriterStatus').textContent=t('aiwriter');
       renderCategoryList();
-      renderQuotes();
     }
 
-    // ==================== منوی همبرگری ====================
+    // ==================== منو همبرگری ====================
     function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('open'); }
     document.getElementById('hamburgerBtn').addEventListener('click',toggleSidebar);
     document.getElementById('closeSidebar').addEventListener('click',toggleSidebar);
     document.getElementById('sidebarOverlay').addEventListener('click',toggleSidebar);
 
     function renderCategoryList(){
-      let html = CATEGORIES.map(cat => `<button class="category-btn ${cat===currentCategory?'active':''}" data-cat="${cat}">${cat}</button>`).join('');
-      sidebarCategoryList.innerHTML = html;
+      sidebarCategoryList.innerHTML = CATEGORIES.map(cat => 
+        `<button class="category-btn ${cat===currentCategory?'active':''}" data-cat="${cat}">${cat}</button>`
+      ).join('');
       sidebarCategoryList.querySelectorAll('.category-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           currentCategory = btn.dataset.cat;
@@ -257,309 +294,318 @@
       });
     }
 
+    // ==================== اثر انگشت ====================
+    function fingerprint(text) {
+      return text.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+    }
+    function isInBlacklist(text) {
+      return blacklist.has(fingerprint(text));
+    }
+
     // ==================== مدیریت جملات ====================
     function getAvailableQuotes(){
-      let filtered = currentCategory==='همه' ? quotesPool : quotesPool.filter(q => q.cat===currentCategory);
-      let ids = new Set(displayedQuotes.map(q => q.id));
-      return filtered.filter(q => !ids.has(q.id) && !blacklist.has(q.en.trim().toLowerCase()));
-    }
-    function refreshDisplay(){
-      let avail = getAvailableQuotes();
-      let need = MAX_DISPLAY - displayedQuotes.length;
-      if (need>0 && avail.length>0){
-        let shuffled = [...avail].sort(()=>Math.random()-0.5);
-        displayedQuotes.push(...shuffled.slice(0, Math.min(need, shuffled.length)));
-      }
-      if (displayedQuotes.length > MAX_DISPLAY) displayedQuotes.length = MAX_DISPLAY;
-      quoteCounter.textContent = t('counter', displayedQuotes.length);
-      renderQuotes();
-    }
-    function deleteQuote(id){
-      let idx = displayedQuotes.findIndex(q => q.id===id);
-      if (idx!==-1){
-        let removed = displayedQuotes.splice(idx,1)[0];
-        // اضافه به بلک‌لیست
-        blacklist.add(removed.en.trim().toLowerCase());
-        localStorage.setItem('quote_blacklist', JSON.stringify([...blacklist]));
-        blacklistSizeEl.textContent = blacklist.size;
-
-        let avail = getAvailableQuotes();
-        if (avail.length>0) displayedQuotes.push(avail[Math.floor(Math.random()*avail.length)]);
-        addLog(`🗑️ جمله حذف و به بلک‌لیست اضافه شد.`);
-        quoteCounter.textContent = t('counter', displayedQuotes.length);
-        renderQuotes();
-      }
-    }
-    function renderQuotes(){
-      quoteList.innerHTML = '';
-      displayedQuotes.forEach((q,i)=>{
-        let card = document.createElement('div');
-        card.className = 'quote-card';
-        let text = currentLang==='fa' ? q.fa : q.en;
-        let sent = {pos:'😊',neu:'😐',neg:'😞'};
-        card.innerHTML = `
-          <div class="quote-number">${i+1}</div>
-          <div class="quote-content">
-            <div class="quote-text">“${text}”</div>
-            <div class="quote-source">${q.source||'نامشخص'}</div>
-          </div>
-          <div class="quote-actions">
-            <span class="sentiment-icon">${sent[q.sentiment]||'😐'}</span>
-            <button class="delete-btn" data-id="${q.id}">${t('deleteBtn')}</button>
-          </div>
-        `;
-        card.querySelector('.delete-btn').addEventListener('click', e=>{
-          e.stopPropagation();
-          deleteQuote(q.id);
-        });
-        quoteList.appendChild(card);
-      });
-    }
-    function addLog(msg){
-      let time = new Date().toLocaleTimeString('fa-IR');
-      robotLogs.push(`[${time}] ${msg}`);
-      if (robotLogs.length>20) robotLogs.shift();
-      logArea.innerHTML = robotLogs.map(m=>`<p>${m}</p>`).join('');
-      logArea.scrollTop = logArea.scrollHeight;
+      let filtered = currentCategory === 'همه' ? quotesPool : quotesPool.filter(q => q.cat === currentCategory);
+      let displayedIds = new Set(displayedQuotes.map(q => q.id));
+      return filtered.filter(q => !displayedIds.has(q.id) && !isInBlacklist(q.en));
     }
 
-    // ==================== تحلیل و دسته‌بندی ====================
-    function simpleSentiment(txt){
-      let posW=['خوب','عالی','زیبا','عشق','امید','شادی','موفقیت','love','hope','joy','success','great','wonderful','beautiful'];
-      let negW=['بد','غم','ترس','شکست','مرگ','درد','sad','fear','failure','death','pain','hate','angry'];
-      let l=txt.toLowerCase(), p=0,n=0;
-      posW.forEach(w=>{if(l.includes(w))p++;});
-      negW.forEach(w=>{if(l.includes(w))n++;});
-      if(p>n)return'pos';
-      if(n>p)return'neg';
-      return'neu';
-    }
-    function categorizeQuote(txt){
-      let l=txt.toLowerCase();
-      for(let c of CATEGORIES.slice(1)) if(l.includes(c)) return c;
-      return 'زندگی';
-    }
-    function isQuality(txt){ return txt && txt.length>=20 && !/^[0-9\s]+$/.test(txt) && !/[<>{}]/.test(txt); }
-
-    // ==================== بلک‌لیست و افزودن جمله ====================
-    function addQuotesFromArray(arr, sourceLabel){
+    function addQuotesToPool(quotesArray, sourceLabel) {
       let added = 0;
-      arr.forEach(item => {
+      quotesArray.forEach(item => {
         let txtEn = (item.en || item.content || item.quote || item.text || '').trim();
         let txtFa = item.fa || txtEn;
-        if (!txtEn || !isQuality(txtEn)) return;
-        let key = txtEn.toLowerCase();
-        if (blacklist.has(key)) return; // در بلک‌لیست
-        if (!quotesPool.some(q => q.en.trim().toLowerCase() === key)) {
-          let cat = categorizeQuote(txtEn);
-          let sent = simpleSentiment(txtEn);
-          quotesPool.push({
-            id: Date.now() + Math.random(),
-            fa: txtFa,
-            en: txtEn,
-            cat: cat,
-            sentiment: sent,
-            source: item.source || item.author || sourceLabel
-          });
-          added++;
-        }
+        if (!txtEn || txtEn.length < 15 || /[<>{}]/.test(txtEn)) return;
+        let fp = fingerprint(txtEn);
+        if (blacklist.has(fp)) return;
+        if (quotesPool.some(q => fingerprint(q.en) === fp)) return;
+        quotesPool.push({
+          id: Date.now() + Math.random(),
+          fa: txtFa,
+          en: txtEn,
+          cat: categorizeQuote(txtEn),
+          sentiment: simpleSentiment(txtEn),
+          source: item.source || item.author || sourceLabel,
+          addedAt: Date.now()
+        });
+        added++;
       });
       return added;
     }
 
-    // ==================== نویسندهٔ AI ====================
-    function generateAIQuotes(count){
-      const subjectsFa=['عشق','زندگی','دوستی','امید','خلاقیت','صبر','شجاعت','آرامش','دانش','موفقیت'];
-      const verbsFa=['پل می‌سازد','نور می‌بخشد','راه را نشان می‌دهد','مرهم می‌گذارد','رویاها را زنده می‌کند','افق‌های تازه می‌گشاید','قدرت می‌دهد','آرامش می‌آورد','تغییر ایجاد می‌کند','معجزه می‌کند'];
-      const compsFa=['در دل تاریکی','با هر طلوع خورشید','در لحظه‌های سخت','در میان اشک‌ها','با هر لبخند','در سکوت شب','با هر گام استوار','در آغوش طبیعت','با هر نفس تازه','در قلب طوفان'];
-      const subjectsEn=['Love','Life','Friendship','Hope','Creativity','Patience','Courage','Peace','Knowledge','Success'];
-      const verbsEn=['builds bridges','brings light','shows the way','heals wounds','revives dreams','opens new horizons','gives strength','brings calm','makes changes','creates miracles'];
-      const compsEn=['in the dark','with every sunrise','in hard times','amid the tears','with every smile','in the silence of night','with every firm step','in nature\'s embrace','with every fresh breath','in the heart of the storm'];
-      let generated = [];
-      for (let i=0; i<count; i++){
-        let sf = subjectsFa[Math.floor(Math.random()*subjectsFa.length)];
-        let vf = verbsFa[Math.floor(Math.random()*verbsFa.length)];
-        let cf = compsFa[Math.floor(Math.random()*compsFa.length)];
-        let se = subjectsEn[Math.floor(Math.random()*subjectsEn.length)];
-        let ve = verbsEn[Math.floor(Math.random()*verbsEn.length)];
-        let ce = compsEn[Math.floor(Math.random()*compsEn.length)];
-        generated.push({fa:`${sf} ${vf} ${cf}.`, en:`${se} ${ve} ${ce}.`, source:'AI نویسنده'});
+    function refreshDisplay() {
+      let avail = getAvailableQuotes();
+      let need = MAX_DISPLAY - displayedQuotes.length;
+      if (need > 0 && avail.length > 0) {
+        let shuffled = [...avail].sort(() => Math.random() - 0.5);
+        let newQuotes = shuffled.slice(0, need);
+        displayedQuotes.push(...newQuotes);
+        newQuotes.forEach(q => appendCard(q));
       }
-      return generated;
+      if (displayedQuotes.length > MAX_DISPLAY) {
+        let excess = displayedQuotes.length - MAX_DISPLAY;
+        for (let i=0; i<excess; i++) {
+          removeCard(displayedQuotes[0].id);
+        }
+      }
+      quoteCounter.textContent = t('counter', displayedQuotes.length);
+      updateNumbers();
     }
-    function runAIWriterIfNeeded(){
-      if (quotesPool.length < 100){
+
+    function updateNumbers() {
+      document.querySelectorAll('.quote-card').forEach((card, idx) => {
+        card.querySelector('.quote-number').textContent = idx + 1;
+      });
+    }
+
+    function appendCard(q, animate = true) {
+      let card = buildCardElement(q);
+      if (!animate) card.style.animation = 'none';
+      quoteList.appendChild(card);
+    }
+
+    function buildCardElement(q) {
+      let card = document.createElement('div');
+      card.className = 'quote-card';
+      card.dataset.id = q.id;
+      let text = currentLang === 'fa' ? q.fa : q.en;
+      let sent = {pos:'😊', neu:'😐', neg:'😞'};
+      card.innerHTML = `
+        <div class="quote-number">0</div>
+        <div class="quote-content">
+          <div class="quote-text">“${text}”</div>
+          <div class="quote-source">${q.source||'نامشخص'}</div>
+        </div>
+        <div class="quote-actions">
+          <span class="sentiment-icon">${sent[q.sentiment]||'😐'}</span>
+          <button class="delete-btn">${t('deleteBtn')}</button>
+        </div>
+      `;
+      card.querySelector('.delete-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteQuote(q.id);
+      });
+      return card;
+    }
+
+    function removeCard(id) {
+      let card = document.querySelector(`.quote-card[data-id="${id}"]`);
+      if (card) {
+        card.classList.add('removing');
+        setTimeout(() => {
+          card.remove();
+          let idx = displayedQuotes.findIndex(q => q.id == id);
+          if (idx !== -1) displayedQuotes.splice(idx, 1);
+          quoteCounter.textContent = t('counter', displayedQuotes.length);
+          updateNumbers();
+        }, 300);
+      }
+    }
+
+    function deleteQuote(id) {
+      let quote = displayedQuotes.find(q => q.id === id);
+      if (!quote) return;
+      blacklist.add(fingerprint(quote.en));
+      localStorage.setItem('quote_blacklist', JSON.stringify([...blacklist]));
+      blacklistSizeEl.textContent = blacklist.size;
+      addLog(`🗑️ جمله حذف و به بلک‌لیست اضافه شد.`);
+      removeCard(id);
+      setTimeout(() => {
+        let avail = getAvailableQuotes();
+        if (avail.length > 0) {
+          let newQ = avail[Math.floor(Math.random() * avail.length)];
+          displayedQuotes.push(newQ);
+          appendCard(newQ);
+          quoteCounter.textContent = t('counter', displayedQuotes.length);
+          updateNumbers();
+        }
+      }, 350);
+    }
+
+    function renderAllQuotes() {
+      quoteList.innerHTML = '';
+      displayedQuotes.forEach(q => appendCard(q, false));
+      updateNumbers();
+    }
+
+    // ==================== AI تخصصی ====================
+    function simpleSentiment(txt) {
+      let posW = ['love','hope','joy','success','great','wonderful','beautiful','good','excellent','amazing','happy','inspiring'];
+      let negW = ['sad','fear','failure','death','pain','hate','angry','bad','terrible','awful','depressing'];
+      let l = txt.toLowerCase(), p=0,n=0;
+      posW.forEach(w=>{ if(l.includes(w)) p++; });
+      negW.forEach(w=>{ if(l.includes(w)) n++; });
+      return p > n ? 'pos' : (n > p ? 'neg' : 'neu');
+    }
+    function categorizeQuote(txt) {
+      let l = txt.toLowerCase();
+      for (let c of CATEGORIES.slice(1)) if (l.includes(c)) return c;
+      return 'زندگی';
+    }
+
+    // ==================== منابع تخصصی برای کتاب‌ها و ضرب‌المثل‌ها ====================
+    // شکارچی کتاب: استفاده از APIهای نقل‌قول کتاب
+    const bookAPIs = [
+      { url: 'https://api.quotable.io/quotes?tags=book&limit=5', parser: d=>d.results, label:'Quotable Book' },
+      { url: 'https://api.quotable.io/quotes?tags=literature&limit=5', parser: d=>d.results, label:'Quotable Literature' },
+      { url: 'https://api.quotable.io/quotes?tags=famous-quotes&limit=5', parser: d=>d.results, label:'Famous Quotes' },
+      { url: 'https://api.quotable.io/quotes?author=shakespeare&limit=5', parser: d=>d.results, label:'Shakespeare' },
+      { url: 'https://api.quotable.io/quotes?author=plato&limit=5', parser: d=>d.results, label:'Plato' },
+    ];
+
+    // شکارچی ضرب‌المثل‌ها
+    const proverbAPIs = [
+      { url: 'https://api.quotable.io/quotes?tags=proverb&limit=5', parser: d=>d.results, label:'Proverbs' },
+      { url: 'https://api.quotable.io/quotes?tags=wisdom&limit=5', parser: d=>d.results, label:'Wisdom' },
+      { url: 'https://api.quotable.io/quotes?tags=philosophy&limit=5', parser: d=>d.results, label:'Philosophy' },
+    ];
+
+    // شکارچی نقل‌قول‌های تاریخی
+    const historicalAPIs = [
+      { url: 'https://api.quotable.io/quotes?tags=history&limit=5', parser: d=>d.results, label:'History' },
+      { url: 'https://api.quotable.io/quotes?tags=civilization&limit=5', parser: d=>d.results, label:'Civilization' },
+    ];
+
+    async function fetchAndProcessSource(src) {
+      try {
+        let res = await fetch(src.url);
+        if (!res.ok) throw new Error('status ' + res.status);
+        let data = await res.json();
+        let items = src.parser(data);
+        if (items && items.length) {
+          let added = addQuotesToPool(items, src.label);
+          if (added) {
+            addLog(`📥 ${src.label}: ${added} جمله جدید.`);
+            poolSizeEl.textContent = quotesPool.length;
+            refreshDisplay();
+          }
+        }
+      } catch (e) { /* ignore */}
+    }
+
+    async function harvestSpecialized(sources) {
+      for (let src of sources) {
+        await fetchAndProcessSource(src);
+      }
+    }
+
+    // هماهنگ‌کنندهٔ اصلی
+    async function coordinator() {
+      // شکار کتاب‌ها
+      await harvestSpecialized(bookAPIs);
+      // شکار ضرب‌المثل‌ها
+      await harvestSpecialized(proverbAPIs);
+      // شکار نقل‌قول‌های تاریخی
+      await harvestSpecialized(historicalAPIs);
+      // اگر هنوز مخزن کم بود، نویسنده AI
+      if (quotesPool.length < 100) {
         let needed = 100 - quotesPool.length;
-        let toGenerate = Math.min(needed, 20);
-        let newQuotes = generateAIQuotes(toGenerate);
-        let added = addQuotesFromArray(newQuotes, 'AI نویسنده');
-        if (added>0){
-          addLog(`✍️ نویسنده AI: ${added} جملهٔ تازه ساخت.`);
+        let aiQuotes = generateAIQuotes(Math.min(needed, 20));
+        let added = addQuotesToPool(aiQuotes, 'AI نویسنده');
+        if (added) {
+          addLog(`✍️ نویسنده AI: ${added} جمله ساخته شد.`);
           poolSizeEl.textContent = quotesPool.length;
           refreshDisplay();
         }
       }
     }
 
-    // ==================== ساخت ۳۰ منبع ====================
-    const SOURCES = [
-      // Quotable (direct)
-      { url: `https://api.quotable.io/quotes/random?limit=5`, parser: d=>d, label:'Quotable' },
-      // Quotable with tags
-      { url: `https://api.quotable.io/quotes?tags=love&limit=5`, parser: d=>d.results, label:'Quotable (love)' },
-      { url: `https://api.quotable.io/quotes?tags=life&limit=5`, parser: d=>d.results, label:'Quotable (life)' },
-      { url: `https://api.quotable.io/quotes?tags=success&limit=5`, parser: d=>d.results, label:'Quotable (success)' },
-      { url: `https://api.quotable.io/quotes?tags=wisdom&limit=5`, parser: d=>d.results, label:'Quotable (wisdom)' },
-      // Type.fit
-      { url: 'https://type.fit/api/quotes', parser: d=>d.slice(0,5), label:'Type.fit' },
-      // ZenQuotes
-      { url: 'https://zenquotes.io/api/random', parser: d=>d.map(q=>({en:q.q,source:q.a})), label:'ZenQuotes' },
-      // Stoic
-      { url: 'https://stoic-server.herokuapp.com/random', parser: d=>[{en:d.quote,source:d.author}], label:'Stoic' },
-      // DummyJSON
-      { url: 'https://dummyjson.com/quotes?limit=5', parser: d=>d.quotes.map(q=>({en:q.quote,source:q.author})), label:'DummyJSON' },
-      // Forismatic
-      { url: 'https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en&count=5', parser: d=>(Array.isArray(d)?d:[d]).map(q=>({en:q.quoteText,source:q.quoteAuthor})), label:'Forismatic' },
-      // QuoteGarden
-      { url: 'https://quote-garden.herokuapp.com/api/v3/quotes?limit=5', parser: d=>d.data.map(q=>({en:q.quoteText,source:q.quoteAuthor})), label:'QuoteGarden' },
-      // FavQs
-      { url: 'https://favqs.com/api/qotd', parser: d=>[{en:d.quote.body,source:d.quote.author}], label:'FavQs' },
-      // Breaking Bad
-      { url: 'https://api.breakingbadquotes.xyz/v1/quotes/5', parser: d=>d.map(q=>({en:q.quote,source:q.author})), label:'Breaking Bad' },
-      // Ron Swanson
-      { url: 'https://ron-swanson-quotes.herokuapp.com/v2/quotes', parser: d=>d.map(q=>({en:q,source:'Ron Swanson'})), label:'Ron Swanson' },
-      // Tronald Dump
-      { url: 'https://www.tronalddump.io/random/quote', parser: d=>[{en:d.value,source:'Donald Trump'}], label:'Tronald Dump' },
-      // Kanye Rest
-      { url: 'https://api.kanye.rest/', parser: d=>[{en:d.quote,source:'Kanye West'}], label:'Kanye' },
-      // Go Quotes
-      { url: 'https://goquotes-api.herokuapp.com/api/v1/random?count=5', parser: d=>d.quotes.map(q=>({en:q.text,source:q.author||'Unknown'})), label:'GoQuotes' },
-      // Advice Slip
-      { url: 'https://api.adviceslip.com/advice', parser: d=>[{en:d.slip.advice,source:'Advice'}], label:'Advice Slip' },
-      // Chuck Norris
-      { url: 'https://api.chucknorris.io/jokes/random', parser: d=>[{en:d.value,source:'Chuck Norris'}], label:'Chuck Norris' },
-      // QuoteSlate
-      { url: 'https://quotes.rest/qod.json', parser: d=>[{en:d.contents.quotes[0].quote,source:d.contents.quotes[0].author}], label:'TheySaidSo' },
-      // local fallback (always available)
-      { url: '', parser: ()=>LOCAL_QUOTES.slice(0,5), label:'حافظه داخلی', fallback:true }
-    ];
-
-    // تقسیم منابع به ۴ گروه برای ۴ دروگر
-    const groupSize = Math.ceil((SOURCES.length - 1) / 4); // one group is fallback only
-    const sourceGroups = [
-      SOURCES.slice(0, groupSize),
-      SOURCES.slice(groupSize, groupSize*2),
-      SOURCES.slice(groupSize*2, groupSize*3),
-      SOURCES.slice(groupSize*3)
-    ];
-
-    // تابع کمکی fetch یک منبع
-    async function tryFetchSource(src){
-      try {
-        let data;
-        if (src.fallback) {
-          data = src.parser();
-        } else {
-          let res = await fetch(src.url);
-          if (!res.ok) throw new Error('status '+res.status);
-          data = await res.json();
-          data = src.parser(data);
-        }
-        if (data && data.length) {
-          let added = addQuotesFromArray(data, src.label);
-          if (added > 0) {
-            addLog(`📥 ${src.label}: ${added} جمله اضافه شد.`);
-            poolSizeEl.textContent = quotesPool.length;
-            refreshDisplay();
-            return true;
-          }
-        }
-      } catch(e) { /* ignore */ }
-      return false;
-    }
-
-    // دروگرها
-    async function harvester1(){
-      for (let src of sourceGroups[0]) {
-        if (src.fallback) continue; // fallback handled by harvester4
-        await tryFetchSource(src);
+    function generateAIQuotes(count) {
+      const piecesFa = [
+        { subj:'عشق', verb:'پل می‌سازد', comp:'در دل تاریکی' },
+        { subj:'زندگی', verb:'نور می‌بخشد', comp:'با هر طلوع' },
+        { subj:'دوستی', verb:'راه را نشان می‌دهد', comp:'در لحظه‌های سخت' },
+        { subj:'امید', verb:'مرهم می‌گذارد', comp:'در میان اشک‌ها' },
+        { subj:'خلاقیت', verb:'افق‌های تازه می‌گشاید', comp:'با هر نفس' },
+        { subj:'صبر', verb:'آرامش می‌آورد', comp:'در سکوت شب' },
+        { subj:'شجاعت', verb:'قدرت می‌دهد', comp:'با هر گام استوار' },
+        { subj:'دانش', verb:'تغییر ایجاد می‌کند', comp:'در قلب طوفان' },
+        { subj:'موفقیت', verb:'رویاها را زنده می‌کند', comp:'با هر تلاش' },
+        { subj:'معنویت', verb:'معجزه می‌کند', comp:'در آغوش طبیعت' }
+      ];
+      let res = [];
+      for (let i=0; i<count; i++) {
+        let p = piecesFa[Math.floor(Math.random() * piecesFa.length)];
+        let enSubj = p.subj==='عشق'?'Love':p.subj==='زندگی'?'Life':p.subj==='دوستی'?'Friendship':p.subj==='امید'?'Hope':p.subj==='خلاقیت'?'Creativity':p.subj==='صبر'?'Patience':p.subj==='شجاعت'?'Courage':p.subj==='دانش'?'Knowledge':p.subj==='موفقیت'?'Success':'Spirituality';
+        res.push({
+          fa: `${p.subj} ${p.verb} ${p.comp}.`,
+          en: `${enSubj} ${p.verb==='پل می‌سازد'?'builds bridges':p.verb==='نور می‌بخشد'?'brings light':'shows the way'} ${p.comp==='در دل تاریکی'?'in the dark':p.comp==='با هر طلوع'?'with every sunrise':'in hard times'}.`,
+          source: 'AI نویسنده'
+        });
       }
-    }
-    async function harvester2(){
-      for (let src of sourceGroups[1]) await tryFetchSource(src);
-    }
-    async function harvester3(){
-      for (let src of sourceGroups[2]) await tryFetchSource(src);
-    }
-    async function harvester4(){
-      // این دروگر fallback و AI writer
-      for (let src of sourceGroups[3]) await tryFetchSource(src);
-      runAIWriterIfNeeded();
+      return res;
     }
 
-    // زمان‌بندی‌ها
-    setInterval(harvester1, 5*60*1000);  // هر ۵ دقیقه
-    setInterval(harvester2, 6*60*1000);  // هر ۶ دقیقه
-    setInterval(harvester3, 7*60*1000);  // هر ۷ دقیقه
-    setInterval(harvester4, 8*60*1000);  // هر ۸ دقیقه (fallback & AI)
-
-    // پالایش تکراری‌ها (همچنان هر ۳۰ ثانیه)
-    function cleanDuplicates(){
-      let seen = new Set(), unique = [];
+    function runDeduplication() {
+      let seen = new Map();
+      let unique = [];
       quotesPool.forEach(q => {
-        let key = q.en.trim().toLowerCase();
-        if (!seen.has(key) && !blacklist.has(key)){
-          seen.add(key);
+        let fp = fingerprint(q.en);
+        if (!seen.has(fp) && !blacklist.has(fp)) {
+          seen.set(fp, q);
           unique.push(q);
         }
       });
       let removed = quotesPool.length - unique.length;
-      if (removed > 0){
+      if (removed > 0) {
         quotesPool = unique;
         addLog(`🧹 پالایشگر: ${removed} تکراری حذف شد.`);
         poolSizeEl.textContent = quotesPool.length;
         let displayedIds = new Set(displayedQuotes.map(q => q.id));
-        displayedQuotes = displayedQuotes.filter(q => quotesPool.some(p => p.id===q.id));
+        displayedQuotes = displayedQuotes.filter(q => quotesPool.some(p => p.id === q.id));
         refreshDisplay();
       }
     }
-    setInterval(cleanDuplicates, 30*1000);
 
-    // راه‌اندازی اولیه
-    async function initialLoad(){
+    // ==================== زمان‌بندی‌ها ====================
+    setInterval(coordinator, 3 * 60 * 1000); // هر ۳ دقیقه
+    setInterval(runDeduplication, 15 * 1000); // هر ۱۵ ثانیه
+
+    // ==================== بارگذاری اولیه ====================
+    async function initialLoad() {
       commanderLog.textContent = t('loading');
-      // پر کردن سریع با ۵۰ جمله محلی
-      addQuotesFromArray(LOCAL_QUOTES.slice(0,50), 'حافظه داخلی');
-      refreshDisplay();
-      // اجرای همه دروگرها یک بار
-      harvester1(); harvester2(); harvester3(); harvester4();
+      addQuotesToPool(LOCAL_QUOTES, 'حافظه داخلی');
+      let initDisplay = getAvailableQuotes().slice(0, MAX_DISPLAY);
+      displayedQuotes = initDisplay;
+      renderAllQuotes();
+      quoteCounter.textContent = t('counter', displayedQuotes.length);
+      poolSizeEl.textContent = quotesPool.length;
+      blacklistSizeEl.textContent = blacklist.size;
+      coordinator();
       commanderLog.textContent = t('commanderLog');
     }
 
     // ==================== زبان و تم ====================
     function toggleLanguage(){
-      currentLang = currentLang==='fa'?'en':'fa';
+      currentLang = currentLang === 'fa' ? 'en' : 'fa';
       localStorage.setItem('qlang', currentLang);
       document.documentElement.lang = currentLang;
-      document.documentElement.dir = currentLang==='fa'?'rtl':'ltr';
+      document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
       updateUI();
+      renderAllQuotes();
     }
     function toggleTheme(){
       document.body.classList.toggle('light-mode');
-      localStorage.setItem('qtheme', document.body.classList.contains('light-mode')?'light':'dark');
+      localStorage.setItem('qtheme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
     }
     document.getElementById('langToggle').addEventListener('click', toggleLanguage);
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-    if (localStorage.getItem('qtheme')==='light') document.body.classList.add('light-mode');
+    if (localStorage.getItem('qtheme') === 'light') document.body.classList.add('light-mode');
 
-    // ==================== آغاز ====================
-    function init(){
+    function addLog(msg) {
+      let time = new Date().toLocaleTimeString('fa-IR');
+      robotLogs.push(`[${time}] ${msg}`);
+      if (robotLogs.length > 20) robotLogs.shift();
+      logArea.innerHTML = robotLogs.map(m => `<p>${m}</p>`).join('');
+      logArea.scrollTop = logArea.scrollHeight;
+    }
+
+    // ==================== راه‌اندازی ====================
+    function init() {
       document.documentElement.lang = currentLang;
-      document.documentElement.dir = currentLang==='fa'?'rtl':'ltr';
+      document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
       renderCategoryList();
       updateUI();
       initialLoad();
-      blacklistSizeEl.textContent = blacklist.size;
     }
     init();
   </script>
