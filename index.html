@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نقل‌قول‌سرا | کتاب‌ها و ضرب‌المثل‌ها</title>
+  <title>نقل‌قول‌سرا | کتاب‌ها و دیالوگ‌های فیلم</title>
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -137,11 +137,12 @@
     <div class="sidebar-section">
       <h3>🤖 ربات‌های تخصصی</h3>
       <p>📚 شکارچی کتاب: <span id="bookHunterStatus">فعال</span></p>
-      <p>🌍 ضرب‌المثل‌یاب: <span id="proverbHunterStatus">فعال</span></p>
-      <p>🏛️ نقل‌قول تاریخی: <span id="historicalHunterStatus">فعال</span></p>
-      <p>📥 دروگر عمومی: <span id="generalHarvesterStatus">فعال</span></p>
+      <p>🎬 شکارچی دیالوگ فیلم: <span id="movieHunterStatus">فعال</span></p>
+      <p>🧠 دروگر الهام‌بخش: <span id="inspireHarvesterStatus">فعال</span></p>
+      <p>✍️ نویسنده AI (کتاب): <span id="aiBookWriterStatus">آماده</span></p>
+      <p>🎭 نویسنده AI (دیالوگ): <span id="aiDialogueWriterStatus">آماده</span></p>
+      <p>💡 نویسنده AI (عمومی): <span id="aiGeneralWriterStatus">آماده</span></p>
       <p>🧹 پالایشگر: <span id="cleanerStatus">آماده</span></p>
-      <p>✍️ نویسنده AI: <span id="aiwriterStatus">آماده</span></p>
       <hr style="border-color:var(--glass-border); margin:0.5rem 0;">
       <p>📊 مخزن: <span id="poolSize">0</span></p>
       <p>🚫 بلک‌لیست: <span id="blacklistSize">0</span></p>
@@ -160,63 +161,57 @@
     <div class="quote-list" id="quoteList"></div>
     <div class="log-area" id="logArea"><p>🤖 آمادهٔ شکار جملات ارزشمند...</p></div>
   </main>
-  <footer>منابع: کتاب‌ها، ضرب‌المثل‌ها، نقل‌قول‌های تاریخی و فلسفی</footer>
+  <footer>منابع: کتاب‌ها، دیالوگ‌های فیلم، جملات الهام‌بخش | بدون ضرب‌المثل</footer>
 
   <script>
     // ==================== تنظیمات ====================
     const MAX_DISPLAY = 50;
     const CATEGORIES = ['همه','عشق','زمان','اخلاق','موفقیت','زندگی','مرگ','دوستی','امید','شجاعت','دانش','قدرت','آرامش','هنر','طبیعت','سفر','کار','سلامتی','معنویت','خلاقیت','رهبری','شادی','غم','صبر','آزادی','عدالت'];
 
-    // ==================== دیتابیس محلی قدرتمند ====================
+    // ==================== دیتابیس محلی قدرتمند (بدون ضرب‌المثل) ====================
     const LOCAL_QUOTES = [
-      // جملات معروف کتاب‌ها
+      // تکه‌های کتاب
       {fa:"تنها راه انجام کار بزرگ، دوست داشتن کاری است که انجام می‌دهی.",en:"The only way to do great work is to love what you do.",cat:"موفقیت",source:"استیو جابز"},
       {fa:"هر چه بیشتر کتاب بخوانید، چیزهای بیشتری خواهید دانست. هر چه بیشتر یاد بگیرید، به جاهای بیشتری خواهید رفت.",en:"The more that you read, the more things you will know. The more that you learn, the more places you'll go.",cat:"دانش",source:"دکتر سوس"},
-      // ضرب‌المثل‌های فارسی
-      {fa:"مشک آن است که خود ببوید، نه آنکه عطار بگوید.",en:"Musk is what smells by itself, not what the perfumer says.",cat:"اخلاق",source:"ضرب‌المثل فارسی"},
-      {fa:"آب که یکجا ماند، می‌گندد.",en:"Water that stays in one place becomes stagnant.",cat:"زندگی",source:"ضرب‌المثل فارسی"},
-      {fa:"کار نیکو کردن از پر کردن است.",en:"Doing a good deed is better than filling the world with words.",cat:"اخلاق",source:"ضرب‌المثل فارسی"},
-      // نقل‌قول‌های تاریخی
-      {fa:"من آمده‌ام که با ستمگران بجنگم، نه آنکه شاهد ستم باشم.",en:"I came to fight the oppressors, not to witness oppression.",cat:"شجاعت",source:"امام حسین (ع)"},
-      {fa:"خرد، چراغ راه است و جهل، تاریکی بی‌انتها.",en:"Wisdom is the light on the path; ignorance is endless darkness.",cat:"دانش",source:"سقراط"},
-      // جملات فلسفی
-      {fa:"زندگی بدون تأمل، ارزش زیستن ندارد.",en:"The unexamined life is not worth living.",cat:"زندگی",source:"سقراط"},
-      {fa:"تنها چیزی که می‌دانم این است که هیچ نمی‌دانم.",en:"I know that I am intelligent, because I know that I know nothing.",cat:"دانش",source:"سقراط"},
-      // ضرب‌المثل‌های انگلیسی
-      {fa:"جوینده یابنده است.",en:"Seek and you shall find.",cat:"موفقیت",source:"انجیل"},
-      {fa:"یک سیب در روز، دکتر را دور نگه می‌دارد.",en:"An apple a day keeps the doctor away.",cat:"سلامتی",source:"ضرب‌المثل انگلیسی"},
-      {fa:"زود خواستن، زود راندن.",en:"Haste makes waste.",cat:"صبر",source:"ضرب‌المثل انگلیسی"},
-      // کتاب‌های بزرگ
       {fa:"همهٔ حیوانات برابرند، اما برخی برابرترند.",en:"All animals are equal, but some animals are more equal than others.",cat:"آزادی",source:"جورج اورول - مزرعهٔ حیوانات"},
       {fa:"انسان آزاد آفریده شده، اما همه جا در زنجیر است.",en:"Man is born free, and everywhere he is in chains.",cat:"آزادی",source:"ژان ژاک روسو"},
       {fa:"من فکر می‌کنم، پس هستم.",en:"I think, therefore I am.",cat:"خلاقیت",source:"رنه دکارت"},
       {fa:"برای داشتن چیزی که هرگز نداشته‌اید، باید کسی شوید که هرگز نبوده‌اید.",en:"To have what you have never had, you must become who you have never been.",cat:"موفقیت",source:"جیم ران"},
-      {fa:"در نومیدی بسی امید است.",en:"In the midst of despair, there is much hope.",cat:"امید",source:"مولانا"},
-      {fa:"هیچ گاه اجازه نده ترس از شکست، تو را از بازی کردن باز دارد.",en:"Never let the fear of striking out keep you from playing the game.",cat:"شجاعت",source:"بیب روث"},
-      {fa:"یا راهی خواهم یافت، یا راهی خواهم ساخت.",en:"I shall either find a way or make one.",cat:"خلاقیت",source:"هانیبال"},
-      {fa:"بزرگترین افتخار ما در این نیست که هرگز زمین نخوریم، بلکه در این است که هر بار که زمین می‌خوریم، برخیزیم.",en:"Our greatest glory is not in never falling, but in rising every time we fall.",cat:"شجاعت",source:"کنفوسیوس"},
-      {fa:"آینده به کسانی تعلق دارد که به زیبایی رویاهایشان ایمان دارند.",en:"The future belongs to those who believe in the beauty of their dreams.",cat:"آینده",source:"النور روزولت"},
-      {fa:"اگر می‌خواهید دشمنانتان را مجازات کنید، خودتان را اصلاح کنید.",en:"If you want to punish your enemies, improve yourself.",cat:"موفقیت",source:"ضرب‌المثل چینی"},
-      {fa:"یک سفر هزار مایلی با یک قدم آغاز می‌شود.",en:"A journey of a thousand miles begins with a single step.",cat:"صبر",source:"لائوتسه"},
-      {fa:"دانش، تنها ثروتی است که با بخشیدن بیشتر می‌شود.",en:"Knowledge is the only wealth that increases when shared.",cat:"دانش",source:"ضرب‌المثل"},
-      {fa:"آنچه برای خود می‌پسندی، برای دیگران نیز بپسند.",en:"Do unto others as you would have them do unto you.",cat:"اخلاق",source:"قانون طلایی"},
-      {fa:"همواره آن سوی کوه را سبزتر می‌بینند.",en:"The grass is always greener on the other side.",cat:"زندگی",source:"ضرب‌المثل انگلیسی"},
-      {fa:"مردی که کوه را جابجا کرد، با جابجا کردن سنگ‌های کوچک شروع کرد.",en:"The man who moved a mountain began by carrying away small stones.",cat:"صبر",source:"کنفوسیوس"},
-      {fa:"هر لحظه از خشم، شصت ثانیه از شادی را از دست می‌دهی.",en:"For every minute of anger, you lose sixty seconds of happiness.",cat:"صبر",source:"رالف والدو امرسون"},
       {fa:"هنگامی که هدفی داری، تمام جهان برای کمک به تو صف‌آرایی می‌کنند.",en:"When you want something, all the universe conspires in helping you to achieve it.",cat:"موفقیت",source:"پائولو کوئلیو - کیمیاگر"},
+      {fa:"زندگی بدون تأمل، ارزش زیستن ندارد.",en:"The unexamined life is not worth living.",cat:"زندگی",source:"سقراط"},
+      {fa:"تنها چیزی که می‌دانم این است که هیچ نمی‌دانم.",en:"I know that I am intelligent, because I know that I know nothing.",cat:"دانش",source:"سقراط"},
+      {fa:"آینده به کسانی تعلق دارد که به زیبایی رویاهایشان ایمان دارند.",en:"The future belongs to those who believe in the beauty of their dreams.",cat:"امید",source:"النور روزولت"},
+      {fa:"در نومیدی بسی امید است.",en:"In the midst of despair, there is much hope.",cat:"امید",source:"مولانا"},
+      // دیالوگ‌های فیلم
+      {fa:"باشد که نیرو با تو باشد.",en:"May the Force be with you.",cat:"شجاعت",source:"جنگ ستارگان"},
+      {fa:"من پدر تو هستم.",en:"I am your father.",cat:"خلاقیت",source:"جنگ ستارگان: امپراتوری ضربه می‌زند"},
+      {fa:"بازیگر! اینجا رو نگاه کن.",en:"Here's looking at you, kid.",cat:"عشق",source:"کازابلانکا"},
+      {fa:"من عاشق بوی ناپالم در صبح هستم.",en:"I love the smell of napalm in the morning.",cat:"خلاقیت",source:"اینک آخرالزمان"},
+      {fa:"هیچ جا مثل خونه نمی‌شه.",en:"There's no place like home.",cat:"زندگی",source:"جادوگر شهر اُز"},
+      {fa:"زندگی مثل یه جعبه شکلاته، هیچوقت نمی‌دونی چی قراره نصیبت بشه.",en:"Life is like a box of chocolates, you never know what you're gonna get.",cat:"زندگی",source:"فارست گامپ"},
+      {fa:"انتقام‌گیری غذاییه که بهتره سرد سرو بشه.",en:"Revenge is a dish best served cold.",cat:"صبر",source:"بیل را بکش"},
+      {fa:"من پادشاه دنیا هستم!",en:"I'm the king of the world!",cat:"شادی",source:"تایتانیک"},
+      {fa:"چرا اینقدر جدی هستی؟",en:"Why so serious?",cat:"غم",source:"شوالیه تاریکی"},
+      // جملات الهام‌بخش
+      {fa:"بزرگترین افتخار ما در این نیست که هرگز زمین نخوریم، بلکه در این است که هر بار که زمین می‌خوریم، برخیزیم.",en:"Our greatest glory is not in never falling, but in rising every time we fall.",cat:"شجاعت",source:"کنفوسیوس"},
+      {fa:"یا راهی خواهم یافت، یا راهی خواهم ساخت.",en:"I shall either find a way or make one.",cat:"خلاقیت",source:"هانیبال"},
+      {fa:"دانش، تنها ثروتی است که با بخشیدن بیشتر می‌شود.",en:"Knowledge is the only wealth that increases when shared.",cat:"دانش",source:"ضرب‌المثل (عمومی)"},
+      {fa:"آنچه برای خود می‌پسندی، برای دیگران نیز بپسند.",en:"Do unto others as you would have them do unto you.",cat:"اخلاق",source:"قانون طلایی"},
+      {fa:"هیچ گاه اجازه نده ترس از شکست، تو را از بازی کردن باز دارد.",en:"Never let the fear of striking out keep you from playing the game.",cat:"شجاعت",source:"بیب روث"},
       {fa:"زمان ارزشمندترین چیز است، چرا که نمی‌توان آن را دوباره به‌دست آورد.",en:"Time is the most valuable thing a man can spend.",cat:"زمان",source:"تئوفراستوس"},
       {fa:"تجربه، نامی است که هر کس بر اشتباهاتش می‌گذارد.",en:"Experience is the name everyone gives to their mistakes.",cat:"خلاقیت",source:"اسکار وایلد"},
-      {fa:"حقیقت همیشه پیروز است، اگر چه گاهی دیر.",en:"Truth always wins, though sometimes late.",cat:"آزادی",source:"ضرب‌المثل"},
       {fa:"کسی که طعم عشق را چشیده باشد، می‌داند که هیچ چیز باارزش‌تر نیست.",en:"He who has tasted love knows that nothing is more precious.",cat:"عشق",source:"جبران خلیل جبران"}
     ];
-    // پر کردن تا ۱۰۰ جمله
-    while (LOCAL_QUOTES.length < 100) LOCAL_QUOTES.push({...LOCAL_QUOTES[LOCAL_QUOTES.length % LOCAL_QUOTES.length], id: LOCAL_QUOTES.length});
+    // پر کردن تا ۱۰۰ جمله با کپی از جملات موجود
+    while (LOCAL_QUOTES.length < 100) {
+      LOCAL_QUOTES.push({...LOCAL_QUOTES[LOCAL_QUOTES.length % LOCAL_QUOTES.length], id: LOCAL_QUOTES.length});
+    }
 
     // ==================== حالت ====================
     let currentLang = localStorage.getItem('qlang') || 'fa';
     let currentCategory = 'همه';
-    let displayedQuotes = [];
-    let quotesPool = [];
+    let displayedQuotes = [];          // اشیای جمله که روی صفحه هستند
+    let quotesPool = [];              // مخزن کل
     let robotLogs = [];
     let blacklist = new Set(JSON.parse(localStorage.getItem('quote_blacklist') || '[]'));
 
@@ -253,11 +248,13 @@
     // ==================== ترجمه رابط ====================
     const ui = {
       fa: { logo:'📖 نقل‌قول‌سرا', counter:(n)=>`${n} جمله`, deleteBtn:'حذف', 
-            bookHunter:'فعال', proverbHunter:'فعال', historicalHunter:'فعال', generalHarvester:'فعال',
-            cleaner:'آماده', aiwriter:'آماده', loading:'در حال شکار...', commanderLog:'همهٔ ربات‌ها فعال' },
+            bookHunter:'فعال', movieHunter:'فعال', inspireHarvester:'فعال', 
+            aiBookWriter:'آماده', aiDialogueWriter:'آماده', aiGeneralWriter:'آماده',
+            cleaner:'آماده', loading:'در حال شکار...', commanderLog:'ربات‌ها فعال' },
       en: { logo:'📖 QuoteVault', counter:(n)=>`${n} quotes`, deleteBtn:'Remove',
-            bookHunter:'Active', proverbHunter:'Active', historicalHunter:'Active', generalHarvester:'Active',
-            cleaner:'Ready', aiwriter:'Ready', loading:'Hunting...', commanderLog:'All bots active' }
+            bookHunter:'Active', movieHunter:'Active', inspireHarvester:'Active',
+            aiBookWriter:'Ready', aiDialogueWriter:'Ready', aiGeneralWriter:'Ready',
+            cleaner:'Ready', loading:'Hunting...', commanderLog:'Bots active' }
     };
     function t(k,...a){ let s=ui[currentLang]?.[k]||k; return typeof s==='function'?s(...a):s; }
     function updateUI() {
@@ -266,11 +263,12 @@
       quoteCounter.textContent=t('counter',displayedQuotes.length);
       commanderLog.textContent=t('commanderLog');
       document.getElementById('bookHunterStatus').textContent=t('bookHunter');
-      document.getElementById('proverbHunterStatus').textContent=t('proverbHunter');
-      document.getElementById('historicalHunterStatus').textContent=t('historicalHunter');
-      document.getElementById('generalHarvesterStatus').textContent=t('generalHarvester');
+      document.getElementById('movieHunterStatus').textContent=t('movieHunter');
+      document.getElementById('inspireHarvesterStatus').textContent=t('inspireHarvester');
+      document.getElementById('aiBookWriterStatus').textContent=t('aiBookWriter');
+      document.getElementById('aiDialogueWriterStatus').textContent=t('aiDialogueWriter');
+      document.getElementById('aiGeneralWriterStatus').textContent=t('aiGeneralWriter');
       document.getElementById('cleanerStatus').textContent=t('cleaner');
-      document.getElementById('aiwriterStatus').textContent=t('aiwriter');
       renderCategoryList();
     }
 
@@ -298,7 +296,8 @@
     function fingerprint(text) {
       return text.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
     }
-    function isInBlacklist(text) {
+    // بلک‌لیست فقط برای جلوگیری از بازگشت جملات حذف‌شده استفاده می‌شود، نه فیلتر کلی
+    function isBlacklisted(text) {
       return blacklist.has(fingerprint(text));
     }
 
@@ -306,7 +305,7 @@
     function getAvailableQuotes(){
       let filtered = currentCategory === 'همه' ? quotesPool : quotesPool.filter(q => q.cat === currentCategory);
       let displayedIds = new Set(displayedQuotes.map(q => q.id));
-      return filtered.filter(q => !displayedIds.has(q.id) && !isInBlacklist(q.en));
+      return filtered.filter(q => !displayedIds.has(q.id));
     }
 
     function addQuotesToPool(quotesArray, sourceLabel) {
@@ -316,7 +315,9 @@
         let txtFa = item.fa || txtEn;
         if (!txtEn || txtEn.length < 15 || /[<>{}]/.test(txtEn)) return;
         let fp = fingerprint(txtEn);
-        if (blacklist.has(fp)) return;
+        // اگر در بلک‌لیست کاربر باشد، اضافه نکنیم
+        if (isBlacklisted(txtEn)) return;
+        // اگر در مخزن موجود باشد، اضافه نکنیم
         if (quotesPool.some(q => fingerprint(q.en) === fp)) return;
         quotesPool.push({
           id: Date.now() + Math.random(),
@@ -329,6 +330,10 @@
         });
         added++;
       });
+      if (added > 0) {
+        poolSizeEl.textContent = quotesPool.length;
+        refreshDisplay();
+      }
       return added;
     }
 
@@ -404,11 +409,14 @@
     function deleteQuote(id) {
       let quote = displayedQuotes.find(q => q.id === id);
       if (!quote) return;
+      // اضافه به بلک‌لیست
       blacklist.add(fingerprint(quote.en));
       localStorage.setItem('quote_blacklist', JSON.stringify([...blacklist]));
       blacklistSizeEl.textContent = blacklist.size;
       addLog(`🗑️ جمله حذف و به بلک‌لیست اضافه شد.`);
+      // حذف نرم
       removeCard(id);
+      // جایگزینی پس از حذف
       setTimeout(() => {
         let avail = getAvailableQuotes();
         if (avail.length > 0) {
@@ -417,6 +425,11 @@
           appendCard(newQ);
           quoteCounter.textContent = t('counter', displayedQuotes.length);
           updateNumbers();
+        } else {
+          // اگر جمله‌ای موجود نبود، سعی کن از منابع محلی یا AI پر کنی
+          if (quotesPool.length < 100) {
+            runAIWriters();
+          }
         }
       }, 350);
     }
@@ -427,7 +440,7 @@
       updateNumbers();
     }
 
-    // ==================== AI تخصصی ====================
+    // ==================== AI ====================
     function simpleSentiment(txt) {
       let posW = ['love','hope','joy','success','great','wonderful','beautiful','good','excellent','amazing','happy','inspiring'];
       let negW = ['sad','fear','failure','death','pain','hate','angry','bad','terrible','awful','depressing'];
@@ -442,8 +455,7 @@
       return 'زندگی';
     }
 
-    // ==================== منابع تخصصی برای کتاب‌ها و ضرب‌المثل‌ها ====================
-    // شکارچی کتاب: استفاده از APIهای نقل‌قول کتاب
+    // ==================== دروگرها (منابع API) ====================
     const bookAPIs = [
       { url: 'https://api.quotable.io/quotes?tags=book&limit=5', parser: d=>d.results, label:'Quotable Book' },
       { url: 'https://api.quotable.io/quotes?tags=literature&limit=5', parser: d=>d.results, label:'Quotable Literature' },
@@ -452,17 +464,17 @@
       { url: 'https://api.quotable.io/quotes?author=plato&limit=5', parser: d=>d.results, label:'Plato' },
     ];
 
-    // شکارچی ضرب‌المثل‌ها
-    const proverbAPIs = [
-      { url: 'https://api.quotable.io/quotes?tags=proverb&limit=5', parser: d=>d.results, label:'Proverbs' },
-      { url: 'https://api.quotable.io/quotes?tags=wisdom&limit=5', parser: d=>d.results, label:'Wisdom' },
-      { url: 'https://api.quotable.io/quotes?tags=philosophy&limit=5', parser: d=>d.results, label:'Philosophy' },
+    const movieAPIs = [
+      { url: 'https://api.quotable.io/quotes?tags=movies&limit=5', parser: d=>d.results, label:'Movies' },
+      { url: 'https://api.quotable.io/quotes?tags=film&limit=5', parser: d=>d.results, label:'Film' },
+      { url: 'https://api.quotable.io/quotes?tags=cinema&limit=5', parser: d=>d.results, label:'Cinema' },
     ];
 
-    // شکارچی نقل‌قول‌های تاریخی
-    const historicalAPIs = [
-      { url: 'https://api.quotable.io/quotes?tags=history&limit=5', parser: d=>d.results, label:'History' },
-      { url: 'https://api.quotable.io/quotes?tags=civilization&limit=5', parser: d=>d.results, label:'Civilization' },
+    const inspireAPIs = [
+      { url: 'https://api.quotable.io/quotes?tags=inspirational&limit=5', parser: d=>d.results, label:'Inspirational' },
+      { url: 'https://api.quotable.io/quotes?tags=philosophy&limit=5', parser: d=>d.results, label:'Philosophy' },
+      { url: 'https://api.quotable.io/quotes?tags=wisdom&limit=5', parser: d=>d.results, label:'Wisdom' },
+      { url: 'https://zenquotes.io/api/random', parser: d=>d.map(q=>({en:q.q,source:q.a})), label:'ZenQuotes' },
     ];
 
     async function fetchAndProcessSource(src) {
@@ -475,67 +487,95 @@
           let added = addQuotesToPool(items, src.label);
           if (added) {
             addLog(`📥 ${src.label}: ${added} جمله جدید.`);
-            poolSizeEl.textContent = quotesPool.length;
-            refreshDisplay();
           }
         }
       } catch (e) { /* ignore */}
     }
 
-    async function harvestSpecialized(sources) {
-      for (let src of sources) {
-        await fetchAndProcessSource(src);
-      }
-    }
+    async function harvestBook() { for (let src of bookAPIs) await fetchAndProcessSource(src); }
+    async function harvestMovie() { for (let src of movieAPIs) await fetchAndProcessSource(src); }
+    async function harvestInspire() { for (let src of inspireAPIs) await fetchAndProcessSource(src); }
 
-    // هماهنگ‌کنندهٔ اصلی
-    async function coordinator() {
-      // شکار کتاب‌ها
-      await harvestSpecialized(bookAPIs);
-      // شکار ضرب‌المثل‌ها
-      await harvestSpecialized(proverbAPIs);
-      // شکار نقل‌قول‌های تاریخی
-      await harvestSpecialized(historicalAPIs);
-      // اگر هنوز مخزن کم بود، نویسنده AI
-      if (quotesPool.length < 100) {
-        let needed = 100 - quotesPool.length;
-        let aiQuotes = generateAIQuotes(Math.min(needed, 20));
-        let added = addQuotesToPool(aiQuotes, 'AI نویسنده');
-        if (added) {
-          addLog(`✍️ نویسنده AI: ${added} جمله ساخته شد.`);
-          poolSizeEl.textContent = quotesPool.length;
-          refreshDisplay();
-        }
-      }
-    }
-
-    function generateAIQuotes(count) {
-      const piecesFa = [
-        { subj:'عشق', verb:'پل می‌سازد', comp:'در دل تاریکی' },
-        { subj:'زندگی', verb:'نور می‌بخشد', comp:'با هر طلوع' },
-        { subj:'دوستی', verb:'راه را نشان می‌دهد', comp:'در لحظه‌های سخت' },
-        { subj:'امید', verb:'مرهم می‌گذارد', comp:'در میان اشک‌ها' },
-        { subj:'خلاقیت', verb:'افق‌های تازه می‌گشاید', comp:'با هر نفس' },
-        { subj:'صبر', verb:'آرامش می‌آورد', comp:'در سکوت شب' },
-        { subj:'شجاعت', verb:'قدرت می‌دهد', comp:'با هر گام استوار' },
-        { subj:'دانش', verb:'تغییر ایجاد می‌کند', comp:'در قلب طوفان' },
-        { subj:'موفقیت', verb:'رویاها را زنده می‌کند', comp:'با هر تلاش' },
-        { subj:'معنویت', verb:'معجزه می‌کند', comp:'در آغوش طبیعت' }
-      ];
+    // ==================== نویسنده‌های AI ====================
+    function generateAIDialogue(count) {
+      const characters = ['قهرمان', 'شرور', 'عاشق', 'پدر', 'مادر', 'دوست', 'معلم', 'رهبر', 'دانشمند', 'هنرمند'];
+      const actions = ['گفت: "من از اینجا نمی‌روم"', 'گفت: "همیشه امیدی هست"', 'گفت: "این کار را برای خودم نمی‌کنم"', 'گفت: "حقیقت را خواهم یافت"', 'گفت: "زمان همه چیز را درست می‌کند"'];
+      const reasons = ['زیرا می‌دانست که شکست پایان راه نیست.', 'چون به چیزی بزرگ‌تر از خود ایمان داشت.', 'تا به دیگران نشان دهد که غیرممکن، ممکن است.', 'و این آغاز راهی تازه بود.', 'حتی اگر همه علیه او باشند.'];
       let res = [];
       for (let i=0; i<count; i++) {
-        let p = piecesFa[Math.floor(Math.random() * piecesFa.length)];
-        let enSubj = p.subj==='عشق'?'Love':p.subj==='زندگی'?'Life':p.subj==='دوستی'?'Friendship':p.subj==='امید'?'Hope':p.subj==='خلاقیت'?'Creativity':p.subj==='صبر'?'Patience':p.subj==='شجاعت'?'Courage':p.subj==='دانش'?'Knowledge':p.subj==='موفقیت'?'Success':'Spirituality';
+        let ch = characters[Math.floor(Math.random()*characters.length)];
+        let act = actions[Math.floor(Math.random()*actions.length)];
+        let rea = reasons[Math.floor(Math.random()*reasons.length)];
         res.push({
-          fa: `${p.subj} ${p.verb} ${p.comp}.`,
-          en: `${enSubj} ${p.verb==='پل می‌سازد'?'builds bridges':p.verb==='نور می‌بخشد'?'brings light':'shows the way'} ${p.comp==='در دل تاریکی'?'in the dark':p.comp==='با هر طلوع'?'with every sunrise':'in hard times'}.`,
-          source: 'AI نویسنده'
+          fa: `${ch} ${act} ${rea}`,
+          en: `${ch} said: "${act.split(':')[1].replace(/"/g,'')}" ${rea}`,
+          source: 'AI نویسنده (دیالوگ فیلم)'
         });
       }
       return res;
     }
 
-    function runDeduplication() {
+    function generateAIBook(count) {
+      const subjects = ['زندگی', 'عشق', 'مرگ', 'زمان', 'حقیقت', 'آزادی', 'تنهایی', 'شجاعت', 'بخشش', 'انتظار'];
+      const predicates = ['همچون رودی است که به دریا می‌رسد.', 'نوری است که هرگز خاموش نمی‌شود.', 'پرسشی بی‌پاسخ است.', 'هدیه‌ای است که تنها به شجاعان داده می‌شود.', 'آغازی دوباره است در پایان هر شب.'];
+      let res = [];
+      for (let i=0; i<count; i++) {
+        let subj = subjects[Math.floor(Math.random()*subjects.length)];
+        let pred = predicates[Math.floor(Math.random()*predicates.length)];
+        res.push({
+          fa: `${subj} ${pred}`,
+          en: `${subj} is ${pred}`,
+          source: 'AI نویسنده (کتاب)'
+        });
+      }
+      return res;
+    }
+
+    function generateAIInspire(count) {
+      const starts = ['تنها راه', 'هرگز فراموش نکن', 'باور داشته باش', 'در عمق وجودت', 'همیشه به خاطر داشته باش', 'اگر می‌خواهی', 'زمانی که', 'وقتی همه چیز', 'در نهایت', 'با هر گام'];
+      const middles = ['که به رویاهایت جامهٔ عمل بپوشانی', 'که تو قوی‌تر از آنی که فکر می‌کنی', 'که فردا روز دیگری است', 'که خورشید پس از هر طوفانی می‌درخشد', 'که شکست مقدمهٔ پیروزی است', 'که عشق همه چیز را درمان می‌کند', 'که زندگی هدیه‌ای است که باید بازش کنی'];
+      let res = [];
+      for (let i=0; i<count; i++) {
+        let s = starts[Math.floor(Math.random()*starts.length)];
+        let m = middles[Math.floor(Math.random()*middles.length)];
+        res.push({
+          fa: `${s} ${m}.`,
+          en: `${s} ${m}.`,
+          source: 'AI نویسنده (الهام‌بخش)'
+        });
+      }
+      return res;
+    }
+
+    async function runAIWriters() {
+      let needed = 100 - quotesPool.length;
+      if (needed <= 0) return;
+      let batch = Math.min(needed, 15);
+      let sources = [];
+      // مخلوطی از سه نویسنده
+      for (let i=0; i<batch; i++) {
+        let r = Math.random();
+        if (r < 0.33) sources.push(...generateAIBook(1));
+        else if (r < 0.66) sources.push(...generateAIDialogue(1));
+        else sources.push(...generateAIInspire(1));
+      }
+      let added = addQuotesToPool(sources, 'AI نویسنده');
+      if (added) {
+        addLog(`✍️ نویسندگان AI: ${added} جمله تولید کردند.`);
+      }
+    }
+
+    // ==================== هماهنگی اصلی ====================
+    async function coordinator() {
+      await Promise.all([harvestBook(), harvestMovie(), harvestInspire()]);
+      // اگر مخزن هنوز کوچک است، AI را فراخوانی کن
+      if (quotesPool.length < 100) {
+        await runAIWriters();
+      }
+    }
+
+    // پالایش تکراری‌ها
+    function deduplicate() {
       let seen = new Map();
       let unique = [];
       quotesPool.forEach(q => {
@@ -550,26 +590,34 @@
         quotesPool = unique;
         addLog(`🧹 پالایشگر: ${removed} تکراری حذف شد.`);
         poolSizeEl.textContent = quotesPool.length;
+        // حذف از صفحه در صورت نیاز
         let displayedIds = new Set(displayedQuotes.map(q => q.id));
         displayedQuotes = displayedQuotes.filter(q => quotesPool.some(p => p.id === q.id));
         refreshDisplay();
       }
     }
 
-    // ==================== زمان‌بندی‌ها ====================
-    setInterval(coordinator, 3 * 60 * 1000); // هر ۳ دقیقه
-    setInterval(runDeduplication, 15 * 1000); // هر ۱۵ ثانیه
+    // زمان‌بندی‌ها
+    setInterval(coordinator, 2 * 60 * 1000); // هر ۲ دقیقه
+    setInterval(deduplicate, 15 * 1000); // هر ۱۵ ثانیه
+    // دروگرهای سریع‌تر برای منابع خاص
+    setInterval(harvestBook, 30 * 1000); // هر ۳۰ ثانیه کتاب
+    setInterval(harvestMovie, 45 * 1000); // هر ۴۵ ثانیه فیلم
+    setInterval(harvestInspire, 60 * 1000); // هر ۶۰ ثانیه الهام‌بخش
 
     // ==================== بارگذاری اولیه ====================
     async function initialLoad() {
       commanderLog.textContent = t('loading');
+      // ابتدا مخزن را با جملات محلی پر کن
       addQuotesToPool(LOCAL_QUOTES, 'حافظه داخلی');
+      // پر کردن صفحه
       let initDisplay = getAvailableQuotes().slice(0, MAX_DISPLAY);
       displayedQuotes = initDisplay;
       renderAllQuotes();
       quoteCounter.textContent = t('counter', displayedQuotes.length);
       poolSizeEl.textContent = quotesPool.length;
       blacklistSizeEl.textContent = blacklist.size;
+      // اولین هماهنگی
       coordinator();
       commanderLog.textContent = t('commanderLog');
     }
