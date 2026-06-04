@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>momento | جملات ماندگار</title>
-    <!-- فونت IranSans (فارسی محبوب) -->
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/iransans@latest/dist/font-face.css" rel="stylesheet">
+    <!-- فونت مطالعه: Vazirmatn -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
     <style>
         /* ==================== ۱۰ تم ==================== */
@@ -164,76 +164,79 @@
             --text-color-on-bg: #fff0f8;
         }
 
-        [data-theme="mint"] {
-            --bg: #060f0e;
-            --card-bg: rgba(16, 30, 28, 0.7);
-            --accent: #6ee7b7;
-            --accent2: #34d399;
-            --text: #d8f0e8;
-            --text-dim: #6e9e8a;
-            --border: rgba(110,231,183,0.25);
-            --glow: 0 0 30px rgba(110,231,183,0.12);
-            --card-hover-border: rgba(110,231,183,0.55);
-            --card-glow: rgba(110,231,183,0.08);
-            --btn-hover-bg: rgba(110,231,183,0.15);
-            --btn-hover-shadow: 0 0 12px rgba(110,231,183,0.25);
+        /* جدید: Cyberpunk */
+        [data-theme="cyberpunk"] {
+            --bg: #0a0010;
+            --card-bg: rgba(20, 5, 30, 0.75);
+            --accent: #ff2a6d;
+            --accent2: #05d5ff;
+            --text: #e0d0f0;
+            --text-dim: #9a7eaa;
+            --border: rgba(255,42,109,0.3);
+            --glow: 0 0 30px rgba(255,42,109,0.2);
+            --card-hover-border: rgba(5,213,255,0.6);
+            --card-glow: rgba(5,213,255,0.12);
+            --btn-hover-bg: rgba(255,42,109,0.15);
+            --btn-hover-shadow: 0 0 15px rgba(255,42,109,0.4);
+            --fav-color: #ff2a6d;
+            --fav-shadow: 0 0 14px rgba(255,42,109,0.5);
+            --del-color: #ff5e5e;
+            --del-shadow: 0 0 14px rgba(255,94,94,0.4);
+            --scrollbar: rgba(255,42,109,0.4);
+            --logo-gradient: linear-gradient(135deg, #ff2a6d, #d400ff, #05d5ff);
+            --text-color-on-bg: #f0e6ff;
+        }
+
+        /* جدید: Sunset */
+        [data-theme="sunset"] {
+            --bg: #1a0a08;
+            --card-bg: rgba(35, 18, 16, 0.75);
+            --accent: #ff9a56;
+            --accent2: #ff3c6f;
+            --text: #f5e0d8;
+            --text-dim: #b8827a;
+            --border: rgba(255,154,86,0.3);
+            --glow: 0 0 30px rgba(255,154,86,0.18);
+            --card-hover-border: rgba(255,60,111,0.6);
+            --card-glow: rgba(255,60,111,0.1);
+            --btn-hover-bg: rgba(255,154,86,0.15);
+            --btn-hover-shadow: 0 0 12px rgba(255,154,86,0.4);
+            --fav-color: #ff3c6f;
+            --fav-shadow: 0 0 14px rgba(255,60,111,0.4);
+            --del-color: #ff5e5e;
+            --del-shadow: 0 0 14px rgba(255,94,94,0.3);
+            --scrollbar: rgba(255,154,86,0.3);
+            --logo-gradient: linear-gradient(135deg, #ffb88c, #ff6b6b, #d65f8a);
+            --text-color-on-bg: #fff2e8;
+        }
+
+        /* جدید: Aurora */
+        [data-theme="aurora"] {
+            --bg: #050f12;
+            --card-bg: rgba(10, 24, 28, 0.75);
+            --accent: #2dd4bf;
+            --accent2: #7c3aed;
+            --text: #d0f0f0;
+            --text-dim: #6e9898;
+            --border: rgba(45,212,191,0.3);
+            --glow: 0 0 30px rgba(45,212,191,0.15);
+            --card-hover-border: rgba(124,58,237,0.6);
+            --card-glow: rgba(124,58,237,0.1);
+            --btn-hover-bg: rgba(45,212,191,0.15);
+            --btn-hover-shadow: 0 0 12px rgba(45,212,191,0.4);
             --fav-color: #f472b6;
             --fav-shadow: 0 0 14px rgba(244,114,182,0.3);
             --del-color: #f87171;
             --del-shadow: 0 0 14px rgba(248,113,113,0.3);
-            --scrollbar: rgba(110,231,183,0.3);
-            --logo-gradient: linear-gradient(135deg, #d1fae5, #6ee7b7, #34d399);
-            --text-color-on-bg: #eafff5;
-        }
-
-        [data-theme="lavender"] {
-            --bg: #0b0a18;
-            --card-bg: rgba(20, 18, 35, 0.7);
-            --accent: #c4b5fd;
-            --accent2: #a78bfa;
-            --text: #e0ddf0;
-            --text-dim: #8e8aa8;
-            --border: rgba(196,181,253,0.25);
-            --glow: 0 0 30px rgba(196,181,253,0.15);
-            --card-hover-border: rgba(196,181,253,0.6);
-            --card-glow: rgba(196,181,253,0.1);
-            --btn-hover-bg: rgba(196,181,253,0.15);
-            --btn-hover-shadow: 0 0 12px rgba(196,181,253,0.3);
-            --fav-color: #fb7185;
-            --fav-shadow: 0 0 14px rgba(251,113,133,0.3);
-            --del-color: #f87171;
-            --del-shadow: 0 0 14px rgba(248,113,113,0.3);
-            --scrollbar: rgba(196,181,253,0.3);
-            --logo-gradient: linear-gradient(135deg, #ede9fe, #c4b5fd, #a78bfa);
-            --text-color-on-bg: #f2efff;
-        }
-
-        [data-theme="navy"] {
-            --bg: #040810;
-            --card-bg: rgba(14, 20, 35, 0.7);
-            --accent: #60a5fa;
-            --accent2: #3b82f6;
-            --text: #dce4f5;
-            --text-dim: #7e8eaa;
-            --border: rgba(96,165,250,0.25);
-            --glow: 0 0 30px rgba(96,165,250,0.15);
-            --card-hover-border: rgba(96,165,250,0.6);
-            --card-glow: rgba(96,165,250,0.1);
-            --btn-hover-bg: rgba(96,165,250,0.15);
-            --btn-hover-shadow: 0 0 12px rgba(96,165,250,0.3);
-            --fav-color: #fb7185;
-            --fav-shadow: 0 0 14px rgba(251,113,133,0.3);
-            --del-color: #f87171;
-            --del-shadow: 0 0 14px rgba(248,113,113,0.3);
-            --scrollbar: rgba(96,165,250,0.3);
-            --logo-gradient: linear-gradient(135deg, #dbeafe, #60a5fa, #3b82f6);
-            --text-color-on-bg: #eef4ff;
+            --scrollbar: rgba(45,212,191,0.3);
+            --logo-gradient: linear-gradient(135deg, #2dd4bf, #3b82f6, #7c3aed);
+            --text-color-on-bg: #e0fffa;
         }
 
         * { margin:0; padding:0; box-sizing:border-box; }
 
         body {
-            font-family: 'IRANSansWeb(FaNum)', 'IRANSans', 'Vazirmatn', sans-serif;
+            font-family: 'Vazirmatn', sans-serif;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
@@ -254,10 +257,13 @@
             position: absolute;
             animation: floatSky linear infinite;
             will-change: transform;
-            filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));
+        }
+        .cloud {
+            filter: drop-shadow(0 0 4px rgba(255,255,255,0.5));
+            opacity: 0.85 !important;
         }
         @keyframes floatSky {
-            0% { transform: translateY(108vh) rotate(0deg); opacity: 0.2; }
+            0% { transform: translateY(108vh) rotate(0deg); opacity: 0.1; }
             15% { opacity: 0.7; }
             85% { opacity: 0.5; }
             100% { transform: translateY(-12vh) rotate(360deg); opacity: 0; }
@@ -467,7 +473,7 @@
         }
 
         .quote-text {
-            font-size: 1.05rem;
+            font-size: 1.2rem;
             line-height: 2.1;
             color: var(--text-color-on-bg);
             font-weight: 400;
@@ -593,8 +599,8 @@
             const showBlacklistBtn = document.getElementById('showBlacklist');
             const clearBlacklistBtn = document.getElementById('clearBlacklist');
 
-            const STORAGE_KEY = 'momento_v3';
-            const THEME_KEY = 'momento_theme_v3';
+            const STORAGE_KEY = 'momento_v4';
+            const THEME_KEY = 'momento_theme_v4';
 
             const themes = [
                 { id: 'purple', name: 'بنفش نیمه‌شب', color: '#b388ff' },
@@ -604,9 +610,9 @@
                 { id: 'rose', name: 'مخملی', color: '#fb7185' },
                 { id: 'sepia', name: 'سپیا', color: '#d4a574' },
                 { id: 'sakura', name: 'شکوفهٔ گیلاس', color: '#f9a8d4' },
-                { id: 'mint', name: 'نعنایی یخی', color: '#6ee7b7' },
-                { id: 'lavender', name: 'لاوندر', color: '#c4b5fd' },
-                { id: 'navy', name: 'آبی نفتی', color: '#60a5fa' },
+                { id: 'cyberpunk', name: 'سایبرپانک', color: '#ff2a6d' },
+                { id: 'sunset', name: 'غروب آتشین', color: '#ff9a56' },
+                { id: 'aurora', name: 'شفق قطبی', color: '#2dd4bf' },
             ];
 
             let currentCategory = 'all';
@@ -624,22 +630,25 @@
 
             function createSky() {
                 const sky = document.getElementById('sky');
-                for (let i = 0; i < 45; i++) {
+                const totalElements = 80;
+                const starCount = 56; // 70%
+                for (let i = 0; i < totalElements; i++) {
                     const el = document.createElement('span');
                     el.className = 'sky-element';
-                    if (Math.random() < 0.55) {
+                    if (i < starCount) {
                         el.textContent = '★';
                         el.style.color = '#ffffff';
                         el.style.fontSize = (Math.random() * 5 + 6) + 'px';
-                        el.style.opacity = Math.random() * 0.5 + 0.3;
+                        el.style.opacity = Math.random() * 0.5 + 0.4;
+                        el.style.animationDuration = (Math.random() * 20 + 30) + 's'; // 30-50s
                     } else {
                         el.textContent = '☁️';
+                        el.classList.add('cloud');
                         el.style.fontSize = (Math.random() * 7 + 14) + 'px';
-                        el.style.opacity = Math.random() * 0.45 + 0.35;
+                        el.style.animationDuration = (Math.random() * 20 + 40) + 's'; // 40-60s
                     }
                     el.style.left = Math.random() * 100 + '%';
-                    el.style.animationDuration = (Math.random() * 14 + 14) + 's';
-                    el.style.animationDelay = Math.random() * 18 + 's';
+                    el.style.animationDelay = Math.random() * 30 + 's';
                     sky.appendChild(el);
                 }
             }
