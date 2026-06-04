@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>فروشگاه بزرگ | همه چیز در یک جا</title>
+  <title>خبرخوان جهان | اخبار از منابع معتبر</title>
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
   <style>
     * {
@@ -12,24 +12,24 @@
       box-sizing: border-box;
     }
     :root {
-      --bg: #f5f6fa;
-      --text: #2f3640;
+      --bg: #f0f2f5;
+      --text: #1c1e21;
       --card-bg: #ffffff;
-      --primary: #e84118;
-      --secondary: #273c75;
-      --shadow: 0 2px 15px rgba(0,0,0,0.05);
-      --header-bg: rgba(255,255,255,0.95);
-      --tag-bg: #dcdde1;
+      --primary: #e63946;
+      --secondary: #1d3557;
+      --shadow: 0 2px 12px rgba(0,0,0,0.06);
+      --header-bg: rgba(255,255,255,0.92);
+      --cat-btn-bg: #e0e0e0;
     }
     body.dark {
-      --bg: #1e272e;
-      --text: #d2dae2;
-      --card-bg: #2f3640;
-      --primary: #e84118;
-      --secondary: #f5f6fa;
-      --shadow: 0 2px 15px rgba(0,0,0,0.3);
-      --header-bg: rgba(30, 39, 46, 0.95);
-      --tag-bg: #485460;
+      --bg: #18191a;
+      --text: #e4e6eb;
+      --card-bg: #242526;
+      --primary: #e63946;
+      --secondary: #f1f1f1;
+      --shadow: 0 2px 12px rgba(0,0,0,0.3);
+      --header-bg: rgba(24, 25, 26, 0.92);
+      --cat-btn-bg: #3a3b3c;
     }
     body {
       font-family: 'Vazirmatn', sans-serif;
@@ -58,11 +58,12 @@
       font-weight: 900;
       color: var(--primary);
       cursor: pointer;
+      user-select: none;
     }
     .nav-actions {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 12px;
       flex-wrap: wrap;
     }
     .search-box {
@@ -77,8 +78,8 @@
       background: transparent;
       padding: 10px;
       font-family: inherit;
-      font-size: 0.95em;
-      width: 180px;
+      font-size: 0.9em;
+      width: 160px;
       color: var(--text);
       outline: none;
     }
@@ -92,126 +93,130 @@
       font-family: inherit;
       font-weight: bold;
     }
-    .cart-btn, .theme-btn {
+    .theme-btn {
       background: var(--card-bg);
       border: 1px solid var(--text);
       color: var(--text);
-      padding: 8px 16px;
-      border-radius: 25px;
-      cursor: pointer;
-      font-family: inherit;
-      font-weight: bold;
-      font-size: 0.9em;
-      white-space: nowrap;
-      transition: 0.2s;
-    }
-    .theme-btn {
-      width: 42px;
-      height: 42px;
       padding: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.3em;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 50%;
-      font-size: 1.3em;
+    }
+    #google_translate_element {
+      margin-right: 5px;
     }
     main {
       flex: 1;
-      padding: 30px 20px;
-      max-width: 1300px;
+      padding: 25px 20px;
+      max-width: 1200px;
       margin: 0 auto;
       width: 100%;
     }
-    .category-filters {
+    .category-nav {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 25px;
       flex-wrap: wrap;
     }
     .cat-btn {
-      background: var(--tag-bg);
+      background: var(--cat-btn-bg);
       border: none;
       padding: 8px 18px;
       border-radius: 20px;
       cursor: pointer;
       font-family: inherit;
       font-size: 0.9em;
-      transition: 0.2s;
+      font-weight: 500;
       color: var(--text);
+      transition: background 0.2s, color 0.2s;
     }
     .cat-btn.active, .cat-btn:hover {
       background: var(--primary);
       color: white;
     }
-    .product-grid {
+    .news-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 25px;
     }
-    .product-card {
+    .news-card {
       background: var(--card-bg);
-      border-radius: 15px;
+      border-radius: 16px;
       overflow: hidden;
       box-shadow: var(--shadow);
       transition: transform 0.2s, box-shadow 0.2s;
       display: flex;
       flex-direction: column;
     }
-    .product-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    .news-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.1);
     }
-    .product-card img {
+    .news-card img {
       width: 100%;
-      height: 200px;
+      height: 190px;
       object-fit: cover;
-      background: #ddd;
+      background: #ccc;
     }
-    .product-info {
+    .news-card .card-body {
       padding: 15px;
       flex: 1;
       display: flex;
       flex-direction: column;
     }
-    .product-title {
-      font-weight: 600;
-      font-size: 1em;
+    .card-body .source {
+      font-size: 0.8em;
+      color: #888;
       margin-bottom: 5px;
     }
-    .product-cat {
-      color: #888;
-      font-size: 0.8em;
-      margin-bottom: 8px;
+    .card-body h3 {
+      font-size: 1.1em;
+      font-weight: 700;
+      margin-bottom: 10px;
+      line-height: 1.5;
     }
-    .product-price {
-      font-weight: bold;
-      color: var(--primary);
-      font-size: 1.2em;
-      margin: auto 0 10px 0;
-    }
-    .add-to-cart {
-      background: var(--secondary);
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-family: inherit;
-      font-weight: bold;
-      transition: opacity 0.2s;
-      width: 100%;
-    }
-    .add-to-cart:hover {
+    .card-body .description {
+      font-size: 0.9em;
+      line-height: 1.7;
+      color: var(--text);
+      flex: 1;
+      margin-bottom: 12px;
       opacity: 0.9;
     }
-    .cart-badge {
+    .card-body a {
+      align-self: flex-start;
+      background: var(--secondary);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.9em;
+      display: inline-block;
+    }
+    .load-more {
+      text-align: center;
+      margin: 35px 0;
+    }
+    .load-more button {
       background: var(--primary);
       color: white;
-      border-radius: 50%;
-      padding: 2px 8px;
-      font-size: 0.7em;
-      margin-right: -8px;
-      margin-top: -10px;
+      border: none;
+      padding: 12px 35px;
+      border-radius: 30px;
+      font-family: inherit;
+      font-size: 1.1em;
+      cursor: pointer;
+      font-weight: bold;
+      transition: opacity 0.2s;
+    }
+    .load-more button:hover {
+      opacity: 0.9;
     }
     footer {
       text-align: center;
@@ -224,7 +229,10 @@
     @media (max-width: 600px) {
       header {
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
+      }
+      .news-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -232,191 +240,220 @@
 <body>
 
   <header>
-    <div class="logo" onclick="resetFilters()">🛍️ فروشگاه بزرگ</div>
+    <div class="logo" onclick="resetToHome()">📰 خبرخوان جهان</div>
     <div class="nav-actions">
+      <div id="google_translate_element"></div>
       <div class="search-box">
-        <input type="text" id="search-input" placeholder="جستجوی محصول..." />
-        <button onclick="searchProducts()">🔍</button>
+        <input type="text" id="search-input" placeholder="جستجوی خبر..." />
+        <button onclick="searchNews()">🔍</button>
       </div>
-      <button class="cart-btn" onclick="showCart()">🛒 سبد خرید <span id="cart-count" class="cart-badge">0</span></button>
       <button class="theme-btn" onclick="toggleTheme()">🌓</button>
     </div>
   </header>
 
   <main>
-    <div class="category-filters" id="category-filters">
+    <div class="category-nav" id="category-nav">
       <button class="cat-btn active" data-category="all">همه</button>
-      <button class="cat-btn" data-category="الکترونیک">الکترونیک</button>
-      <button class="cat-btn" data-category="کتاب">کتاب</button>
-      <button class="cat-btn" data-category="پوشاک">پوشاک</button>
-      <button class="cat-btn" data-category="خانه">خانه و آشپزخانه</button>
-      <button class="cat-btn" data-category="ورزشی">ورزشی</button>
+      <button class="cat-btn" data-category="world">جهان</button>
+      <button class="cat-btn" data-category="technology">فناوری</button>
+      <button class="cat-btn" data-category="sports">ورزش</button>
+      <button class="cat-btn" data-category="business">کسب‌وکار</button>
+      <button class="cat-btn" data-category="health">سلامت</button>
+      <button class="cat-btn" data-category="science">علم</button>
     </div>
-    <div id="product-grid" class="product-grid"></div>
+    <div id="news-grid" class="news-grid"></div>
+    <div class="load-more" id="load-more-btn" style="display: none;">
+      <button onclick="loadMore()">بارگذاری اخبار بیشتر</button>
+    </div>
   </main>
 
   <footer>
-    فروشگاه ساختگی با ۱۰۰ محصول – طراحی شده برای نمایش قدرت یک سایت گسترده بدون محتوای دستی
+    اخبار از RSS فیدهای BBC، CNN، Reuters، TechCrunch، ESPN و ... – بدون نیاز به API Key
   </footer>
 
+  <!-- Google Translate Widget -->
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'fa,en',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
   <script>
-    // ====================== ساخت ۱۰۰ محصول fake ======================
-    const categories = ["الکترونیک", "کتاب", "پوشاک", "خانه", "ورزشی"];
-    const productNames = {
-      الکترونیک: ["هدفون بی‌سیم مدل X", "ساعت هوشمند نسل ۵", "پاوربانک ۲۰۰۰۰ میلی‌آمپر", "کیبورد مکانیکال RGB", "مانیتور ۲۷ اینچ", "ماوس گیمینگ", "اسپیکر بلوتوثی", "شارژر سریع ۶۵ وات", "هارد اکسترنال ۱ ترابایت", "وب‌کم Full HD", "هدفون گیمینگ", "تبلت ۱۰ اینچی", "دوربین عکاسی", "چراغ مطالعه LED", "فلش مموری ۶۴ گیگ", "کابل USB-C", "پایه نگهدارنده لپتاپ", "اسپیکر هوشمند", "مانیتور گیمینگ", "پروژکتور کوچک"],
-      کتاب: ["رمان جاودانگی", "مدیریت زمان", "هنر شفاف اندیشیدن", "صد سال تنهایی", "کیمیاگر", "ملت عشق", "انسان در جستجوی معنا", "بی‌حد و مرز", "قدرت عادت", "باشگاه پنج صبحی‌ها", "چهار میثاق", "اثر مرکب", "هنر ظریف بی‌خیالی", "شازده کوچولو", "جنگ و صلح", "دن‌کیشوت", "مغازه خودکشی", "ذهنیت برنده", "ثروت سریع", "قانون جذب"],
-      پوشاک: ["کفش اسپرت مردانه", "تی‌شرت تابستانی", "شلوار جین لی", "مانتو بهاره", "کت چرم", "پیراهن رسمی", "کاپشن زمستانی", "کفش پاشنه‌بلند", "سویشرت کلاه‌دار", "شلوار کتان", "تی‌شرت طرح‌دار", "کفش کوهنوردی", "جوراب ست", "لباس زیر نخ", "دامن چیندار", "کراوات ابریشمی", "شال و روسری", "کلاه بافتنی", "دستکش چرمی", "کمربند مردانه"],
-      خانه: ["سرویس قابلمه گرانیتی", "دستگاه قهوه‌ساز", "جارو برقی بی‌سیم", "پرده‌های مدرن", "ست ظروف پذیرایی", "چاقوی آشپزخانه", "کتری برقی", "ماهیتابه نچسب", "آبمیوه‌گیری", "ساعت دیواری", "قاب عکس چوبی", "گلدان سرامیکی", "جا لباسی ایستاده", "فرش ماشینی", "چراغ خواب", "آینه قدی", "سرویس لحاف", "دستمال کاغذی", "ظرف نگهداری مواد", "زودپز"],
-      ورزشی: ["توپ فوتبال", "دمبل ۱۰ کیلویی", "زیرانداز یوگا", "طناب ورزشی", "دوچرخه کوهستان", "کفش فوتبال", "کوله‌پشتی کوهنوردی", "بطری آب ورزشی", "تردمیل خانگی", "توپ بسکتبال", "هندزفری ورزشی", "مچ‌بند هوشمند", "لباس شنا", "حلقه لاغری", "کش مقاومتی", "کلاه دوچرخه‌سواری", "عینک شنا", "کفش تنیس", "پد زانو", "جوراب ورزشی"]
+    // ====================== منابع RSS ======================
+    const RSS_FEEDS = {
+      world: [
+        'https://feeds.bbci.co.uk/news/world/rss.xml',
+        'https://rss.nytimes.com/services/xml/rss/nyt/World.xml'
+      ],
+      technology: [
+        'https://feeds.bbci.co.uk/news/technology/rss.xml',
+        'https://techcrunch.com/feed/'
+      ],
+      sports: [
+        'https://feeds.bbci.co.uk/sport/rss.xml',
+        'https://www.espn.com/espn/rss/news'
+      ],
+      business: [
+        'https://feeds.bbci.co.uk/news/business/rss.xml',
+        'https://www.cnbc.com/id/10001147/device/rss/rss.html'
+      ],
+      health: [
+        'https://feeds.bbci.co.uk/news/health/rss.xml',
+        'https://www.medicalnewstoday.com/newsfeeds/rss/health'
+      ],
+      science: [
+        'https://feeds.bbci.co.uk/news/science_and_environment/rss.xml',
+        'https://www.sciencedaily.com/rss/all.xml'
+      ]
     };
 
-    function generateProduct(id, cat, index) {
-      const names = productNames[cat];
-      const name = names[index % names.length];
-      const price = Math.floor(Math.random() * 900000) + 100000; // بین ۱۰۰ هزار تا ۱ میلیون تومان
-      return {
-        id,
-        name,
-        category: cat,
-        price,
-        image: `https://picsum.photos/400/300?random=${id}`, // تصاویر واقعی از Lorem Picsum
-        desc: `${name} با کیفیت عالی و قیمت مناسب. مناسب برای استفاده روزمره و هدیه.`
-      };
-    }
+    let allArticles = [];
+    let displayedArticles = [];
+    let currentCategory = 'all';
+    let currentSearchTerm = '';
+    let pageSize = 12;
+    let currentPage = 0;
 
-    let allProducts = [];
-    let idCounter = 0;
-    categories.forEach(cat => {
-      for (let i = 0; i < 20; i++) { // ۲۰ محصول از هر دسته = ۱۰۰ محصول
-        allProducts.push(generateProduct(idCounter++, cat, i));
-      }
-    });
-
-    // ====================== سبد خرید ======================
-    let cart = JSON.parse(localStorage.getItem('fake_shop_cart') || '[]');
-
-    function saveCart() {
-      localStorage.setItem('fake_shop_cart', JSON.stringify(cart));
-      updateCartBadge();
-    }
-
-    function addToCart(productId) {
-      const existing = cart.find(item => item.id === productId);
-      if (existing) {
-        existing.qty += 1;
-      } else {
-        cart.push({ id: productId, qty: 1 });
-      }
-      saveCart();
-      alert('✅ به سبد خرید اضافه شد');
-    }
-
-    function updateCartBadge() {
-      const total = cart.reduce((sum, item) => sum + item.qty, 0);
-      document.getElementById('cart-count').textContent = total;
-    }
-
-    function showCart() {
-      if (cart.length === 0) {
-        alert('🛒 سبد خرید شما خالی است.');
-        return;
-      }
-      let msg = 'محصولات در سبد خرید:\n';
-      cart.forEach(item => {
-        const product = allProducts.find(p => p.id === item.id);
-        if (product) {
-          msg += `${product.name} (${item.qty} عدد) - ${(product.price * item.qty).toLocaleString()} تومان\n`;
+    // ====================== Fetch RSS via rss2json ======================
+    async function fetchFeed(url) {
+      const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
+      try {
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error('Network error');
+        const data = await res.json();
+        if (data.status === 'ok') {
+          return data.items.map(item => ({
+            title: item.title,
+            link: item.link,
+            description: item.description,
+            image: item.thumbnail || item.enclosure?.link || extractImage(item.description) || 'https://via.placeholder.com/400x200?text=No+Image',
+            pubDate: item.pubDate,
+            source: data.feed.title,
+            category: currentCategory
+          }));
         }
-      });
-      const totalPrice = cart.reduce((sum, item) => {
-        const p = allProducts.find(prod => prod.id === item.id);
-        return sum + (p ? p.price * item.qty : 0);
-      }, 0);
-      msg += `\n💰 جمع کل: ${totalPrice.toLocaleString()} تومان`;
-      alert(msg);
+      } catch (e) {
+        console.warn('Could not fetch feed:', url, e);
+      }
+      return [];
     }
 
-    // ====================== فیلتر و جستجو ======================
-    let currentFilter = 'all';
-    let currentSearch = '';
-
-    function filterProducts() {
-      let filtered = allProducts;
-      if (currentFilter !== 'all') {
-        filtered = filtered.filter(p => p.category === currentFilter);
-      }
-      if (currentSearch.trim()) {
-        const term = currentSearch.trim().toLowerCase();
-        filtered = filtered.filter(p => p.name.toLowerCase().includes(term) || p.category.toLowerCase().includes(term));
-      }
-      renderProducts(filtered);
+    function extractImage(html) {
+      if (!html) return null;
+      const match = html.match(/<img[^>]+src="([^">]+)"/);
+      return match ? match[1] : null;
     }
 
-    function renderProducts(products) {
-      const grid = document.getElementById('product-grid');
-      grid.innerHTML = '';
-      if (products.length === 0) {
-        grid.innerHTML = '<p style="text-align:center; padding:50px;">هیچ محصولی یافت نشد.</p>';
+    async function loadArticles(category = 'all') {
+      currentCategory = category;
+      const feedUrls = category === 'all'
+        ? Object.values(RSS_FEEDS).flat()
+        : RSS_FEEDS[category] || [];
+
+      document.getElementById('news-grid').innerHTML = '<p style="text-align:center; padding:40px;">در حال دریافت اخبار...</p>';
+      document.getElementById('load-more-btn').style.display = 'none';
+
+      const promises = feedUrls.map(url => fetchFeed(url));
+      const results = await Promise.all(promises);
+      allArticles = results.flat().sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+
+      currentPage = 0;
+      displayedArticles = [];
+      applySearchAndDisplay();
+    }
+
+    function applySearchAndDisplay() {
+      let filtered = allArticles;
+      if (currentSearchTerm) {
+        const term = currentSearchTerm.toLowerCase();
+        filtered = filtered.filter(a => a.title.toLowerCase().includes(term) || (a.description && a.description.toLowerCase().includes(term)));
+      }
+      displayedArticles = filtered;
+      renderPage(0);
+    }
+
+    function renderPage(page) {
+      currentPage = page;
+      const start = page * pageSize;
+      const end = start + pageSize;
+      const articlesToShow = displayedArticles.slice(start, end);
+
+      const grid = document.getElementById('news-grid');
+      if (page === 0) grid.innerHTML = '';
+
+      if (articlesToShow.length === 0 && page === 0) {
+        grid.innerHTML = '<p style="text-align:center; padding:40px;">خبری یافت نشد.</p>';
+        document.getElementById('load-more-btn').style.display = 'none';
         return;
       }
-      products.forEach(product => {
+
+      articlesToShow.forEach(article => {
         const card = document.createElement('div');
-        card.className = 'product-card';
+        card.className = 'news-card';
         card.innerHTML = `
-          <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=بدون+تصویر'">
-          <div class="product-info">
-            <div class="product-title">${product.name}</div>
-            <div class="product-cat">${product.category}</div>
-            <div class="product-price">${product.price.toLocaleString()} تومان</div>
-            <button class="add-to-cart" onclick="addToCart(${product.id})">🛒 افزودن به سبد</button>
+          <img src="${article.image}" alt="${article.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x200?text=No+Image'">
+          <div class="card-body">
+            <div class="source">${article.source}</div>
+            <h3>${article.title}</h3>
+            <div class="description">${article.description ? article.description.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : ''}</div>
+            <a href="${article.link}" target="_blank">مشاهده خبر کامل</a>
           </div>
         `;
         grid.appendChild(card);
       });
+
+      document.getElementById('load-more-btn').style.display = displayedArticles.length > end ? 'block' : 'none';
     }
 
-    function searchProducts() {
-      currentSearch = document.getElementById('search-input').value;
-      filterProducts();
+    function loadMore() {
+      renderPage(currentPage + 1);
+    }
+
+    function searchNews() {
+      currentSearchTerm = document.getElementById('search-input').value.trim();
+      applySearchAndDisplay();
     }
 
     document.getElementById('search-input').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') searchProducts();
+      if (e.key === 'Enter') searchNews();
     });
 
-    // فیلترهای دسته‌بندی
-    document.getElementById('category-filters').addEventListener('click', (e) => {
+    // ====================== دکمه‌های دسته‌بندی ======================
+    document.getElementById('category-nav').addEventListener('click', (e) => {
       if (e.target.classList.contains('cat-btn')) {
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         e.target.classList.add('active');
-        currentFilter = e.target.dataset.category;
-        filterProducts();
+        const cat = e.target.dataset.category;
+        loadArticles(cat);
       }
     });
 
-    function resetFilters() {
-      currentFilter = 'all';
-      currentSearch = '';
+    function resetToHome() {
       document.getElementById('search-input').value = '';
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      currentSearchTerm = '';
       document.querySelector('.cat-btn[data-category="all"]').classList.add('active');
-      filterProducts();
+      loadArticles('all');
     }
 
     // ====================== حالت تاریک ======================
     function applyTheme(theme) {
       document.body.classList.toggle('dark', theme === 'dark');
-      localStorage.setItem('theme', theme);
+      localStorage.setItem('news_theme', theme);
     }
     function toggleTheme() {
-      const newTheme = document.body.classList.contains('dark') ? 'light' : 'dark';
-      applyTheme(newTheme);
+      const next = document.body.classList.contains('dark') ? 'light' : 'dark';
+      applyTheme(next);
     }
-    applyTheme(localStorage.getItem('theme') || 'light');
+    applyTheme(localStorage.getItem('news_theme') || 'light');
 
-    // ====================== راه‌اندازی ======================
-    updateCartBadge();
-    filterProducts();
+    // راه‌اندازی اولیه
+    loadArticles('all');
   </script>
 </body>
 </html>
