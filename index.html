@@ -3,29 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موزه هنرهای کهکشانی | Samisaki Museum</title>
+    <title>تور مجازی آپارتمان مدرن | Samisaki Real Estate</title>
     <style>
         body { margin: 0; overflow: hidden; background: #000; font-family: 'Vazirmatn', sans-serif; }
         canvas { display: block; }
-        .info {
+        .ui {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(12px);
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+            background: rgba(20, 20, 30, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .ui button {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.2);
             color: #e0d6ff;
-            padding: 12px 28px;
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            font-size: 0.9rem;
+            font-family: inherit;
+            font-size: 0.85rem;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .ui button:hover, .ui button.active {
+            background: #2d5a27;
+            border-color: #8bc34a;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(45,90,39,0.5);
+        }
+        .ui button.active {
+            background: #8bc34a;
+            color: #0a0a0c;
+            font-weight: bold;
+        }
+        .hint {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.7);
+            background: rgba(0,0,0,0.5);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             pointer-events: none;
             z-index: 10;
         }
     </style>
 </head>
 <body>
-    <div class="info">🖱️ با موس بچرخید | اسکرول برای زوم | موزه کهکشانی Samisaki</div>
+    <div class="hint">🖱️ موس بچرخانید | اسکرول برای زوم | دکمه‌ها برای جابجایی</div>
+    <div class="ui" id="ui">
+        <button class="active" data-room="living">نشیمن</button>
+        <button data-room="kitchen">آشپزخانه</button>
+        <button data-room="bedroom">اتاق خواب</button>
+        <button data-room="bathroom">حمام</button>
+        <button data-room="exterior">نمای بیرونی</button>
+    </div>
 
     <script type="importmap">
         {
@@ -39,14 +81,13 @@
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        // ==================== صحنه، دوربین، رندرر ====================
+        // ==================== صحنه ====================
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x0d0d14);
-        scene.fog = new THREE.Fog(0x0d0d14, 10, 40);
+        scene.background = new THREE.Color(0x87CEEB); // آسمان آبی
+        scene.fog = new THREE.Fog(0x87CEEB, 15, 50);
 
         const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 50);
-        camera.position.set(0, 1.7, 8);
-        camera.lookAt(0, 1.5, 0);
+        camera.position.set(0, 1.7, 6);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -57,104 +98,61 @@
         renderer.toneMappingExposure = 1.0;
         document.body.appendChild(renderer.domElement);
 
-        // ==================== کنترل‌ها ====================
         const controls = new OrbitControls(camera, renderer.domElement);
-        controls.target.set(0, 1.4, 0);
+        controls.target.set(0, 1.3, 0);
         controls.enableDamping = true;
         controls.dampingFactor = 0.08;
-        controls.minDistance = 2.5;
-        controls.maxDistance = 14;
-        controls.maxPolarAngle = Math.PI / 2.1;
+        controls.minDistance = 1.5;
+        controls.maxDistance = 10;
+        controls.maxPolarAngle = Math.PI / 2.2;
         controls.update();
 
-        // ==================== نورپردازی ====================
-        // نور محیطی بسیار ملایم
-        const ambient = new THREE.AmbientLight(0x222244, 0.5);
+        // ==================== نورپردازی (نور طبیعی روز) ====================
+        const ambient = new THREE.AmbientLight(0x8899aa, 0.6);
         scene.add(ambient);
 
-        // نور اصلی از نورگیر سقفی (شبیه‌سازی نور روز)
-        const skyLight = new THREE.DirectionalLight(0xfff5e8, 6.0);
-        skyLight.position.set(0, 8, 0);
-        skyLight.castShadow = true;
-        skyLight.shadow.mapSize.width = 2048;
-        skyLight.shadow.mapSize.height = 2048;
-        skyLight.shadow.camera.near = 0.5;
-        skyLight.shadow.camera.far = 25;
-        skyLight.shadow.camera.left = -8;
-        skyLight.shadow.camera.right = 8;
-        skyLight.shadow.camera.top = 8;
-        skyLight.shadow.camera.bottom = -8;
-        skyLight.shadow.bias = -0.0005;
-        skyLight.shadow.normalBias = 0.02;
-        scene.add(skyLight);
+        const sunLight = new THREE.DirectionalLight(0xfff5e8, 5.5);
+        sunLight.position.set(8, 12, 2);
+        sunLight.castShadow = true;
+        sunLight.shadow.mapSize.width = 2048;
+        sunLight.shadow.mapSize.height = 2048;
+        sunLight.shadow.camera.near = 0.5;
+        sunLight.shadow.camera.far = 30;
+        sunLight.shadow.camera.left = -10;
+        sunLight.shadow.camera.right = 10;
+        sunLight.shadow.camera.top = 10;
+        sunLight.shadow.camera.bottom = -10;
+        sunLight.shadow.bias = -0.0001;
+        scene.add(sunLight);
 
-        // نورهای نقطه‌ای گرم روی تابلوها (حس گالری)
-        const spotLight1 = new THREE.SpotLight(0xffeedd, 15, 12, Math.PI / 6, 0.3, 1);
-        spotLight1.position.set(-2.5, 2.6, -3.2);
-        spotLight1.target.position.set(-2.5, 1.8, -4.3);
-        spotLight1.castShadow = true;
-        spotLight1.shadow.mapSize.width = 512;
-        spotLight1.shadow.mapSize.height = 512;
-        scene.add(spotLight1);
-        scene.add(spotLight1.target);
-
-        const spotLight2 = new THREE.SpotLight(0xffeedd, 15, 12, Math.PI / 6, 0.3, 1);
-        spotLight2.position.set(2.5, 2.6, -3.2);
-        spotLight2.target.position.set(2.5, 1.8, -4.3);
-        spotLight2.castShadow = true;
-        spotLight2.shadow.mapSize.width = 512;
-        spotLight2.shadow.mapSize.height = 512;
-        scene.add(spotLight2);
-        scene.add(spotLight2.target);
-
-        const spotLight3 = new THREE.SpotLight(0xffeedd, 12, 10, Math.PI / 6, 0.3, 1);
-        spotLight3.position.set(0, 2.6, 3.2);
-        spotLight3.target.position.set(0, 1.8, 4.3);
-        spotLight3.castShadow = true;
-        spotLight3.shadow.mapSize.width = 512;
-        spotLight3.shadow.mapSize.height = 512;
-        scene.add(spotLight3);
-        scene.add(spotLight3.target);
+        // نور آسمان (hemisphere light برای realism بیشتر)
+        const hemiLight = new THREE.HemisphereLight(0x87CEEB, 0x362907, 0.4);
+        scene.add(hemiLight);
 
         // ==================== متریال‌ها ====================
-        // تولید بافت مرمر با Canvas برای کف
-        const marbleCanvas = document.createElement('canvas');
-        marbleCanvas.width = 512;
-        marbleCanvas.height = 512;
-        const mCtx = marbleCanvas.getContext('2d');
-        mCtx.fillStyle = '#e8e4df';
-        mCtx.fillRect(0, 0, 512, 512);
-        for (let i = 0; i < 200; i++) {
-            mCtx.beginPath();
-            mCtx.strokeStyle = `rgba(${180 + Math.random() * 40}, ${175 + Math.random() * 40}, ${170 + Math.random() * 40}, 0.15)`;
-            mCtx.lineWidth = Math.random() * 4 + 1;
-            const x = Math.random() * 512;
-            const y = Math.random() * 512;
-            mCtx.moveTo(x, y);
-            mCtx.bezierCurveTo(x + Math.random() * 80 - 40, y + Math.random() * 80 - 40, x + Math.random() * 80 - 40, y + Math.random() * 80 - 40, x + Math.random() * 100 - 50, y + Math.random() * 100 - 50);
-            mCtx.stroke();
+        // بافت پارکت چوبی
+        const woodCanvas = document.createElement('canvas');
+        woodCanvas.width = 512; woodCanvas.height = 512;
+        const wCtx = woodCanvas.getContext('2d');
+        wCtx.fillStyle = '#8B7355'; wCtx.fillRect(0, 0, 512, 512);
+        for (let i = 0; i < 40; i++) {
+            wCtx.fillStyle = `rgba(${100+Math.random()*40}, ${70+Math.random()*30}, ${40+Math.random()*20}, 0.3)`;
+            wCtx.fillRect(0, i * 12.8, 512, 4 + Math.random() * 8);
         }
-        const marbleTexture = new THREE.CanvasTexture(marbleCanvas);
-        marbleTexture.wrapS = THREE.RepeatWrapping;
-        marbleTexture.wrapT = THREE.RepeatWrapping;
-        marbleTexture.repeat.set(4, 4);
+        const woodTexture = new THREE.CanvasTexture(woodCanvas);
+        woodTexture.wrapS = THREE.RepeatWrapping;
+        woodTexture.wrapT = THREE.RepeatWrapping;
+        woodTexture.repeat.set(4, 4);
 
-        const floorMat = new THREE.MeshStandardMaterial({
-            map: marbleTexture,
-            roughness: 0.25,
-            metalness: 0.1,
-            color: 0xffffff
-        });
-
-        const wallMat = new THREE.MeshStandardMaterial({ color: 0xe8e2d8, roughness: 0.85, metalness: 0.0 });
-        const ceilingMat = new THREE.MeshStandardMaterial({ color: 0xf5f0e8, roughness: 0.9, metalness: 0.0 });
-        const woodMat = new THREE.MeshStandardMaterial({ color: 0x4a3728, roughness: 0.5, metalness: 0.1 });
-        const metalMat = new THREE.MeshStandardMaterial({ color: 0x2a2a2a, roughness: 0.2, metalness: 0.9 });
-        const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.1, metalness: 0.1, transparent: true, opacity: 0.25, envMapIntensity: 0.5 });
-        const frameMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.3, metalness: 0.8 });
-        const benchMat = new THREE.MeshStandardMaterial({ color: 0x3d2b1f, roughness: 0.55, metalness: 0.05 });
+        const floorMat = new THREE.MeshStandardMaterial({ map: woodTexture, roughness: 0.5, metalness: 0.05 });
+        const wallMat = new THREE.MeshStandardMaterial({ color: 0xf5f0e8, roughness: 0.85 });
+        const ceilingMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 });
+        const woodMat = new THREE.MeshStandardMaterial({ color: 0x5a4030, roughness: 0.5, metalness: 0.1 });
+        const metalMat = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.2, metalness: 0.9 });
+        const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.1, metalness: 0.1, transparent: true, opacity: 0.3 });
+        const fabricMat = new THREE.MeshStandardMaterial({ color: 0x4a4a5a, roughness: 0.9 });
         const plantMat = new THREE.MeshStandardMaterial({ color: 0x2d5a27, roughness: 0.7 });
-        const potMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.3, metalness: 0.6 });
+        const marbleMat = new THREE.MeshStandardMaterial({ color: 0xeeebe6, roughness: 0.2, metalness: 0.3 });
 
         // ==================== تابع‌های کمکی ====================
         function createBox(w, h, d, mat, x, y, z, cast = true, receive = true) {
@@ -165,226 +163,251 @@
             return mesh;
         }
 
-        // ==================== ساختمان موزه ====================
-        // کف
-        const floor = new THREE.Mesh(new THREE.PlaneGeometry(16, 16), floorMat);
-        floor.rotation.x = -Math.PI / 2;
-        floor.position.y = 0;
-        floor.receiveShadow = true;
-        scene.add(floor);
-
-        // دیوارهای بیرونی
-        scene.add(createBox(16, 4.5, 0.35, wallMat, 0, 2.25, -8));
-        scene.add(createBox(0.35, 4.5, 16, wallMat, -8, 2.25, 0));
-        scene.add(createBox(0.35, 4.5, 16, wallMat, 8, 2.25, 0));
-        scene.add(createBox(16, 4.5, 0.35, wallMat, 0, 2.25, 8));
-        // سقف
-        scene.add(createBox(16, 0.15, 16, ceilingMat, 0, 4.4, 0));
-
-        // --- نورگیر سقفی (اسکای‌لایت) ---
-        const skylightFrame = new THREE.Mesh(new THREE.BoxGeometry(3.5, 0.1, 3.5), metalMat);
-        skylightFrame.position.set(0, 4.5, 0);
-        skylightFrame.castShadow = true;
-        scene.add(skylightFrame);
-        const skylightGlass = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 3.2), glassMat);
-        skylightGlass.rotation.x = -Math.PI / 2;
-        skylightGlass.position.set(0, 4.55, 0);
-        scene.add(skylightGlass);
-
-        // --- ستون‌های داخلی (۴ عدد) ---
-        const pillarPositions = [[-5, -5], [5, -5], [-5, 5], [5, 5]];
-        pillarPositions.forEach(([px, pz]) => {
-            const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.4, 4.5, 32), new THREE.MeshStandardMaterial({ color: 0xf0ebe0, roughness: 0.4, metalness: 0.2 }));
-            pillar.position.set(px, 2.25, pz);
-            pillar.castShadow = true;
-            pillar.receiveShadow = true;
-            scene.add(pillar);
+        // ==================== گروه‌های اتاق ====================
+        const rooms = {};
+        ['living', 'kitchen', 'bedroom', 'bathroom', 'exterior'].forEach(name => {
+            const group = new THREE.Group();
+            group.name = name;
+            scene.add(group);
+            rooms[name] = group;
         });
 
-        // --- دیوارهای داخلی برای ایجاد راهرو و فضاهای نمایش ---
-        // دیوار پشتی سالن اصلی (با تابلو)
-        scene.add(createBox(10, 3.8, 0.25, wallMat, 0, 2.1, -6));
-        // دو دیوار جداکنندهٔ کوتاه برای تعریف فضا
-        scene.add(createBox(0.25, 3.5, 5, wallMat, -3.5, 1.95, -3.5));
-        scene.add(createBox(0.25, 3.5, 5, wallMat, 3.5, 1.95, -3.5));
-
-        // ==================== تابلوهای هنری ====================
-        function createArtCanvas(width, height, paintFunction) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 512;
-            canvas.height = 512 * (height / width);
-            const ctx = canvas.getContext('2d');
-            paintFunction(ctx, canvas.width, canvas.height);
-            const texture = new THREE.CanvasTexture(canvas);
-            texture.colorSpace = THREE.SRGBColorSpace;
-            return texture;
+        // ==================== نمای بیرونی ====================
+        const ext = rooms.exterior;
+        // زمین چمن
+        const groundCanvas = document.createElement('canvas');
+        groundCanvas.width = 256; groundCanvas.height = 256;
+        const gCtx = groundCanvas.getContext('2d');
+        gCtx.fillStyle = '#4a7c3f'; gCtx.fillRect(0, 0, 256, 256);
+        for (let i = 0; i < 200; i++) {
+            gCtx.fillStyle = `rgb(${60+Math.random()*40}, ${100+Math.random()*60}, ${30+Math.random()*40})`;
+            gCtx.fillRect(Math.random()*256, Math.random()*256, 2, 6);
         }
+        const groundTexture = new THREE.CanvasTexture(groundCanvas);
+        groundTexture.wrapS = THREE.RepeatWrapping;
+        groundTexture.wrapT = THREE.RepeatWrapping;
+        groundTexture.repeat.set(8, 8);
+        const groundMat = new THREE.MeshStandardMaterial({ map: groundTexture, roughness: 0.9 });
+        const ground = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), groundMat);
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.y = 0;
+        ground.receiveShadow = true;
+        ext.add(ground);
 
-        // تابع نقاشی کهکشانی ۱
-        function paintGalaxy1(ctx, w, h) {
-            ctx.fillStyle = '#0a0a14';
-            ctx.fillRect(0, 0, w, h);
-            for (let i = 0; i < 600; i++) {
-                const x = Math.random() * w;
-                const y = Math.random() * h;
-                const r = Math.random() * 3 + 1;
-                ctx.fillStyle = `rgba(${200 + Math.random() * 55}, ${150 + Math.random() * 100}, ${220 + Math.random() * 35}, ${Math.random() * 0.8 + 0.2})`;
-                ctx.beginPath();
-                ctx.arc(x, y, r, 0, Math.PI * 2);
-                ctx.fill();
+        // ساختمان (مکعب ساده با پنجره)
+        const buildingMat = new THREE.MeshStandardMaterial({ color: 0xd4c5b9, roughness: 0.7 });
+        const building = new THREE.Mesh(new THREE.BoxGeometry(8, 3.5, 8), buildingMat);
+        building.position.set(0, 1.75, 0);
+        building.castShadow = true; building.receiveShadow = true;
+        ext.add(building);
+        // سقف
+        ext.add(createBox(8.4, 0.15, 8.4, new THREE.MeshStandardMaterial({ color: 0x4a4a4a, roughness: 0.4 }), 0, 3.55, 0));
+        // پنجره‌ها
+        for (let fx = -2; fx <= 2; fx += 4) {
+            const windowFrame = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.5, 0.1), metalMat);
+            windowFrame.position.set(fx, 2.2, 3.95);
+            ext.add(windowFrame);
+            const windowGlass = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 1.3), glassMat);
+            windowGlass.position.set(fx, 2.2, 3.96);
+            ext.add(windowGlass);
+        }
+        // در ورودی
+        const door = new THREE.Mesh(new THREE.BoxGeometry(1.2, 2.4, 0.1), woodMat);
+        door.position.set(0, 1.2, 3.95);
+        ext.add(door);
+        // درخت
+        const treeTrunk = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.2, 2.5, 8), new THREE.MeshStandardMaterial({ color: 0x5a3a2a, roughness: 0.8 }));
+        treeTrunk.position.set(-5, 1.25, -5);
+        treeTrunk.castShadow = true;
+        ext.add(treeTrunk);
+        const treeLeaves = new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 8), plantMat);
+        treeLeaves.position.set(-5, 2.8, -5);
+        treeLeaves.castShadow = true;
+        ext.add(treeLeaves);
+
+        // ==================== نشیمن ====================
+        const living = rooms.living;
+        living.add(createBox(8, 0.15, 8, floorMat, 0, -0.075, -1));
+        living.add(createBox(8, 3, 0.2, wallMat, 0, 1.5, -5));
+        living.add(createBox(0.2, 3, 8, wallMat, -4, 1.5, -1));
+        living.add(createBox(0.2, 3, 8, wallMat, 4, 1.5, -1));
+        living.add(createBox(2.5, 3, 0.2, wallMat, -2.75, 1.5, 3));
+        living.add(createBox(2.5, 3, 0.2, wallMat, 2.75, 1.5, 3));
+        living.add(createBox(0.3, 2.4, 0.2, woodMat, -1.2, 1.2, 2.9));
+        living.add(createBox(0.3, 2.4, 0.2, woodMat, 1.2, 1.2, 2.9));
+        living.add(createBox(2.7, 0.15, 0.3, woodMat, 0, 2.35, 2.9));
+        living.add(createBox(8, 0.1, 8, ceilingMat, 0, 2.95, -1));
+        // پنجره بزرگ
+        const bigWindow = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 2.0), glassMat);
+        bigWindow.position.set(0, 2.0, -4.88);
+        living.add(bigWindow);
+        // مبل و مبلمان (مانند نسخه قبلی، کمی جزئیات بیشتر)
+        const sofaBase = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.5, 0.9), fabricMat);
+        sofaBase.position.set(-1.8, 0.4, -2.5);
+        sofaBase.castShadow = true; sofaBase.receiveShadow = true;
+        living.add(sofaBase);
+        const sofaBack = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.6, 0.25), fabricMat);
+        sofaBack.position.set(-1.8, 0.9, -2.85);
+        sofaBack.castShadow = true; sofaBack.receiveShadow = true;
+        living.add(sofaBack);
+        for (let i = 0; i < 3; i++) {
+            const cushion = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.15, 0.55), new THREE.MeshStandardMaterial({ color: 0x6a5a7a, roughness: 0.8 }));
+            cushion.position.set(-2.4 + i * 0.6, 0.7, -2.5);
+            cushion.castShadow = true; cushion.receiveShadow = true;
+            living.add(cushion);
+        }
+        living.add(createBox(1.2, 0.35, 0.6, woodMat, -1.8, 0.35, -1.6));
+        const tvPanel = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.0, 0.06), new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.1, metalness: 0.9 }));
+        tvPanel.position.set(2.5, 1.6, -4.75);
+        tvPanel.castShadow = true;
+        living.add(tvPanel);
+        const tvScreen = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 0.85), new THREE.MeshBasicMaterial({ color: 0x001122 }));
+        tvScreen.position.set(2.5, 1.6, -4.71);
+        living.add(tvScreen);
+        living.add(createBox(2.0, 0.45, 0.5, woodMat, 2.5, 0.5, -3.8));
+        // کتابخانه
+        for (let row = 0; row < 3; row++) {
+            living.add(createBox(1.0, 0.05, 0.35, woodMat, -3.5, 0.7 + row * 0.6, -3.5));
+            for (let col = 0; col < 2; col++) {
+                const book = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.3 + Math.random() * 0.2, 0.2), new THREE.MeshStandardMaterial({ color: new THREE.Color().setHSL(Math.random() * 0.1 + 0.05, 0.6, 0.3 + Math.random() * 0.4), roughness: 0.7 }));
+                book.position.set(-3.5 - 0.25 + col * 0.25, 0.75 + row * 0.6, -3.45);
+                book.castShadow = true; book.receiveShadow = true;
+                living.add(book);
             }
-            // بازوی کهکشانی
-            for (let i = 0; i < 300; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const dist = Math.random() * 180;
-                const x = w / 2 + Math.cos(angle) * dist;
-                const y = h / 2 + Math.sin(angle) * dist * 0.4;
-                ctx.fillStyle = `rgba(255, ${180 + Math.random() * 75}, ${200 + Math.random() * 55}, ${Math.random() * 0.6 + 0.2})`;
-                ctx.beginPath();
-                ctx.arc(x, y, Math.random() * 4 + 1, 0, Math.PI * 2);
-                ctx.fill();
-            }
         }
+        const rugL = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 3.5), new THREE.MeshStandardMaterial({ color: 0x5a4a6a, roughness: 0.95 }));
+        rugL.rotation.x = -Math.PI / 2;
+        rugL.position.set(-1.8, 0.01, -1.5);
+        rugL.receiveShadow = true;
+        living.add(rugL);
+        const chandelierL = new THREE.Mesh(new THREE.TorusGeometry(0.35, 0.03, 8, 16), new THREE.MeshStandardMaterial({ color: 0xffccaa, roughness: 0.2, metalness: 0.9, emissive: 0x331100 }));
+        chandelierL.position.set(0, 2.8, -1);
+        chandelierL.rotation.x = Math.PI / 2;
+        living.add(chandelierL);
+        const bulbL = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffeedd }));
+        bulbL.position.set(0, 2.7, -1);
+        living.add(bulbL);
 
-        // تابع نقاشی کهکشانی ۲
-        function paintGalaxy2(ctx, w, h) {
-            ctx.fillStyle = '#050510';
-            ctx.fillRect(0, 0, w, h);
-            for (let i = 0; i < 400; i++) {
-                const x = Math.random() * w;
-                const y = Math.random() * h;
-                ctx.fillStyle = `rgba(${100 + Math.random() * 100}, ${100 + Math.random() * 100}, ${200 + Math.random() * 55}, 0.8)`;
-                ctx.beginPath();
-                ctx.arc(x, y, Math.random() * 2 + 0.5, 0, Math.PI * 2);
-                ctx.fill();
-            }
-            for (let i = 0; i < 200; i++) {
-                const x = w / 2 + (Math.random() - 0.5) * 200;
-                const y = h / 2 + (Math.random() - 0.5) * 200;
-                ctx.fillStyle = `rgba(255, ${150 + Math.random() * 105}, 255, 0.5)`;
-                ctx.beginPath();
-                ctx.arc(x, y, Math.random() * 3 + 1, 0, Math.PI * 2);
-                ctx.fill();
-            }
+        // ==================== آشپزخانه ====================
+        const kitchen = rooms.kitchen;
+        kitchen.add(createBox(8, 0.15, 8, floorMat, 0, -0.075, -1));
+        kitchen.add(createBox(8, 3, 0.2, wallMat, 0, 1.5, -5));
+        kitchen.add(createBox(0.2, 3, 8, wallMat, -4, 1.5, -1));
+        kitchen.add(createBox(0.2, 3, 8, wallMat, 4, 1.5, -1));
+        kitchen.add(createBox(8, 0.1, 8, ceilingMat, 0, 2.95, -1));
+        kitchen.add(createBox(6.5, 3, 0.2, wallMat, 0.75, 1.5, 3));
+        for (let i = 0; i < 4; i++) {
+            const cabinet = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.9, 0.6), woodMat);
+            cabinet.position.set(-3 + i * 1, 0.7, -4.2);
+            cabinet.castShadow = true; cabinet.receiveShadow = true;
+            kitchen.add(cabinet);
         }
-
-        // تابع نقاشی انتزاعی ۳
-        function paintAbstract(ctx, w, h) {
-            ctx.fillStyle = '#0d0d14';
-            ctx.fillRect(0, 0, w, h);
-            for (let i = 0; i < 200; i++) {
-                ctx.fillStyle = `rgba(${180 + Math.random() * 75}, ${130 + Math.random() * 100}, ${200 + Math.random() * 55}, 0.5)`;
-                ctx.beginPath();
-                const x = Math.random() * w;
-                const y = Math.random() * h;
-                ctx.arc(x, y, Math.random() * 15 + 3, 0, Math.PI * 2);
-                ctx.fill();
-            }
+        kitchen.add(createBox(3.8, 0.06, 0.65, marbleMat, -1.5, 1.16, -4.2));
+        const sink = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.15, 0.5), metalMat);
+        sink.position.set(2.5, 1.1, -4.1);
+        kitchen.add(sink);
+        const stove = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.1, 0.5), new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.1, metalness: 0.9 }));
+        stove.position.set(-3, 1.1, -4.1);
+        kitchen.add(stove);
+        const diningTable = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.7, 0.06, 32), woodMat);
+        diningTable.position.set(2, 0.9, -1.5);
+        diningTable.castShadow = true; diningTable.receiveShadow = true;
+        kitchen.add(diningTable);
+        const tableLegK = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.9, 8), metalMat);
+        tableLegK.position.set(2, 0.45, -1.5);
+        kitchen.add(tableLegK);
+        for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 2) {
+            const chair = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.1, 0.4), fabricMat);
+            chair.position.set(2 + Math.cos(angle) * 1, 0.55, -1.5 + Math.sin(angle) * 1);
+            chair.castShadow = true; chair.receiveShadow = true;
+            kitchen.add(chair);
         }
+        const fridge = new THREE.Mesh(new THREE.BoxGeometry(0.9, 2, 0.7), new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.15, metalness: 0.9 }));
+        fridge.position.set(-3.2, 1.2, 3.8);
+        fridge.castShadow = true; fridge.receiveShadow = true;
+        kitchen.add(fridge);
 
-        const textures = [
-            createArtCanvas(3, 4, paintGalaxy1),
-            createArtCanvas(3, 4, paintGalaxy2),
-            createArtCanvas(3, 4, paintAbstract),
-            createArtCanvas(3, 4, paintGalaxy1),
-            createArtCanvas(3, 4, paintGalaxy2),
-            createArtCanvas(3, 4, paintAbstract),
-        ];
+        // ==================== اتاق خواب ====================
+        const bedroom = rooms.bedroom;
+        bedroom.add(createBox(6, 0.15, 7, floorMat, 0, -0.075, -0.5));
+        bedroom.add(createBox(6, 3, 0.2, wallMat, 0, 1.5, -4));
+        bedroom.add(createBox(0.2, 3, 7, wallMat, -3, 1.5, -0.5));
+        bedroom.add(createBox(0.2, 3, 7, wallMat, 3, 1.5, -0.5));
+        bedroom.add(createBox(6, 0.1, 7, ceilingMat, 0, 2.95, -0.5));
+        bedroom.add(createBox(6, 3, 0.2, wallMat, 0, 1.5, 3));
+        const bedBase = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.4, 2.2), woodMat);
+        bedBase.position.set(0, 0.45, -2);
+        bedBase.castShadow = true; bedBase.receiveShadow = true;
+        bedroom.add(bedBase);
+        const mattress = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.2, 2.1), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8 }));
+        mattress.position.set(0, 0.75, -2);
+        mattress.castShadow = true; mattress.receiveShadow = true;
+        bedroom.add(mattress);
+        const pillow = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.12, 1.2), new THREE.MeshStandardMaterial({ color: 0xeeeeff, roughness: 0.9 }));
+        pillow.position.set(0, 0.9, -2.9);
+        pillow.castShadow = true; pillow.receiveShadow = true;
+        bedroom.add(pillow);
+        const blanket = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.08, 1.2), new THREE.MeshStandardMaterial({ color: 0x5a4a6a, roughness: 0.9 }));
+        blanket.position.set(0, 0.9, -1.3);
+        blanket.castShadow = true; blanket.receiveShadow = true;
+        bedroom.add(blanket);
+        const wardrobe = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2.4, 0.6), woodMat);
+        wardrobe.position.set(2.2, 1.4, -3);
+        wardrobe.castShadow = true; wardrobe.receiveShadow = true;
+        bedroom.add(wardrobe);
+        bedroom.add(createBox(1, 0.05, 0.4, woodMat, -2.2, 0.8, 2.2));
+        bedroom.add(createBox(0.05, 0.8, 0.4, woodMat, -2.7, 0.4, 2.2));
+        bedroom.add(createBox(0.05, 0.8, 0.4, woodMat, -1.7, 0.4, 2.2));
+        const mirrorB = new THREE.Mesh(new THREE.PlaneGeometry(0.6, 0.8), new THREE.MeshStandardMaterial({ color: 0xccccff, roughness: 0.05, metalness: 0.9 }));
+        mirrorB.position.set(-2.2, 1.3, 2.38);
+        bedroom.add(mirrorB);
 
-        function createPainting(texture, x, y, z, rotY = 0) {
-            const group = new THREE.Group();
-            // قاب
-            const frame = new THREE.Mesh(new THREE.BoxGeometry(1.25, 1.65, 0.08), frameMat);
-            frame.castShadow = true;
-            frame.receiveShadow = true;
-            group.add(frame);
-            // بوم
-            const canvas = new THREE.Mesh(new THREE.PlaneGeometry(1.05, 1.45), new THREE.MeshStandardMaterial({ map: texture, roughness: 0.6, metalness: 0.0 }));
-            canvas.position.z = 0.05;
-            group.add(canvas);
-            group.position.set(x, y, z);
-            group.rotation.y = rotY;
-            scene.add(group);
-            return group;
-        }
+        // ==================== حمام ====================
+        const bathroom = rooms.bathroom;
+        bathroom.add(createBox(5, 0.15, 5, new THREE.MeshStandardMaterial({ color: 0xd0ccc8, roughness: 0.3 }), 0, -0.075, 0));
+        bathroom.add(createBox(5, 3, 0.2, new THREE.MeshStandardMaterial({ color: 0xd8e8e8, roughness: 0.2 }), 0, 1.5, -2.5));
+        bathroom.add(createBox(0.2, 3, 5, new THREE.MeshStandardMaterial({ color: 0xd8e8e8, roughness: 0.2 }), -2.5, 1.5, 0));
+        bathroom.add(createBox(0.2, 3, 5, new THREE.MeshStandardMaterial({ color: 0xd8e8e8, roughness: 0.2 }), 2.5, 1.5, 0));
+        bathroom.add(createBox(5, 0.1, 5, new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 }), 0, 2.95, 0));
+        bathroom.add(createBox(5, 3, 0.2, new THREE.MeshStandardMaterial({ color: 0xd8e8e8, roughness: 0.2 }), 0, 1.5, 2.5));
+        const tub = new THREE.Mesh(new THREE.CapsuleGeometry(0.6, 1.2, 8, 16), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1, metalness: 0.2 }));
+        tub.position.set(1.2, 0.4, -0.8);
+        tub.rotation.z = Math.PI / 2;
+        tub.castShadow = true; tub.receiveShadow = true;
+        bathroom.add(tub);
+        const vanity = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.15, 0.5), marbleMat);
+        vanity.position.set(-1.5, 0.9, 1.5);
+        vanity.castShadow = true; vanity.receiveShadow = true;
+        bathroom.add(vanity);
+        bathroom.add(createBox(0.8, 0.7, 0.4, woodMat, -1.5, 0.5, 1.5));
+        const toiletBase = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.3, 0.5, 16), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 }));
+        toiletBase.position.set(-1.5, 0.35, -1.8);
+        toiletBase.castShadow = true; toiletBase.receiveShadow = true;
+        bathroom.add(toiletBase);
+        bathroom.add(createBox(0.3, 0.5, 0.25, new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 }), -1.5, 0.75, -1.95));
 
-        // تابلوها روی دیوار پشتی (دو عدد)
-        createPainting(textures[0], -2.5, 2.2, -5.85, 0);
-        createPainting(textures[1], 2.5, 2.2, -5.85, 0);
-        // تابلوها روی دیوارهای کناری
-        createPainting(textures[2], -7.85, 2.2, -2, Math.PI / 2);
-        createPainting(textures[3], 7.85, 2.2, -2, -Math.PI / 2);
-        // تابلو روی دیوار ورودی
-        createPainting(textures[4], 0, 2.2, 7.85, Math.PI);
-        // یک تابلوی اضافه روی دیوار پشتی نزدیک ستون
-        createPainting(textures[5], -5.5, 2.2, -5.85, 0);
+        // ==================== مدیریت اتاق‌ها ====================
+        Object.values(rooms).forEach(group => group.visible = false);
+        rooms.living.visible = true;
 
-        // ==================== مبلمان موزه ====================
-        // نیمکت‌ها
-        function createBench(x, y, z, rotY = 0) {
-            const group = new THREE.Group();
-            const seat = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.1, 0.5), benchMat);
-            seat.position.y = 0.45;
-            seat.castShadow = true; seat.receiveShadow = true;
-            group.add(seat);
-            for (let lx = -0.9; lx <= 0.9; lx += 0.6) {
-                const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.07, 0.45, 8), metalMat);
-                leg.position.set(lx, 0.22, 0.18);
-                leg.castShadow = true;
-                group.add(leg);
-                const leg2 = leg.clone();
-                leg2.position.z = -0.18;
-                group.add(leg2);
-            }
-            group.position.set(x, y, z);
-            group.rotation.y = rotY;
-            scene.add(group);
-        }
-        createBench(0, 0, 3.5, 0);
-        createBench(-4, 0, -3.5, Math.PI / 4);
-        createBench(4, 0, -3.5, -Math.PI / 4);
-
-        // گلدان‌ها
-        function createPlant(x, z) {
-            const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.12, 0.4, 16), potMat);
-            pot.position.set(x, 0.25, z);
-            pot.castShadow = true; pot.receiveShadow = true;
-            scene.add(pot);
-            const leaves = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 8), plantMat);
-            leaves.position.set(x, 0.6, z);
-            leaves.castShadow = true;
-            scene.add(leaves);
-        }
-        createPlant(-6.5, -6.5);
-        createPlant(6.5, -6.5);
-        createPlant(-6.5, 6.5);
-        createPlant(6.5, 6.5);
-
-        // تابلوی راهنما در ورودی
-        const signBase = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 1.5, 8), metalMat);
-        signBase.position.set(0, 0.75, 6.5);
-        signBase.castShadow = true;
-        scene.add(signBase);
-        const signBoard = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.5, 0.05), woodMat);
-        signBoard.position.set(0, 1.5, 6.5);
-        signBoard.castShadow = true;
-        scene.add(signBoard);
-        // متن راهنما با Canvas
-        const signCanvas = document.createElement('canvas');
-        signCanvas.width = 256;
-        signCanvas.height = 128;
-        const sCtx = signCanvas.getContext('2d');
-        sCtx.fillStyle = '#2a2018';
-        sCtx.fillRect(0, 0, 256, 128);
-        sCtx.fillStyle = '#d4af37';
-        sCtx.font = 'bold 28px serif';
-        sCtx.textAlign = 'center';
-        sCtx.fillText('گالری کهکشان', 128, 55);
-        sCtx.fillText('Samisaki Museum', 128, 95);
-        const signTexture = new THREE.CanvasTexture(signCanvas);
-        const signLabel = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.4), new THREE.MeshBasicMaterial({ map: signTexture }));
-        signLabel.position.set(0, 1.5, 6.53);
-        scene.add(signLabel);
+        document.querySelectorAll('.ui button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const roomName = btn.dataset.room;
+                Object.values(rooms).forEach(g => g.visible = false);
+                rooms[roomName].visible = true;
+                document.querySelectorAll('.ui button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                // تنظیم دوربین برای نمای بیرونی
+                if (roomName === 'exterior') {
+                    camera.position.set(8, 5, 8);
+                    controls.target.set(0, 1.5, 0);
+                } else {
+                    camera.position.set(0, 1.7, 6);
+                    controls.target.set(0, 1.3, -1);
+                }
+                controls.update();
+            });
+        });
 
         // ==================== انیمیشن ====================
         function animate() {
@@ -394,7 +417,6 @@
         }
         animate();
 
-        // واکنش‌گرایی
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
