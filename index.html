@@ -2,265 +2,45 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>کفش ورزشی واقعی | Samisaki Shoes</title>
+    <title>استودیوی پادکست Samisaki</title>
     <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background: #d5d0c8;
-            font-family: 'Vazirmatn', sans-serif;
-        }
-        canvas { display: block; }
-        .hint {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(10px);
-            color: #fff;
-            padding: 10px 24px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            pointer-events: none;
-            z-index: 10;
-        }
+        body { background: #1a1a2e; color: #e0d6ff; font-family: 'Vazirmatn', sans-serif; padding: 30px; max-width: 700px; margin: 0 auto; }
+        h1 { color: #ff99c8; text-align: center; }
+        textarea { width: 100%; height: 200px; background: #0a0a0c; color: #fff; border: 1px solid #333; border-radius: 12px; padding: 15px; font-family: inherit; font-size: 1rem; margin: 20px 0; }
+        button { background: #7209b7; color: #fff; border: none; padding: 12px 30px; border-radius: 25px; font-size: 1rem; cursor: pointer; margin: 5px; }
+        button:hover { background: #ff99c8; color: #0a0a0c; }
+        .status { margin-top: 15px; color: #aaa; }
     </style>
 </head>
 <body>
-    <div class="hint">🖱️ بچرخانید | اسکرول زوم | کفش واقعی</div>
+    <h1>🎙️ استودیوی پادکست</h1>
+    <p>متن سناریو رو paste کن و گوش بده—صدای طبیعی فارسی</p>
+    <textarea id="textInput" placeholder="سناریوی پادکست رو اینجا بنویس..."></textarea>
+    <div>
+        <button onclick="speak()">▶️ پخش کن</button>
+        <button onclick="pause()">⏸️ توقف</button>
+        <button onclick="resume()">🔄 ادامه</button>
+    </div>
+    <div class="status" id="status">آماده</div>
 
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.157.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
-            }
-        }
-    </script>
-    <script type="module">
-        import * as THREE from 'three';
-        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    <script>
+        const synth = window.speechSynthesis;
+        let utterance = null;
 
-        // ==================== صحنه ====================
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xd5d0c8);
-
-        // Environment Map برای انعکاس واقعی
-        const pmremGenerator = new THREE.PMREMGenerator(new THREE.WebGLRenderer());
-        scene.environment = pmremGenerator.fromScene(new THREE.Scene()).texture;
-
-        // دوربین
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
-        camera.position.set(2.5, 1.8, 3.5);
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.1;
-        document.body.appendChild(renderer.domElement);
-
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.target.set(0, 0.4, 0);
-        controls.enableDamping = true;
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = 1.5;
-        controls.minDistance = 1.5;
-        controls.maxDistance = 7;
-        controls.maxPolarAngle = Math.PI / 1.8;
-        controls.update();
-
-        // ==================== نورپردازی ====================
-        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-
-        const key = new THREE.DirectionalLight(0xfff5f0, 7);
-        key.position.set(-4, 6, 4);
-        key.castShadow = true;
-        key.shadow.mapSize.width = 1024;
-        key.shadow.mapSize.height = 1024;
-        key.shadow.camera.near = 0.5;
-        key.shadow.camera.far = 15;
-        key.shadow.camera.left = -3;
-        key.shadow.camera.right = 3;
-        key.shadow.camera.top = 3;
-        key.shadow.camera.bottom = -3;
-        scene.add(key);
-
-        const fill = new THREE.DirectionalLight(0xccddff, 3);
-        fill.position.set(3, 2, 1);
-        scene.add(fill);
-
-        const rim = new THREE.DirectionalLight(0xffffff, 5);
-        rim.position.set(0, 1.5, -3);
-        scene.add(rim);
-
-        // ==================== پایه ====================
-        const base = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.8, 0.85, 0.05, 64),
-            new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2, metalness: 0.1 })
-        );
-        base.position.y = -0.03;
-        base.receiveShadow = true;
-        scene.add(base);
-
-        // ==================== بارگذاری مدل GLB از یک CDN معتبر ====================
-        const loader = new GLTFLoader();
-        loader.load(
-            'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/Shoe/glTF-Binary/Shoe.glb',
-            (gltf) => {
-                const model = gltf.scene;
-                model.scale.set(1.3, 1.3, 1.3);
-                model.position.set(0, 0.05, 0);
-                model.rotation.y = -0.4;
-                model.traverse((child) => {
-                    if (child.isMesh) {
-                        child.castShadow = true;
-                        child.receiveShadow = true;
-                    }
-                });
-                scene.add(model);
-            },
-            undefined,
-            (error) => {
-                console.error('خطا:', error);
-                // اگر مدل بارگذاری نشد، یک کفش ساده با جزئیات بیشتر میسازیم
-                createFallbackShoe();
-            }
-        );
-
-        // ==================== کفش پشتیبان (در صورت خطا) ====================
-        function createFallbackShoe() {
-            const shoe = new THREE.Group();
-
-            // زیره (با بافت لاستیک)
-            const rubberCanvas = document.createElement('canvas');
-            rubberCanvas.width = 256; rubberCanvas.height = 256;
-            const rCtx = rubberCanvas.getContext('2d');
-            rCtx.fillStyle = '#e8e8e8'; rCtx.fillRect(0, 0, 256, 256);
-            for (let i = 0; i < 500; i++) {
-                rCtx.fillStyle = `rgba(0,0,0,${Math.random()*0.1})`;
-                rCtx.fillRect(Math.random()*256, Math.random()*256, 2, 2);
-            }
-            const rubberTex = new THREE.CanvasTexture(rubberCanvas);
-            const soleMat = new THREE.MeshStandardMaterial({ map: rubberTex, roughness: 0.5, metalness: 0.1 });
-
-            // بافت پارچه
-            const fabricCanvas = document.createElement('canvas');
-            fabricCanvas.width = 256; fabricCanvas.height = 256;
-            const fCtx = fabricCanvas.getContext('2d');
-            fCtx.fillStyle = '#2a2a2a'; fCtx.fillRect(0, 0, 256, 256);
-            for (let i = 0; i < 1000; i++) {
-                fCtx.fillStyle = `rgba(${Math.random()>0.5?255:0},${Math.random()>0.5?255:0},${Math.random()>0.5?255:0},0.05)`;
-                fCtx.fillRect(Math.random()*256, Math.random()*256, 1, 1);
-            }
-            const fabricTex = new THREE.CanvasTexture(fabricCanvas);
-            const upperMat = new THREE.MeshStandardMaterial({ map: fabricTex, roughness: 0.65, metalness: 0.05 });
-
-            // زیره
-            const sole = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.1, 1.6), soleMat);
-            sole.position.set(0, 0.04, 0.1);
-            sole.castShadow = true; sole.receiveShadow = true;
-            shoe.add(sole);
-
-            // پاشنه
-            const heel = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.12, 0.4), soleMat);
-            heel.position.set(0, 0.06, -0.5);
-            heel.castShadow = true; heel.receiveShadow = true;
-            shoe.add(heel);
-
-            // رویه - پنجه
-            const toeBox = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.35, 0.7), upperMat);
-            toeBox.position.set(0, 0.3, 0.6);
-            toeBox.castShadow = true; toeBox.receiveShadow = true;
-            shoe.add(toeBox);
-
-            // رویه - وسط
-            const mid = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.4, 0.55), upperMat);
-            mid.position.set(0, 0.35, 0.1);
-            mid.castShadow = true; mid.receiveShadow = true;
-            shoe.add(mid);
-
-            // رویه - پاشنه
-            const heelUp = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.4, 0.4), upperMat);
-            heelUp.position.set(0, 0.35, -0.5);
-            heelUp.castShadow = true; heelUp.receiveShadow = true;
-            shoe.add(heelUp);
-
-            // زبانه
-            const tongue = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.55, 0.18), upperMat);
-            tongue.position.set(0, 0.6, 0.2);
-            tongue.rotation.x = -0.3;
-            tongue.castShadow = true;
-            shoe.add(tongue);
-
-            // یقه
-            const collar = new THREE.Mesh(new THREE.TorusGeometry(0.28, 0.07, 8, 16), upperMat);
-            collar.position.set(0, 0.6, -0.4);
-            collar.rotation.x = Math.PI / 2;
-            collar.castShadow = true;
-            shoe.add(collar);
-
-            // بندها
-            for (let i = 0; i < 5; i++) {
-                const lace = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.4, 6),
-                    new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 }));
-                lace.position.set(0, 0.5 + i * 0.09, 0.28);
-                lace.rotation.z = Math.PI / 2;
-                lace.castShadow = true;
-                shoe.add(lace);
-            }
-
-            // خط تزئینی
-            const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.04, 1.4),
-                new THREE.MeshStandardMaterial({ color: 0xff5533, roughness: 0.3, metalness: 0.2 }));
-            stripe.position.set(0, 0.1, 0.1);
-            stripe.castShadow = true;
-            shoe.add(stripe);
-
-            // لوگوی Swoosh
-            const curve = new THREE.CatmullRomCurve3([
-                new THREE.Vector3(-0.22, 0.2, 0.65),
-                new THREE.Vector3(-0.05, 0.32, 0.35),
-                new THREE.Vector3(0.18, 0.4, -0.1),
-                new THREE.Vector3(0.12, 0.3, -0.55)
-            ]);
-            const tube = new THREE.Mesh(
-                new THREE.TubeGeometry(curve, 40, 0.03, 8, false),
-                new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2, metalness: 0.2 })
-            );
-            tube.castShadow = true;
-            shoe.add(tube);
-
-            // کفی داخلی
-            const insole = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.04, 1.0),
-                new THREE.MeshStandardMaterial({ color: 0xffddcc, roughness: 0.8 }));
-            insole.position.set(0, 0.5, 0.2);
-            insole.castShadow = true;
-            shoe.add(insole);
-
-            shoe.position.y = 0.02;
-            shoe.rotation.y = -0.3;
-            scene.add(shoe);
+        function speak() {
+            synth.cancel();
+            const text = document.getElementById('textInput').value;
+            utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'fa-IR';
+            utterance.rate = 0.9;  // کمی آهسته‌تر—طبیعی‌تر
+            utterance.pitch = 1.0;
+            utterance.onstart = () => document.getElementById('status').textContent = '🔊 در حال پخش...';
+            utterance.onend = () => document.getElementById('status').textContent = '✅ پخش تموم شد';
+            synth.speak(utterance);
         }
 
-        // ==================== انیمیشن ====================
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+        function pause() { synth.pause(); document.getElementById('status').textContent = '⏸️ متوقف شد'; }
+        function resume() { synth.resume(); document.getElementById('status').textContent = '🔊 ادامه...'; }
     </script>
 </body>
 </html>
