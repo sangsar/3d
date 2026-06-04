@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اتاق قرن شانزدهم</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.157.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // --- صحنه، دوربین، رندرر ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x1a0f07); // پس‌زمینه خیلی تاریک
+        scene.fog = new THREE.Fog(0x1a0f07, 3, 10); // مه برای حس مرموز
+
+        const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 20);
+        camera.position.set(1.5, 1.5, 4.5);
+        camera.lookAt(0, 1.2, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
+        document.body.appendChild(renderer.domElement);
+
+        // --- کنترل چرخش با موس ---
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.target.set(0, 1.2, 0);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.08;
+        controls.minDistance = 1.8;
+        controls.maxDistance = 7;
+        controls.maxPolarAngle = Math.PI / 2.1;
+        controls.update();
+
+        // --- نورپردازی (نور شمع و نور پنجره) ---
+        // نور محیطی خیلی کم (مثل نور مهتاب)
+        const ambientLight = new THREE.AmbientLight(0x332244, 0.4);
+        scene.add(ambientLight);
+
+        // نور اصلی گرم (مثل نور شمع از مرکز اتاق)
+        const candleLight = new THREE.PointLight(0xffaa55, 50, 8, 0.8);
+        candleLight.position.set(0, 1.8, 0);
+        candleLight.castShadow = true;
+        candleLight.shadow.mapSize.width = 512;
+        candleLight.shadow.mapSize.height = 512;
+        candleLight.shadow.camera.near = 0.1;
+        candleLight.shadow.camera.far = 10;
+        scene.add(candleLight);
+
+        // نور سرد از پنجره (آبی کمرنگ)
+        const windowLight = new THREE.DirectionalLight(0xaaccff, 2.5);
+        windowLight.position.set(-3.8, 2.2, 0);
+        windowLight.target.position.set(-2.2, 1.5, 0);
+        windowLight.castShadow = true;
+        windowLight.shadow.mapSize.width = 1024;
+        windowLight.shadow.mapSize.height = 1024;
+        windowLight.shadow.camera.near = 0.5;
+        windowLight.shadow.camera.far = 12;
+        windowLight.shadow.bias = -0.0001;
+        scene.add(windowLight);
+        scene.add(windowLight.target);
+
+        // --- مصالح (متریال‌ها) ---
+        // سنگ خشن برای دیوارها
+        const stoneMat = new THREE.MeshStandardMaterial({
+            color: 0x887766,
+            roughness: 0.95,
+            metalness: 0.05,
+            flatShading: false
+        });
+
+        // چوب تیره برای کف و تیرها
+        const woodMat = new THREE.MeshStandardMaterial({
+            color: 0x4a3822,
+            roughness: 0.7,
+            metalness: 0.1
+        });
+
+        // پارچه برای فرش یا رومیزی
+        const clothMat = new THREE.MeshStandardMaterial({
+            color: 0x8b4513,
+            roughness: 0.9,
+            metalness: 0.0
+        });
+
+        // فلز برای شمعدان
+        const metalMat = new THREE.MeshStandardMaterial({
+            color: 0x333333,
+            roughness: 0.3,
+            metalness: 0.9
+        });
+
+        // --- هندسه (ساختن اتاق) ---
+        // کف
+        const floor = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), woodMat);
+        floor.rotation.x = -Math.PI / 2;
+        floor.position.y = 0;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        // دیوار پشتی (با پنجره)
+        const backWall = new THREE.Mesh(new THREE.BoxGeometry(6, 3.5, 0.3), stoneMat);
+        backWall.position.set(0, 1.75, -3);
+        backWall.receiveShadow = true;
+        backWall.castShadow = true;
+        scene.add(backWall);
+
+        // دیوار چپ
+        const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.3, 3.5, 6), stoneMat);
+        leftWall.position.set(-3, 1.75, 0);
+        leftWall.receiveShadow = true;
+        leftWall.castShadow = true;
+        scene.add(leftWall);
+
+        // دیوار راست
+        const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.3, 3.5, 6), stoneMat);
+        rightWall.position.set(3, 1.75, 0);
+        rightWall.receiveShadow = true;
+        rightWall.castShadow = true;
+        scene.add(rightWall);
+
+        // دیوار جلو (نیمه‌کاره – حس ویرانه یا قرن ۱۶)
+        const frontWall = new THREE.Mesh(new THREE.BoxGeometry(6, 3.5, 0.3), stoneMat);
+        frontWall.position.set(0, 1.75, 2.5);
+        frontWall.receiveShadow = true;
+        frontWall.castShadow = true;
+        // سوراخ برای ورود (حذف بخشی از دیوار با CSG سخت است؛ اینجا دیوار کوتاه‌تر می‌کنیم یا درگاه می‌سازیم)
+        // راه ساده: دیوار جلو را نیمه رها کنیم (فقط نیمه پایینی باشد یا با یک درگاه فرضی)
+        frontWall.scale.set(0.6, 1, 1); // فقط وسط
+        frontWall.position.x = 0;
+        scene.add(frontWall);
+
+        // --- درگاه ورودی (قوس سنگی) ---
+        const archPillar1 = new THREE.Mesh(new THREE.BoxGeometry(0.3, 2.2, 0.3), stoneMat);
+        archPillar1.position.set(-1.2, 1.1, 2.35);
+        archPillar1.castShadow = true;
+        archPillar1.receiveShadow = true;
+        scene.add(archPillar1);
+
+        const archPillar2 = new THREE.Mesh(new THREE.BoxGeometry(0.3, 2.2, 0.3), stoneMat);
+        archPillar2.position.set(1.2, 1.1, 2.35);
+        archPillar2.castShadow = true;
+        archPillar2.receiveShadow = true;
+        scene.add(archPillar2);
+
+        const archTop = new THREE.Mesh(new THREE.BoxGeometry(2.7, 0.2, 0.3), stoneMat);
+        archTop.position.set(0, 2.2, 2.35);
+        archTop.castShadow = true;
+        archTop.receiveShadow = true;
+        scene.add(archTop);
+
+        // --- پنجره (پشت دیوار عقب) ---
+        // قاب پنجره
+        const windowFrame = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.8, 0.15), new THREE.MeshStandardMaterial({ color: 0x3a2a1a, roughness: 0.6, metalness: 0.2 }));
+        windowFrame.position.set(0, 1.9, -2.85);
+        windowFrame.receiveShadow = true;
+        windowFrame.castShadow = true;
+        scene.add(windowFrame);
+
+        // شیشه پنجره (نیمه شفاف با رنگ آبی)
+        const glassPane = new THREE.Mesh(
+            new THREE.PlaneGeometry(1.2, 1.6),
+            new THREE.MeshPhysicalMaterial({ color: 0xaaccff, roughness: 0.1, metalness: 0.1, transparent: true, opacity: 0.3 })
+        );
+        glassPane.position.set(0, 1.9, -2.77);
+        scene.add(glassPane);
+
+        // --- تیرهای سقف (چوبی) ---
+        for (let i = -2; i <= 2; i += 2) {
+            const beam = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 5.8), new THREE.MeshStandardMaterial({ color: 0x3b2b1a, roughness: 0.8, metalness: 0.1 }));
+            beam.position.set(i, 3.3, 0);
+            beam.castShadow = true;
+            beam.receiveShadow = true;
+            scene.add(beam);
+        }
+
+        // --- لوستر ساده (چند شمع روی یک حلقه) ---
+        const chandelierRing = new THREE.Mesh(new THREE.TorusGeometry(0.4, 0.05, 8, 16), metalMat);
+        chandelierRing.position.set(0, 3.0, 0);
+        chandelierRing.rotation.x = Math.PI / 2;
+        chandelierRing.castShadow = true;
+        chandelierRing.receiveShadow = true;
+        scene.add(chandelierRing);
+
+        // شمع‌های روی لوستر
+        for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 3) {
+            const candle = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.25, 8), new THREE.MeshStandardMaterial({ color: 0xffeedd, roughness: 0.5, emissive: 0x220000 }));
+            candle.position.set(Math.cos(angle) * 0.35, 3.12, Math.sin(angle) * 0.35);
+            candle.castShadow = true;
+            candle.receiveShadow = true;
+            scene.add(candle);
+
+            // شعله (نقطه نورانی)
+            const flame = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 8), new THREE.MeshBasicMaterial({ color: 0xff6600 }));
+            flame.position.set(Math.cos(angle) * 0.35, 3.25, Math.sin(angle) * 0.35);
+            scene.add(flame);
+        }
+
+        // --- میز چوبی ساده ---
+        const tableTop = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.1, 0.8), woodMat);
+        tableTop.position.set(0, 0.9, -0.5);
+        tableTop.castShadow = true;
+        tableTop.receiveShadow = true;
+        scene.add(tableTop);
+
+        const tableLeg1 = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.9, 8), woodMat);
+        tableLeg1.position.set(-0.5, 0.45, -0.3);
+        tableLeg1.castShadow = true;
+        tableLeg1.receiveShadow = true;
+        scene.add(tableLeg1);
+
+        const tableLeg2 = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.9, 8), woodMat);
+        tableLeg2.position.set(0.5, 0.45, -0.3);
+        tableLeg2.castShadow = true;
+        tableLeg2.receiveShadow = true;
+        scene.add(tableLeg2);
+
+        const tableLeg3 = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.9, 8), woodMat);
+        tableLeg3.position.set(-0.5, 0.45, -0.7);
+        tableLeg3.castShadow = true;
+        tableLeg3.receiveShadow = true;
+        scene.add(tableLeg3);
+
+        const tableLeg4 = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.9, 8), woodMat);
+        tableLeg4.position.set(0.5, 0.45, -0.7);
+        tableLeg4.castShadow = true;
+        tableLeg4.receiveShadow = true;
+        scene.add(tableLeg4);
+
+        // شمع روی میز
+        const tableCandle = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.08, 0.3, 8), new THREE.MeshStandardMaterial({ color: 0xffeedd, roughness: 0.5 }));
+        tableCandle.position.set(0, 1.05, -0.5);
+        tableCandle.castShadow = true;
+        tableCandle.receiveShadow = true;
+        scene.add(tableCandle);
+        const tableFlame = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), new THREE.MeshBasicMaterial({ color: 0xff8800 }));
+        tableFlame.position.set(0, 1.22, -0.5);
+        scene.add(tableFlame);
+
+        // --- صندلی ساده (فقط یکی برای سادگی) ---
+        const chairSeat = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.1, 0.5), woodMat);
+        chairSeat.position.set(0.7, 0.55, -1.2);
+        chairSeat.castShadow = true;
+        chairSeat.receiveShadow = true;
+        scene.add(chairSeat);
+
+        for (let lx = -0.2; lx <= 0.2; lx += 0.4) {
+            for (let lz = -0.2; lz <= 0.2; lz += 0.4) {
+                const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.55, 8), woodMat);
+                leg.position.set(0.7 + lx, 0.28, -1.2 + lz);
+                leg.castShadow = true;
+                leg.receiveShadow = true;
+                scene.add(leg);
+            }
+        }
+        const chairBack = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.08), woodMat);
+        chairBack.position.set(0.7, 0.85, -1.44);
+        chairBack.castShadow = true;
+        chairBack.receiveShadow = true;
+        scene.add(chairBack);
+
+        // --- قالیچه کوچک (زیر میز) ---
+        const rug = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 2.0), clothMat);
+        rug.rotation.x = -Math.PI / 2;
+        rug.position.set(0, 0.01, -0.5);
+        rug.receiveShadow = true;
+        scene.add(rug);
+
+        // --- انیمیشن ---
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // واکنش‌گرایی
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
