@@ -3,415 +3,872 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>جملات ناب | Samisaki</title>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>نقل‌قول‌های ماندگار | سینمای کلمات</title>
+    <link href="https://cdn.jsdelivr.net/gh/vhidvz/iransans@latest/fonts/IRANSansWeb(FaNum).woff2" rel="stylesheet">
     <style>
         :root {
-            --bg: #0a0a0c;
-            --card-bg: rgba(20, 10, 40, 0.75);
-            --pink: #ff99c8;
-            --purple: #b388eb;
-            --gold: #f5c518;
-            --text: #e0d6ff;
-            --shadow: 0 12px 30px rgba(0,0,0,0.5);
-            --glass-border: rgba(255,255,255,0.12);
+            --bg: #0a0a0f;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --gold: #c9a84c;
+            --gold-light: #e0c97f;
+            --text: #e0d5c1;
+            --text-dim: #8a8070;
+            --red: #c0392b;
+            --red-light: #e74c3c;
+            --heart: #e74c3c;
+            --glass: rgba(20, 18, 30, 0.75);
+            --border: rgba(201, 168, 76, 0.15);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --radius: 18px;
+            --transition: 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
+            font-family: 'IRANSansWeb(FaNum)', 'Tahoma', sans-serif;
             background: var(--bg);
-            font-family: 'Vazirmatn', sans-serif;
+            background-image:
+                radial-gradient(ellipse at 20% 10%, rgba(201, 168, 76, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 90%, rgba(180, 130, 50, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 50%, rgba(100, 80, 60, 0.03) 0%, transparent 80%);
             color: var(--text);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            direction: rtl;
-            padding: 20px;
-            position: relative;
             overflow-x: hidden;
+            line-height: 1.8;
+            position: relative;
         }
+
+        /* floating particles */
         .particles {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            pointer-events: none; z-index: 0;
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
         }
         .particle {
             position: absolute;
-            background: var(--pink);
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            animation: twinkle 4s infinite ease-in-out;
-            opacity: 0.8;
-        }
-        @keyframes twinkle {
-            0%,100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.3); }
-        }
-        .cloud {
-            position: absolute;
-            background: #fff;
+            background: var(--gold);
             border-radius: 50%;
-            box-shadow: 0 0 15px rgba(255,255,255,0.6);
-            animation: floatCloud 18s linear infinite;
-            opacity: 0.8;
+            opacity: 0;
+            animation: floatUp 8s infinite;
         }
-        .cloud::before, .cloud::after {
-            content: "";
-            position: absolute;
-            background: inherit;
-            border-radius: 50%;
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-10vh) scale(1.5);
+            }
         }
-        .cloud::before {
-            width: 70%; height: 80%;
-            top: -40%; left: 8%;
-        }
-        .cloud::after {
-            width: 55%; height: 70%;
-            top: -30%; right: 8%;
-        }
-        .cloud.pinkish {
-            background: rgba(255,153,200,0.7);
-            box-shadow: 0 0 12px rgba(255,153,200,0.7);
-        }
-        @keyframes floatCloud {
-            0% { transform: translateX(0) translateY(0); opacity: 0.8; }
-            100% { transform: translateX(calc(100vw + 150px)) translateY(-20px); opacity: 0.5; }
-        }
-        .app-container {
-            position: relative; z-index: 1;
-            max-width: 680px;
-            width: 100%;
-            margin: 80px 0 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 14px 24px;
-            box-shadow: var(--shadow);
-            position: fixed;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 40px);
-            max-width: 680px;
+
+        /* header */
+        .header {
+            position: sticky;
+            top: 0;
             z-index: 100;
+            background: rgba(10, 10, 15, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
         }
-        .top-bar h2 {
-            font-size: 1.25rem;
-            color: var(--gold);
-            letter-spacing: 0.5px;
-            margin: 0;
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            white-space: nowrap;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .category-badge {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: var(--gold-light);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            backdrop-filter: blur(10px);
         }
         .hamburger {
-            width: 42px; height: 42px;
-            border-radius: 14px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid var(--pink);
-            color: var(--pink);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: var(--gold);
             font-size: 1.4rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.3s;
-            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            position: relative;
+            z-index: 200;
         }
-        .hamburger:hover { background: var(--pink); color: #0a0a0c; }
-        .quote-grid {
+        .hamburger:hover {
+            background: rgba(201, 168, 76, 0.15);
+            border-color: var(--gold);
+        }
+
+        /* sidebar overlay */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 150;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -380px;
+            width: 360px;
+            max-width: 85vw;
+            height: 100vh;
+            background: rgba(15, 13, 22, 0.95);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-left: 1px solid var(--border);
+            z-index: 160;
+            padding: 30px 24px;
+            overflow-y: auto;
+            transition: right 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
         }
-        .quote-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
-            border-radius: 18px;
-            padding: 16px 20px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        .sidebar.active {
+            right: 0;
+        }
+        .sidebar h3 {
+            color: var(--gold);
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .sidebar .section-title {
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 12px;
+            padding-right: 8px;
+        }
+        .sidebar button,
+        .sidebar .menu-link {
             display: flex;
-            align-items: flex-start;
-            gap: 14px;
-            transition: all 0.3s ease;
-            animation: fadeSlide 0.4s ease;
-        }
-        @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .quote-card:hover {
-            border-color: var(--pink);
-            box-shadow: 0 0 25px rgba(255,153,200,0.25);
-        }
-        .quote-body { flex: 1; display: flex; flex-direction: column; gap: 6px; }
-        .quote-text { font-size: 0.95rem; line-height: 1.9; color: #fff; }
-        .quote-meta { color: var(--gold); font-size: 0.8rem; font-weight: 500; }
-        .action-btns { display: flex; gap: 8px; flex-shrink: 0; align-items: center; }
-        .mini-btn {
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.25);
-            background: rgba(255,255,255,0.08);
-            color: #ccc;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 13px 18px;
+            border-radius: 14px;
+            border: 1px solid transparent;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 0.95rem;
             cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            text-align: right;
+        }
+        .sidebar button:hover,
+        .sidebar .menu-link:hover {
+            background: rgba(201, 168, 76, 0.08);
+            border-color: var(--border);
+            color: var(--gold-light);
+        }
+        .sidebar button.active-cat {
+            background: rgba(201, 168, 76, 0.12);
+            border-color: var(--gold);
+            color: var(--gold);
+            font-weight: bold;
+        }
+        .sidebar .icon {
+            font-size: 1.2rem;
+            width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .danger-btn {
+            color: var(--red-light) !important;
+            border-color: rgba(231, 76, 60, 0.3) !important;
+        }
+        .danger-btn:hover {
+            background: rgba(231, 76, 60, 0.1) !important;
+            border-color: var(--red) !important;
+        }
+        .sidebar .close-btn {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 1.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-            backdrop-filter: blur(5px);
+            transition: var(--transition);
         }
-        .mini-btn:hover { background: var(--pink); color: #0a0a0c; border-color: var(--pink); transform: scale(1.1); }
-        .mini-btn.heart { color: #ff6b6b; }
-        .mini-btn.heart.liked { background: #ff6b6b; color: #fff; border-color: #ff6b6b; }
-        .mini-btn.trash { color: #ffaaaa; }
-        .mini-btn.trash:hover { background: #ff4444; color: #fff; border-color: #ff4444; }
-        .mini-btn.remove { color: #cccccc; }
-        .mini-btn.remove:hover { background: #ff4444; color: #fff; border-color: #ff4444; }
-        .sidebar {
-            position: fixed;
-            top: 0; right: -340px;
-            width: 300px; height: 100vh;
-            background: rgba(10,10,12,0.95);
-            backdrop-filter: blur(20px);
-            border-left: 1px solid var(--glass-border);
-            z-index: 999;
-            transition: right 0.4s ease;
+        .sidebar .close-btn:hover {
+            color: #fff;
+            border-color: #fff;
+        }
+
+        /* main grid */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            padding: 30px 20px 60px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        .quotes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        @media (max-width: 700px) {
+            .quotes-grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                padding: 10px 14px;
+            }
+            .logo {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* quote card */
+        .quote-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 20px 20px;
+            position: relative;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
             display: flex;
             flex-direction: column;
-            padding: 90px 20px 30px;
-            gap: 12px;
-            overflow-y: auto;
+            gap: 14px;
+            animation: fadeInUp 0.6s ease backwards;
+            cursor: default;
         }
-        .sidebar.open { right: 0; }
-        .sidebar-btn {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: #fff;
-            font-family: inherit;
-            font-size: 0.95rem;
-            padding: 14px 18px;
-            border-radius: 16px;
+        .quote-card:hover {
+            border-color: rgba(201, 168, 76, 0.35);
+            box-shadow: 0 12px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(201, 168, 76, 0.1) inset;
+            transform: translateY(-4px);
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .quote-text {
+            font-size: 1.05rem;
+            line-height: 2;
+            color: #f0e6d3;
+            position: relative;
+            padding-right: 8px;
+        }
+        .quote-text::before {
+            content: '«';
+            color: var(--gold);
+            font-size: 2.5rem;
+            position: absolute;
+            right: -6px;
+            top: -12px;
+            opacity: 0.5;
+            font-family: serif;
+        }
+        .quote-author {
+            font-size: 0.85rem;
+            color: var(--gold-light);
+            font-weight: 600;
+            margin-top: auto;
+        }
+        .quote-category {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+        }
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+        .card-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--glass);
+            color: var(--text-dim);
             cursor: pointer;
-            transition: 0.3s;
-            text-align: center;
-            backdrop-filter: blur(5px);
+            font-size: 1rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(6px);
         }
-        .sidebar-btn:hover, .sidebar-btn.active { background: var(--pink); color: #0a0a0c; border-color: var(--pink); }
-        .overlay {
+        .card-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(201, 168, 76, 0.1);
+        }
+        .card-btn.fav-btn.liked {
+            color: var(--heart);
+            border-color: var(--heart);
+            background: rgba(231, 76, 60, 0.1);
+            animation: heartBeat 0.5s ease;
+        }
+        @keyframes heartBeat {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            30% {
+                transform: scale(1.25);
+            }
+        }
+        .card-btn.delete-btn:hover {
+            border-color: var(--red);
+            color: var(--red-light);
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        /* empty state */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-dim);
+            font-size: 1.2rem;
+        }
+        .empty-state .icon-big {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 16px;
+            opacity: 0.4;
+        }
+
+        /* toast */
+        .toast {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 998;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(20, 18, 30, 0.9);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px 24px;
+            border-radius: 30px;
+            z-index: 300;
+            backdrop-filter: blur(16px);
+            font-size: 0.9rem;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s;
+            transition: opacity 0.4s, transform 0.4s;
         }
-        .overlay.show { opacity: 1; pointer-events: auto; }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-8px);
+        }
+
+        /* scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(201, 168, 76, 0.25);
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
-    <div class="particles" id="particlesContainer"></div>
-    <div class="sidebar" id="sidebar">
-        <button class="sidebar-btn active" data-category="all">📜 همه</button>
-        <button class="sidebar-btn" data-category="famous">🌟 بزرگان (۱-۳۰۰)</button>
-        <button class="sidebar-btn" data-category="book">📚 تکه کتاب (۳۰۱-۶۰۰)</button>
-        <button class="sidebar-btn" data-category="dialogue">🎬 دیالوگ (۶۰۱-۹۰۰)</button>
-        <button class="sidebar-btn" data-category="psychology">🧠 روانشناسی و فلسفه (۹۰۱-۱۰۰۰)</button>
-        <button class="sidebar-btn" data-category="favorites">❤️ علاقه‌مندی‌ها</button>
-        <button class="sidebar-btn" data-category="blacklist">🚫 لیست سیاه</button>
-        <button class="sidebar-btn" id="clearBlacklistBtn" style="background:rgba(255,100,100,0.2); border-color:#ff4444; color:#ff8888;">🗑️ پاک‌کردن لیست سیاه</button>
-    </div>
-    <div class="overlay" id="overlay"></div>
-    <div class="top-bar">
-        <h2>✨ جملات ناب</h2>
-        <button class="hamburger" id="hamburgerBtn">☰</button>
-    </div>
-    <div class="app-container">
-        <div class="quote-grid" id="quoteGrid">
-            <p style="color:#aaa; text-align:center; padding:40px;">در حال بارگذاری...</p>
+
+    <!-- Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">🎬 نقل‌قول‌های ماندگار</div>
+        <div class="header-actions">
+            <span class="category-badge" id="categoryBadge">✨ همه</span>
+            <button class="hamburger" id="hamburgerBtn" title="منو">☰</button>
         </div>
-    </div>
+    </header>
 
-    <!-- لود quotes.js با تشخیص خطا -->
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <button class="close-btn" id="closeSidebar">✕</button>
+        <h3>🎭 منوی گنجینه</h3>
+
+        <div class="section-title">📂 دسته‌بندی</div>
+        <button class="menu-link active-cat" data-category="all"><span class="icon">📚</span> همه نقل‌قول‌ها</button>
+        <button class="menu-link" data-category="famous"><span class="icon">🌟</span> سخنان بزرگان</button>
+        <button class="menu-link" data-category="book"><span class="icon">📖</span> تکه‌های کتاب</button>
+        <button class="menu-link" data-category="dialogue"><span class="icon">🎬</span> دیالوگ‌های ماندگار</button>
+        <button class="menu-link" data-category="philosophy"><span class="icon">🏛️</span> فلسفی</button>
+        <button class="menu-link" data-category="psychology"><span class="icon">🧠</span> روانشناسی</button>
+
+        <div class="section-title">❤️ مجموعه‌های من</div>
+        <button class="menu-link" id="showFavorites"><span class="icon">❤️</span> علاقه‌مندی‌ها <span id="favCount">(0)</span></button>
+        <button class="menu-link" id="showBlacklist"><span class="icon">🚫</span> بلک‌لیست <span id="blacklistCount">(0)</span></button>
+        <button class="menu-link danger-btn" id="clearBlacklist"><span class="icon">🔓</span> آزادسازی بلک‌لیست</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <div class="quotes-grid" id="quotesGrid"></div>
+    </main>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Load quotes data -->
+    <script src="quotes.js"></script>
     <script>
-        const scriptEl = document.createElement('script');
-        scriptEl.src = 'quotes.js';
-        scriptEl.onload = function() {
-            if (typeof quotes === 'undefined' || !Array.isArray(quotes) || quotes.length === 0) {
-                document.getElementById('quoteGrid').innerHTML = '<p style="color:red; text-align:center; padding:40px;">❌ فایل quotes.js بارگذاری شد اما آرایه quotes خالی یا نامعتبر است. لطفاً ساختار فایل را بررسی کنید (const quotes = [ ... ];).</p>';
-            } else {
-                // همه چیز خوب است، حالا برنامه را اجرا کن
-                initApp();
-            }
-        };
-        scriptEl.onerror = function() {
-            document.getElementById('quoteGrid').innerHTML = '<p style="color:red; text-align:center; padding:40px;">❌ فایل quotes.js پیدا نشد. لطفاً مطمئن شوید فایل quotes.js در همان پوشه‌ای است که index.html قرار دارد (ریشه مخزن). همچنین نام فایل را دقیقاً quotes.js (با حروف کوچک) بگذارید.</p>';
-        };
-        document.head.appendChild(scriptEl);
-
-        // تابع اصلی برنامه
-        function initApp() {
-            document.getElementById('quoteGrid').innerHTML = '';
-
-            let blacklist = JSON.parse(localStorage.getItem('quoteBlacklist')) || [];
-            let favorites = JSON.parse(localStorage.getItem('quoteFavorites')) || [];
-            let currentCategory = 'all';
-            let visibleQuotes = [];
-
-            function saveData() {
-                localStorage.setItem('quoteBlacklist', JSON.stringify(blacklist));
-                localStorage.setItem('quoteFavorites', JSON.stringify(favorites));
-            }
-
-            function getPool() {
-                let pool = [];
-                switch(currentCategory) {
-                    case 'famous': pool = quotes.filter(q => q.id >= 1 && q.id <= 300); break;
-                    case 'book': pool = quotes.filter(q => q.id >= 301 && q.id <= 600); break;
-                    case 'dialogue': pool = quotes.filter(q => q.id >= 601 && q.id <= 900); break;
-                    case 'psychology': pool = quotes.filter(q => q.id >= 901 && q.id <= 1000); break;
-                    case 'favorites': pool = quotes.filter(q => favorites.includes(q.id) && !blacklist.includes(q.id)); break;
-                    case 'blacklist': pool = quotes.filter(q => blacklist.includes(q.id)); break;
-                    default: pool = quotes.filter(q => !blacklist.includes(q.id));
-                }
-                return pool;
-            }
-
-            function refreshVisible() {
-                const pool = getPool();
-                const shuffled = [...pool].sort(() => Math.random() - 0.5);
-                visibleQuotes = shuffled.slice(0, 100);
-            }
-
-            function replaceOne(oldId) {
-                const pool = getPool();
-                const usedIds = visibleQuotes.map(q => q.id);
-                const available = pool.filter(q => !usedIds.includes(q.id) && q.id !== oldId);
-                if (available.length === 0) return;
-                const randomPick = available[Math.floor(Math.random() * available.length)];
-                const idx = visibleQuotes.findIndex(q => q.id === oldId);
-                if (idx > -1) visibleQuotes[idx] = randomPick;
-            }
-
-            function render() {
-                const grid = document.getElementById('quoteGrid');
-                grid.innerHTML = '';
-                if (visibleQuotes.length === 0) {
-                    grid.innerHTML = '<div style="text-align:center; color:#aaa; padding:40px;">جمله‌ای برای نمایش وجود ندارد.</div>';
-                    return;
-                }
-                visibleQuotes.forEach(q => {
-                    const isFav = favorites.includes(q.id);
-                    const card = document.createElement('div');
-                    card.className = 'quote-card';
-                    card.setAttribute('data-id', q.id);
-                    card.innerHTML = `
-                        <div class="quote-body">
-                            <div class="quote-text">"${q.text}"</div>
-                            <div class="quote-meta">— ${q.author}</div>
-                        </div>
-                        <div class="action-btns">
-                            <button class="mini-btn heart ${isFav ? 'liked' : ''}" data-action="heart">${isFav ? '❤️' : '🤍'}</button>
-                            <button class="mini-btn remove" data-action="remove">✕</button>
-                            <button class="mini-btn trash" data-action="trash">🗑️</button>
-                        </div>
-                    `;
-                    const id = q.id;
-                    card.querySelector('[data-action="heart"]').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const idx = favorites.indexOf(id);
-                        if (idx > -1) favorites.splice(idx, 1); else favorites.push(id);
-                        saveData();
-                        render();
-                    });
-                    card.querySelector('[data-action="remove"]').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        visibleQuotes = visibleQuotes.filter(q => q.id !== id);
-                        replaceOne(id);
-                        render();
-                    });
-                    card.querySelector('[data-action="trash"]').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        if (!blacklist.includes(id)) blacklist.push(id);
-                        saveData();
-                        visibleQuotes = visibleQuotes.filter(q => q.id !== id);
-                        if (currentCategory === 'blacklist') refreshVisible();
-                        else replaceOne(id);
-                        render();
-                    });
-                    grid.appendChild(card);
-                });
-            }
-
+        (function() {
+            // ──────────────────────────────────────
+            // DOM refs
+            // ──────────────────────────────────────
+            const grid = document.getElementById('quotesGrid');
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
-            document.getElementById('hamburgerBtn').addEventListener('click', () => {
-                sidebar.classList.add('open');
-                overlay.classList.add('show');
-            });
-            overlay.addEventListener('click', () => {
-                sidebar.classList.remove('open');
-                overlay.classList.remove('show');
-            });
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const closeSidebarBtn = document.getElementById('closeSidebar');
+            const categoryBadge = document.getElementById('categoryBadge');
+            const toast = document.getElementById('toast');
+            const favCountEl = document.getElementById('favCount');
+            const blacklistCountEl = document.getElementById('blacklistCount');
+            const showFavoritesBtn = document.getElementById('showFavorites');
+            const showBlacklistBtn = document.getElementById('showBlacklist');
+            const clearBlacklistBtn = document.getElementById('clearBlacklist');
+            const particlesContainer = document.getElementById('particles');
 
-            document.querySelectorAll('.sidebar-btn[data-category]').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    currentCategory = btn.dataset.category;
-                    refreshVisible();
-                    render();
-                    document.querySelectorAll('.sidebar-btn[data-category]').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    sidebar.classList.remove('open');
-                    overlay.classList.remove('show');
+            // ──────────────────────────────────────
+            // State
+            // ──────────────────────────────────────
+            const STORAGE_KEY = 'cinema_quotes_app';
+            let currentCategory = 'all';
+            let displayedIds = [];
+            let blacklist = new Set();
+            let favorites = new Set();
+            let allQuotes = [];
+
+            // Initialize allQuotes from loaded quotes.js
+            if (typeof quotes !== 'undefined' && Array.isArray(quotes)) {
+                allQuotes = [...quotes];
+            } else {
+                allQuotes = [];
+                console.error('فایل quotes.js بارگذاری نشده است.');
+            }
+
+            // ──────────────────────────────────────
+            // Load / Save state
+            // ──────────────────────────────────────
+            function loadState() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    if (raw) {
+                        const data = JSON.parse(raw);
+                        if (data.blacklist) blacklist = new Set(data.blacklist);
+                        if (data.favorites) favorites = new Set(data.favorites);
+                        if (data.currentCategory) currentCategory = data.currentCategory;
+                        if (data.displayedIds) displayedIds = data.displayedIds;
+                    }
+                } catch (e) {
+                    console.warn('خطا در خواندن localStorage:', e);
+                }
+            }
+
+            function saveState() {
+                try {
+                    const data = {
+                        blacklist: [...blacklist],
+                        favorites: [...favorites],
+                        currentCategory,
+                        displayedIds,
+                    };
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                } catch (e) {
+                    console.warn('خطا در ذخیره‌سازی:', e);
+                }
+            }
+
+            // ──────────────────────────────────────
+            // Helpers
+            // ──────────────────────────────────────
+            function getQuotesByCategory(cat) {
+                if (cat === 'all') return [...allQuotes];
+                return allQuotes.filter(q => q.category === cat);
+            }
+
+            function getAvailableQuoteIds(cat) {
+                const pool = getQuotesByCategory(cat);
+                const poolIds = new Set(pool.map(q => q.id));
+                const available = [];
+                for (const id of poolIds) {
+                    if (!blacklist.has(id) && !displayedIds.includes(id)) {
+                        available.push(id);
+                    }
+                }
+                // shuffle
+                for (let i = available.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [available[i], available[j]] = [available[j], available[i]];
+                }
+                return available;
+            }
+
+            function findQuoteById(id) {
+                return allQuotes.find(q => q.id === id);
+            }
+
+            const categoryNames = {
+                all: '✨ همه',
+                famous: '🌟 سخنان بزرگان',
+                book: '📖 تکه‌های کتاب',
+                dialogue: '🎬 دیالوگ‌های ماندگار',
+                philosophy: '🏛️ فلسفی',
+                psychology: '🧠 روانشناسی',
+                favorites: '❤️ علاقه‌مندی‌ها',
+                blacklist: '🚫 بلک‌لیست',
+            };
+
+            // ──────────────────────────────────────
+            // Toast
+            // ──────────────────────────────────────
+            let toastTimer;
+
+            function showToast(msg) {
+                clearTimeout(toastTimer);
+                toast.textContent = msg;
+                toast.classList.add('show');
+                toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+            }
+
+            // ──────────────────────────────────────
+            // Initialize displayed IDs
+            // ──────────────────────────────────────
+            function initDisplayedIds(cat) {
+                const available = getAvailableQuoteIds(cat);
+                const count = Math.min(100, available.length);
+                displayedIds = available.slice(0, count);
+            }
+
+            function refillDisplayedIds(cat) {
+                const needed = 100 - displayedIds.length;
+                if (needed <= 0) return;
+                const available = getAvailableQuoteIds(cat);
+                const toAdd = available.slice(0, needed);
+                displayedIds.push(...toAdd);
+            }
+
+            // ──────────────────────────────────────
+            // Render
+            // ──────────────────────────────────────
+            function renderGrid() {
+                grid.innerHTML = '';
+                if (displayedIds.length === 0) {
+                    const emptyMsg = currentCategory === 'favorites' ?
+                        '❤️ هنوز نقل‌قولی به علاقه‌مندی‌ها اضافه نکردی.' :
+                        currentCategory === 'blacklist' ?
+                        '🚫 بلک‌لیست خالی است. نقل‌قول‌ها را آزاد کن.' :
+                        '📭 نقل‌قولی برای نمایش وجود ندارد.';
+                    grid.innerHTML = `<div class="empty-state"><span class="icon-big">${currentCategory==='favorites'?'💔':currentCategory==='blacklist'?'🕊️':'🎭'}</span>${emptyMsg}</div>`;
+                    return;
+                }
+
+                const fragment = document.createDocumentFragment();
+                displayedIds.forEach((id, index) => {
+                    const quote = findQuoteById(id);
+                    if (!quote) return;
+                    const isFav = favorites.has(id);
+                    const card = document.createElement('div');
+                    card.className = 'quote-card';
+                    card.style.animationDelay = `${(index % 20) * 0.03}s`;
+                    card.innerHTML = `
+                        <div class="quote-text">${escapeHTML(quote.text)}</div>
+                        <div class="quote-author">— ${escapeHTML(quote.author)}</div>
+                        <div class="quote-category">📂 ${categoryNames[quote.category] || quote.category}</div>
+                        <div class="card-actions">
+                            <button class="card-btn fav-btn ${isFav ? 'liked' : ''}" data-id="${id}" title="${isFav ? 'حذف از علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی‌ها'}">
+                                ${isFav ? '❤️' : '🤍'}
+                            </button>
+                            <button class="card-btn delete-btn" data-id="${id}" title="حذف و انتقال به بلک‌لیست">🗑️</button>
+                        </div>
+                    `;
+                    fragment.appendChild(card);
                 });
-            });
+                grid.appendChild(fragment);
+            }
 
-            document.getElementById('clearBlacklistBtn').addEventListener('click', () => {
-                if (confirm('لیست سیاه کامل پاک شود؟')) {
-                    blacklist = [];
-                    saveData();
-                    if (currentCategory === 'blacklist') { refreshVisible(); render(); }
-                    sidebar.classList.remove('open');
-                    overlay.classList.remove('show');
+            function escapeHTML(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            function updateCounts() {
+                favCountEl.textContent = `(${favorites.size})`;
+                blacklistCountEl.textContent = `(${blacklist.size})`;
+            }
+
+            function updateBadge() {
+                categoryBadge.textContent = categoryNames[currentCategory] || '✨ همه';
+            }
+
+            function updateSidebarActive() {
+                document.querySelectorAll('.sidebar button[data-category]').forEach(btn => {
+                    btn.classList.toggle('active-cat', btn.dataset.category === currentCategory);
+                });
+            }
+
+            // ──────────────────────────────────────
+            // Actions
+            // ──────────────────────────────────────
+            function switchCategory(cat) {
+                if (cat === 'favorites') {
+                    currentCategory = 'favorites';
+                    displayedIds = [...favorites];
+                    updateBadge();
+                    updateSidebarActive();
+                    renderGrid();
+                    updateCounts();
+                    closeSidebar();
+                    saveState();
+                    return;
+                }
+                if (cat === 'blacklist') {
+                    currentCategory = 'blacklist';
+                    displayedIds = [...blacklist];
+                    updateBadge();
+                    updateSidebarActive();
+                    renderGrid();
+                    updateCounts();
+                    closeSidebar();
+                    saveState();
+                    return;
+                }
+                currentCategory = cat;
+                initDisplayedIds(cat);
+                refillDisplayedIds(cat);
+                updateBadge();
+                updateSidebarActive();
+                renderGrid();
+                updateCounts();
+                closeSidebar();
+                saveState();
+            }
+
+            function toggleFavorite(id) {
+                if (favorites.has(id)) {
+                    favorites.delete(id);
+                    showToast('🤍 از علاقه‌مندی‌ها حذف شد');
+                } else {
+                    favorites.add(id);
+                    showToast('❤️ به علاقه‌مندی‌ها اضافه شد');
+                }
+                updateCounts();
+                if (currentCategory === 'favorites') {
+                    displayedIds = [...favorites];
+                }
+                renderGrid();
+                saveState();
+            }
+
+            function deleteQuote(id) {
+                if (blacklist.has(id)) return;
+                // Remove from displayed
+                displayedIds = displayedIds.filter(did => did !== id);
+                // Add to blacklist
+                blacklist.add(id);
+                // Also remove from favorites if present
+                favorites.delete(id);
+                // Refill
+                refillDisplayedIds(currentCategory === 'favorites' ? 'all' : currentCategory);
+                if (currentCategory === 'favorites') {
+                    displayedIds = [...favorites];
+                }
+                if (currentCategory === 'blacklist') {
+                    displayedIds = [...blacklist];
+                }
+                updateCounts();
+                renderGrid();
+                saveState();
+                showToast('🗑️ نقل‌قول به بلک‌لیست منتقل شد و جایگزین گردید');
+            }
+
+            function clearBlacklistAction() {
+                if (blacklist.size === 0) {
+                    showToast('🚫 بلک‌لیست در حال حاضر خالی است');
+                    return;
+                }
+                const count = blacklist.size;
+                blacklist.clear();
+                if (currentCategory === 'blacklist') {
+                    displayedIds = [];
+                }
+                if (currentCategory !== 'favorites' && currentCategory !== 'blacklist') {
+                    initDisplayedIds(currentCategory);
+                    refillDisplayedIds(currentCategory);
+                }
+                updateCounts();
+                renderGrid();
+                saveState();
+                showToast(`🔓 ${count} نقل‌قول از بلک‌لیست آزاد شدند`);
+            }
+
+            // ──────────────────────────────────────
+            // Event delegation
+            // ──────────────────────────────────────
+            grid.addEventListener('click', (e) => {
+                const btn = e.target.closest('button');
+                if (!btn) return;
+                const id = parseInt(btn.dataset.id);
+                if (isNaN(id)) return;
+                if (btn.classList.contains('fav-btn')) {
+                    toggleFavorite(id);
+                } else if (btn.classList.contains('delete-btn')) {
+                    deleteQuote(id);
                 }
             });
 
-            // ذرات و ابرها
-            const pc = document.getElementById('particlesContainer');
-            for (let i = 0; i < 30; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle';
-                const size = Math.random() * 5 + 2;
-                p.style.width = size + 'px'; p.style.height = size + 'px';
-                p.style.top = Math.random() * 100 + '%';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.animationDelay = Math.random() * 5 + 's';
-                pc.appendChild(p);
-            }
-            for (let i = 0; i < 8; i++) {
-                const cloud = document.createElement('div');
-                const isPink = Math.random() > 0.5;
-                cloud.className = isPink ? 'cloud pinkish' : 'cloud';
-                const size = Math.random() * 30 + 20;
-                cloud.style.width = size + 'px';
-                cloud.style.height = size * 0.6 + 'px';
-                cloud.style.top = Math.random() * 90 + '%';
-                cloud.style.left = -size + 'px';
-                cloud.style.animationDuration = (Math.random() * 15 + 12) + 's';
-                cloud.style.animationDelay = Math.random() * 8 + 's';
-                pc.appendChild(cloud);
+            // Sidebar category buttons
+            document.querySelectorAll('.sidebar button[data-category]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const cat = btn.dataset.category;
+                    switchCategory(cat);
+                });
+            });
+
+            // Show favorites / blacklist
+            showFavoritesBtn.addEventListener('click', () => switchCategory('favorites'));
+            showBlacklistBtn.addEventListener('click', () => switchCategory('blacklist'));
+            clearBlacklistBtn.addEventListener('click', clearBlacklistAction);
+
+            // Hamburger / sidebar
+            function openSidebar() {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
             }
 
-            refreshVisible();
-            render();
-        }
+            function closeSidebar() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            hamburgerBtn.addEventListener('click', openSidebar);
+            closeSidebarBtn.addEventListener('click', closeSidebar);
+            overlay.addEventListener('click', closeSidebar);
+
+            // Close sidebar with Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                    closeSidebar();
+                }
+            });
+
+            // ──────────────────────────────────────
+            // Particles
+            // ──────────────────────────────────────
+            function createParticles() {
+                const count = 25;
+                for (let i = 0; i < count; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'particle';
+                    const size = Math.random() * 3 + 1.5;
+                    p.style.width = size + 'px';
+                    p.style.height = size + 'px';
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.animationDelay = Math.random() * 10 + 's';
+                    p.style.animationDuration = (Math.random() * 8 + 6) + 's';
+                    particlesContainer.appendChild(p);
+                }
+            }
+
+            // ──────────────────────────────────────
+            // Init
+            // ──────────────────────────────────────
+            function init() {
+                createParticles();
+                loadState();
+                if (displayedIds.length === 0 && currentCategory !== 'favorites' && currentCategory !==
+                    'blacklist') {
+                    initDisplayedIds(currentCategory);
+                    refillDisplayedIds(currentCategory);
+                }
+                if (currentCategory === 'favorites') {
+                    displayedIds = [...favorites];
+                }
+                if (currentCategory === 'blacklist') {
+                    displayedIds = [...blacklist];
+                }
+                updateBadge();
+                updateCounts();
+                updateSidebarActive();
+                renderGrid();
+                saveState();
+            }
+
+            init();
+        })();
     </script>
 </body>
 </html>
