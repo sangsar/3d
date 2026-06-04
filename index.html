@@ -30,7 +30,6 @@
             position: relative;
             overflow-x: hidden;
         }
-        /* ذرات پس‌زمینه */
         .particles {
             position: fixed; top:0; left:0; width:100%; height:100%;
             pointer-events: none; z-index: 0;
@@ -46,7 +45,6 @@
             0%,100% { opacity: 0.4; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.3); }
         }
-        /* ابرهای متحرک شبیه ایموجی */
         .cloud {
             position: absolute;
             background: #fff;
@@ -77,7 +75,6 @@
             0% { transform: translateX(0) translateY(0); opacity: 0.8; }
             100% { transform: translateX(calc(100vw + 150px)) translateY(-20px); opacity: 0.5; }
         }
-        /* لایه اصلی */
         .app-container {
             position: relative; z-index: 1;
             max-width: 680px;
@@ -87,7 +84,6 @@
             flex-direction: column;
             gap: 18px;
         }
-        /* هدر */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -127,7 +123,6 @@
             backdrop-filter: blur(10px);
         }
         .hamburger:hover { background: var(--pink); color: #0a0a0c; }
-        /* لیست جملات */
         .quote-grid {
             display: flex;
             flex-direction: column;
@@ -154,29 +149,10 @@
             border-color: var(--pink);
             box-shadow: 0 0 25px rgba(255,153,200,0.25);
         }
-        .quote-body {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .quote-text {
-            font-size: 0.95rem;
-            line-height: 1.9;
-            color: #fff;
-        }
-        .quote-meta {
-            color: var(--gold);
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        .action-btns {
-            display: flex;
-            gap: 8px;
-            flex-shrink: 0;
-            align-items: center;
-        }
-        /* دکمه‌های شیشه‌ای */
+        .quote-body { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+        .quote-text { font-size: 0.95rem; line-height: 1.9; color: #fff; }
+        .quote-meta { color: var(--gold); font-size: 0.8rem; font-weight: 500; }
+        .action-btns { display: flex; gap: 8px; flex-shrink: 0; align-items: center; }
         .mini-btn {
             width: 32px; height: 32px;
             border-radius: 50%;
@@ -191,20 +167,13 @@
             transition: all 0.2s;
             backdrop-filter: blur(5px);
         }
-        .mini-btn:hover {
-            background: var(--pink);
-            color: #0a0a0c;
-            border-color: var(--pink);
-            transform: scale(1.1);
-        }
+        .mini-btn:hover { background: var(--pink); color: #0a0a0c; border-color: var(--pink); transform: scale(1.1); }
         .mini-btn.heart { color: #ff6b6b; }
         .mini-btn.heart.liked { background: #ff6b6b; color: #fff; border-color: #ff6b6b; }
         .mini-btn.trash { color: #ffaaaa; }
         .mini-btn.trash:hover { background: #ff4444; color: #fff; border-color: #ff4444; }
         .mini-btn.remove { color: #cccccc; }
         .mini-btn.remove:hover { background: #ff4444; color: #fff; border-color: #ff4444; }
-
-        /* سایدبار */
         .sidebar {
             position: fixed;
             top: 0; right: -340px;
@@ -234,11 +203,7 @@
             text-align: center;
             backdrop-filter: blur(5px);
         }
-        .sidebar-btn:hover, .sidebar-btn.active {
-            background: var(--pink);
-            color: #0a0a0c;
-            border-color: var(--pink);
-        }
+        .sidebar-btn:hover, .sidebar-btn.active { background: var(--pink); color: #0a0a0c; border-color: var(--pink); }
         .overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -249,20 +214,10 @@
             transition: opacity 0.3s;
         }
         .overlay.show { opacity: 1; pointer-events: auto; }
-        @media (max-width: 600px) {
-            .top-bar { padding: 12px 18px; }
-            .top-bar h2 { font-size: 1.1rem; }
-            .quote-card { padding: 14px 16px; }
-            .quote-text { font-size: 0.88rem; }
-            .mini-btn { width: 28px; height: 28px; font-size: 0.75rem; }
-        }
     </style>
 </head>
 <body>
-    <!-- ذرات و ابرها -->
     <div class="particles" id="particlesContainer"></div>
-
-    <!-- سایدبار -->
     <div class="sidebar" id="sidebar">
         <button class="sidebar-btn active" data-category="all">📜 همه</button>
         <button class="sidebar-btn" data-category="famous">🌟 بزرگان (۱-۳۰۰)</button>
@@ -274,34 +229,42 @@
         <button class="sidebar-btn" id="clearBlacklistBtn" style="background:rgba(255,100,100,0.2); border-color:#ff4444; color:#ff8888;">🗑️ پاک‌کردن لیست سیاه</button>
     </div>
     <div class="overlay" id="overlay"></div>
-
-    <!-- هدر -->
     <div class="top-bar">
         <h2>✨ جملات ناب</h2>
         <button class="hamburger" id="hamburgerBtn">☰</button>
     </div>
-
-    <!-- لیست جملات -->
     <div class="app-container">
-        <div class="quote-grid" id="quoteGrid"></div>
+        <div class="quote-grid" id="quoteGrid">
+            <p style="color:#aaa; text-align:center; padding:40px;">در حال بارگذاری...</p>
+        </div>
     </div>
 
-    <!-- اسکریپت اصلی -->
-    <script src="quotes.js" defer></script>
+    <!-- لود quotes.js با تشخیص خطا -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        const scriptEl = document.createElement('script');
+        scriptEl.src = 'quotes.js';
+        scriptEl.onload = function() {
             if (typeof quotes === 'undefined' || !Array.isArray(quotes) || quotes.length === 0) {
-                document.getElementById('quoteGrid').innerHTML = '<p style="color:red; text-align:center; padding:40px;">❌ فایل کلمات بارگذاری نشد.</p>';
-                return;
+                document.getElementById('quoteGrid').innerHTML = '<p style="color:red; text-align:center; padding:40px;">❌ فایل quotes.js بارگذاری شد اما آرایه quotes خالی یا نامعتبر است. لطفاً ساختار فایل را بررسی کنید (const quotes = [ ... ];).</p>';
+            } else {
+                // همه چیز خوب است، حالا برنامه را اجرا کن
+                initApp();
             }
+        };
+        scriptEl.onerror = function() {
+            document.getElementById('quoteGrid').innerHTML = '<p style="color:red; text-align:center; padding:40px;">❌ فایل quotes.js پیدا نشد. لطفاً مطمئن شوید فایل quotes.js در همان پوشه‌ای است که index.html قرار دارد (ریشه مخزن). همچنین نام فایل را دقیقاً quotes.js (با حروف کوچک) بگذارید.</p>';
+        };
+        document.head.appendChild(scriptEl);
 
-            // ========== GLOBALS ==========
+        // تابع اصلی برنامه
+        function initApp() {
+            document.getElementById('quoteGrid').innerHTML = '';
+
             let blacklist = JSON.parse(localStorage.getItem('quoteBlacklist')) || [];
             let favorites = JSON.parse(localStorage.getItem('quoteFavorites')) || [];
             let currentCategory = 'all';
             let visibleQuotes = [];
 
-            // ========== DATA ==========
             function saveData() {
                 localStorage.setItem('quoteBlacklist', JSON.stringify(blacklist));
                 localStorage.setItem('quoteFavorites', JSON.stringify(favorites));
@@ -337,7 +300,6 @@
                 if (idx > -1) visibleQuotes[idx] = randomPick;
             }
 
-            // ========== RENDER ==========
             function render() {
                 const grid = document.getElementById('quoteGrid');
                 grid.innerHTML = '';
@@ -388,26 +350,26 @@
                 });
             }
 
-            // ========== SIDEBAR ==========
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
             document.getElementById('hamburgerBtn').addEventListener('click', () => {
                 sidebar.classList.add('open');
                 overlay.classList.add('show');
             });
-            overlay.addEventListener('click', closeSidebar);
-            function closeSidebar() {
+            overlay.addEventListener('click', () => {
                 sidebar.classList.remove('open');
                 overlay.classList.remove('show');
-            }
+            });
 
             document.querySelectorAll('.sidebar-btn[data-category]').forEach(btn => {
                 btn.addEventListener('click', () => {
                     currentCategory = btn.dataset.category;
                     refreshVisible();
                     render();
-                    updateActiveSidebar();
-                    closeSidebar();
+                    document.querySelectorAll('.sidebar-btn[data-category]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('show');
                 });
             });
 
@@ -416,19 +378,13 @@
                     blacklist = [];
                     saveData();
                     if (currentCategory === 'blacklist') { refreshVisible(); render(); }
-                    closeSidebar();
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('show');
                 }
             });
 
-            function updateActiveSidebar() {
-                document.querySelectorAll('.sidebar-btn[data-category]').forEach(b => b.classList.remove('active'));
-                const active = document.querySelector(`.sidebar-btn[data-category="${currentCategory}"]`);
-                if (active) active.classList.add('active');
-            }
-
-            // ========== PARTICLES & CLOUDS ==========
+            // ذرات و ابرها
             const pc = document.getElementById('particlesContainer');
-            // ستاره‌ها
             for (let i = 0; i < 30; i++) {
                 const p = document.createElement('div');
                 p.className = 'particle';
@@ -439,12 +395,11 @@
                 p.style.animationDelay = Math.random() * 5 + 's';
                 pc.appendChild(p);
             }
-            // ابرها
             for (let i = 0; i < 8; i++) {
                 const cloud = document.createElement('div');
                 const isPink = Math.random() > 0.5;
                 cloud.className = isPink ? 'cloud pinkish' : 'cloud';
-                const size = Math.random() * 30 + 20; // 20-50px
+                const size = Math.random() * 30 + 20;
                 cloud.style.width = size + 'px';
                 cloud.style.height = size * 0.6 + 'px';
                 cloud.style.top = Math.random() * 90 + '%';
@@ -454,11 +409,9 @@
                 pc.appendChild(cloud);
             }
 
-            // ========== INIT ==========
             refreshVisible();
             render();
-            updateActiveSidebar();
-        });
+        }
     </script>
 </body>
 </html>
