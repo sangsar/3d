@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>خبرخوان هوشمند | بایا</title>
+  <title>خبرخوان ایران + توییتر</title>
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
   <style>
     * {
@@ -18,9 +18,12 @@
       --primary: #00f2fe;
       --secondary: #4facfe;
       --danger: #ff4d6d;
-      --glass-bg: rgba(20, 27, 43, 0.7);
+      --glass-bg: rgba(20, 27, 43, 0.75);
       --glass-border: rgba(255, 255, 255, 0.08);
       --font: 'Vazirmatn', sans-serif;
+      --accent: #f4a261; /* نارنجی ایرانی */
+      --card-radius: 1.2rem;
+      --max-width: 800px;
     }
     body {
       background: var(--bg);
@@ -29,9 +32,10 @@
       transition: background 0.3s;
       margin: 0;
       overflow-x: hidden;
-      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
-    /* ذرات پس‌زمینه */
     #particles {
       position: fixed;
       top: 0;
@@ -48,385 +52,385 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      padding: 1rem 2rem;
+      padding: 0.8rem 1.2rem;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
+      gap: 0.8rem;
     }
     .logo {
-      font-size: 2rem;
+      font-size: 1.6rem;
       font-weight: 900;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      background: linear-gradient(135deg, var(--accent), var(--primary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       cursor: pointer;
+      white-space: nowrap;
     }
     nav {
       display: flex;
-      gap: 1.5rem;
+      gap: 0.8rem;
       align-items: center;
+      flex-wrap: wrap;
     }
-    nav a, nav button {
+    nav button {
+      background: var(--surface);
       color: var(--text);
-      text-decoration: none;
-      font-weight: 500;
-      background: none;
-      border: none;
-      cursor: pointer;
+      border: 1px solid var(--glass-border);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
       font-family: var(--font);
-      font-size: 1rem;
-      transition: color 0.2s;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
       display: flex;
       align-items: center;
       gap: 0.3rem;
+      white-space: nowrap;
     }
-    nav a:hover, nav button:hover {
-      color: var(--primary);
+    nav button:hover {
+      background: var(--accent);
+      color: #000;
     }
     .lang-btn {
       background: var(--surface);
-      padding: 0.5rem 1rem;
-      border-radius: 2rem;
-      font-weight: bold;
     }
     .theme-btn {
-      background: var(--surface);
       width: 2.5rem;
       height: 2.5rem;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
       justify-content: center;
       font-size: 1.2rem;
     }
     main {
-      padding: 2rem;
-      max-width: 1400px;
+      flex: 1;
+      padding: 1.2rem;
+      max-width: var(--max-width);
       margin: 0 auto;
+      width: 100%;
     }
     .status-bar {
       background: var(--surface);
-      padding: 0.8rem 1.5rem;
+      padding: 0.7rem 1rem;
       border-radius: 1rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
-      font-size: 0.9rem;
+      align-items: center;
+      font-size: 0.85rem;
       color: var(--secondary);
+      gap: 0.5rem;
     }
-    .news-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.5rem;
+    .news-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
     .news-card {
       background: var(--glass-bg);
       backdrop-filter: blur(10px);
       border: 1px solid var(--glass-border);
-      border-radius: 1.2rem;
+      border-radius: var(--card-radius);
       overflow: hidden;
-      transition: transform 0.3s, box-shadow 0.3s;
-      animation: fadeInUp 0.5s ease;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: fadeInUp 0.4s ease;
+      display: flex;
+      flex-direction: column;
     }
-    .news-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 25px rgba(0, 242, 254, 0.15);
+    .news-card:active {
+      transform: scale(0.99);
     }
     .news-card img {
       width: 100%;
-      height: 200px;
+      height: 180px;
       object-fit: cover;
+      display: block;
     }
     .card-body {
-      padding: 1.2rem;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
     }
-    .card-body .source {
-      font-size: 0.8rem;
-      color: var(--secondary);
-      margin-bottom: 0.5rem;
+    .source {
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .source .twitter-icon {
+      font-size: 0.9rem;
     }
     .card-body h3 {
-      font-size: 1.2rem;
-      margin-bottom: 0.8rem;
-      line-height: 1.5;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      font-weight: 700;
     }
     .card-body .desc {
       font-size: 0.9rem;
-      line-height: 1.6;
-      opacity: 0.9;
-      margin-bottom: 1rem;
+      line-height: 1.7;
+      opacity: 0.85;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
     .card-body a {
-      display: inline-block;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      padding: 0.5rem 1.2rem;
+      align-self: flex-start;
+      background: var(--accent);
+      color: #fff;
+      padding: 0.4rem 1.2rem;
       border-radius: 2rem;
       text-decoration: none;
       font-weight: bold;
       font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    .card-body a:hover {
+      background: var(--primary);
+      color: #000;
     }
     .robot-log {
       background: var(--surface);
       border-radius: 1rem;
-      padding: 1rem;
-      margin-top: 2rem;
-      font-size: 0.9rem;
+      padding: 0.8rem;
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
       color: var(--secondary);
-      max-height: 200px;
+      max-height: 150px;
       overflow-y: auto;
+      border: 1px solid var(--glass-border);
     }
     .robot-log p {
-      margin: 0.3rem 0;
-      border-right: 2px solid var(--primary);
+      margin: 0.2rem 0;
+      border-right: 2px solid var(--accent);
       padding-right: 0.5rem;
+      word-break: break-all;
     }
     footer {
       text-align: center;
-      padding: 1.5rem;
+      padding: 1rem;
       color: #555;
+      font-size: 0.8rem;
     }
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(15px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
-      nav {
-        flex-wrap: wrap;
-      }
+    /* حالت روشن */
+    body.light-mode {
+      --bg: #f5f0eb;
+      --surface: #ffffff;
+      --text: #2c3e50;
+      --glass-bg: rgba(255,255,255,0.85);
+      --glass-border: rgba(0,0,0,0.05);
+    }
+    body.light-mode .card-body a {
+      color: #fff;
     }
   </style>
 </head>
 <body>
-  <!-- بوم ذرات -->
   <canvas id="particles"></canvas>
 
   <header>
-    <div class="logo" id="logo-text">📡 خبرخوان هوشمند</div>
+    <div class="logo" id="logo-text">📡 خبرخوان ایران</div>
     <nav>
-      <a href="#" data-i18n="home">خانه</a>
-      <a href="#" data-i18n="tech">فناوری</a>
-      <a href="#" data-i18n="sport">ورزش</a>
-      <a href="#" data-i18n="world">جهان</a>
-      <button class="lang-btn" onclick="toggleLanguage()">🌐 <span id="lang-label">FA</span></button>
+      <button class="lang-btn" onclick="toggleLanguage()">
+        <span id="lang-icon">🌐</span> <span id="lang-label">FA</span>
+      </button>
       <button class="theme-btn" onclick="toggleTheme()">🌓</button>
     </nav>
   </header>
 
   <main>
-    <div class="status-bar" id="status">
-      <span>🤖 ربات هوشمند فعال</span>
-      <span id="last-fetch">آخرین به‌روزرسانی: --</span>
+    <div class="status-bar">
+      <span>🤖 ربات فعال (هر ۱ ساعت، ۶۰ خبر + توییتر)</span>
+      <span id="last-fetch">آخرین دریافت: --</span>
     </div>
-    <div class="news-grid" id="news-grid">
-      <!-- کارت‌های خبر اینجا -->
+    <div class="news-list" id="news-list">
+      <p style="text-align:center; padding:2rem;">در حال بارگذاری اخبار ایران و توییتر...</p>
     </div>
     <div class="robot-log" id="robot-log">
-      <p>🤖 ربات آمادهٔ جمع‌آوری خبر است...</p>
+      <p>⏳ آماده دریافت خبرها...</p>
     </div>
   </main>
 
   <footer>
-    ساخته‌شده با ❤️ | ترجمهٔ خودکار توسط MyMemory (رایگان)
+    منابع: ISNA، ایرنا، مهر، تسنیم، فارس، باشگاه خبرنگاران، خبرآنلاین، تابناک، BBC فارسی، توییتر (Nitter)<br>
+    قدرت‌گرفته از rss2json رایگان
   </footer>
 
   <script>
-    // ==================== پیکربندی ====================
+    // ==================== منابع ====================
     const RSS_SOURCES = [
-      'https://feeds.bbci.co.uk/news/rss.xml',          // BBC News
-      'https://rss.nytimes.com/services/xml/rss/nyt/World.xml', // NYT World
-      'https://feeds.bbci.co.uk/news/technology/rss.xml', // BBC Tech
-      'https://www.espn.com/espn/rss/news'              // ESPN Sports
+      // خبرگزاری‌های فارسی
+      'https://www.isna.ir/rss',
+      'https://www.irna.ir/rss',
+      'https://www.mehrnews.com/rss',
+      'https://www.tasnimnews.com/fa/rss',
+      'https://www.farsnews.ir/rss',
+      'https://www.yjc.ir/fa/rss',
+      'https://www.khabaronline.ir/rss',
+      'https://www.tabnak.ir/fa/rss',
+      'https://feeds.bbci.co.uk/persian/rss.xml',
+      // توییتر (جستجوی ایران و Iran)
+      'https://nitter.net/search/rss?q=ایران',
+      'https://nitter.net/search/rss?q=Iran'
     ];
-    const FETCH_INTERVAL = 10 * 60 * 1000; // ۱۰ دقیقه
-    const ARTICLE_TTL = 3 * 60 * 1000;     // ۳ دقیقه
-    const MAX_NEW_PER_FETCH = 5;
 
-    let currentLanguage = localStorage.getItem('lang') || 'fa';
-    let articles = []; // همهٔ مقاله‌ها با addedAt
-    let robotLog = [];
+    const FETCH_INTERVAL = 60 * 60 * 1000; // ۱ ساعت
+    const ARTICLE_TTL = 60 * 60 * 1000;    // ۱ ساعت
+    const MAX_NEW_PER_FETCH = 60;          // ۶۰ خبر در هر بار
 
-    // ==================== ترجمه ====================
-    const i18n = {
-      fa: {
-        home: 'خانه',
-        tech: 'فناوری',
-        sport: 'ورزش',
-        world: 'جهان',
-        loading: 'در حال بارگذاری اخبار...',
-        empty: 'خبری برای نمایش وجود ندارد.',
-        robot_active: 'ربات هوشمند فعال',
-        last_fetch: 'آخرین به‌روزرسانی',
-        new_article: 'خبر جدید اضافه شد',
-        duplicate_removed: 'خبر تکراری حذف شد',
-        ai_filtered: 'فیلتر هوش مصنوعی: خبر بی‌کیفیت حذف شد',
-      },
-      en: {
-        home: 'Home',
-        tech: 'Technology',
-        sport: 'Sports',
-        world: 'World',
-        loading: 'Loading news...',
-        empty: 'No news to display.',
-        robot_active: 'AI Robot Active',
-        last_fetch: 'Last updated',
-        new_article: 'New article added',
-        duplicate_removed: 'Duplicate removed',
-        ai_filtered: 'AI filter: Low quality removed',
-      }
-    };
+    let articles = [];
+    let robotLogLines = [];
+    let currentLang = localStorage.getItem('news_lang') || 'fa';
 
-    function t(key) {
-      return i18n[currentLanguage]?.[key] || key;
-    }
-
-    function applyLanguage() {
-      document.documentElement.lang = currentLanguage;
-      document.documentElement.dir = currentLanguage === 'fa' ? 'rtl' : 'ltr';
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        el.textContent = t(el.dataset.i18n);
-      });
-      document.getElementById('lang-label').textContent = currentLanguage === 'fa' ? 'FA' : 'EN';
-      // بروزرسانی لوگو
-      document.getElementById('logo-text').textContent = currentLanguage === 'fa' ? '📡 خبرخوان هوشمند' : '📡 Smart News Reader';
-      // بروزرسانی نوار وضعیت
-      updateStatusBar();
-      // بازسازی نمایش اخبار (با ترجمه)
-      renderNews();
-    }
-
-    function toggleLanguage() {
-      currentLanguage = currentLanguage === 'fa' ? 'en' : 'fa';
-      localStorage.setItem('lang', currentLanguage);
-      applyLanguage();
-    }
-
-    // ==================== ذرات بوم (کانواس) ====================
+    // ==================== ذرات ====================
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
-    let particlesArray = [];
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    window.addEventListener('resize', () => {
+    let particles = [];
+    function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-    });
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
     class Particle {
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = (Math.random() * 0.3) - 0.15;
-        this.speedY = (Math.random() * 0.3) - 0.15;
+        this.size = Math.random() * 2.5 + 0.5;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
       }
       update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
       }
       draw() {
-        ctx.fillStyle = 'rgba(79, 172, 254, 0.6)';
+        ctx.fillStyle = 'rgba(244, 162, 97, 0.6)';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
       }
     }
-    function initParticles() {
-      particlesArray = [];
-      for (let i = 0; i < 80; i++) {
-        particlesArray.push(new Particle());
-      }
-    }
+    particles = Array.from({ length: 60 }, () => new Particle());
     function animateParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particlesArray.forEach(p => { p.update(); p.draw(); });
+      particles.forEach(p => { p.update(); p.draw(); });
       requestAnimationFrame(animateParticles);
     }
-    initParticles();
     animateParticles();
 
-    // ==================== ربات و مدیریت اخبار ====================
+    // ==================== ترجمه ====================
+    const translations = {
+      fa: {
+        loading: 'در حال بارگذاری اخبار...', empty: 'خبری یافت نشد.',
+        last_fetch: 'آخرین دریافت', new_article: 'خبر جدید اضافه شد',
+        duplicate_removed: 'تکراری حذف شد', ai_filtered: 'فیلتر هوش مصنوعی: بی‌کیفیت حذف شد',
+        read_more: 'مشاهده خبر', twitter_source: 'توییتر'
+      },
+      en: {
+        loading: 'Loading Iran news...', empty: 'No news found.',
+        last_fetch: 'Last fetch', new_article: 'New article added',
+        duplicate_removed: 'Duplicate removed', ai_filtered: 'AI filter: Low quality removed',
+        read_more: 'Read more', twitter_source: 'Twitter'
+      }
+    };
+    function t(key) {
+      return translations[currentLang]?.[key] || key;
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+      document.getElementById('lang-label').textContent = currentLang === 'fa' ? 'فارسی' : 'EN';
+      document.getElementById('lang-icon').textContent = currentLang === 'fa' ? '🌐' : '🌍';
+      document.getElementById('logo-text').textContent = currentLang === 'fa' ? '📡 خبرخوان ایران' : '📡 Iran News Reader';
+      const timePart = document.getElementById('last-fetch').textContent.split(':')[1] || '--';
+      document.getElementById('last-fetch').textContent = `${t('last_fetch')}:${timePart}`;
+      renderArticles();
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'fa' ? 'en' : 'fa';
+      localStorage.setItem('news_lang', currentLang);
+      applyLanguage();
+    }
+
+    // ==================== ربات ====================
     function logRobot(msg) {
-      const now = new Date().toLocaleTimeString('fa-IR');
-      robotLog.push(`[${now}] ${msg}`);
-      if (robotLog.length > 50) robotLog.shift();
+      const time = new Date().toLocaleTimeString('fa-IR');
+      robotLogLines.push(`[${time}] ${msg}`);
+      if (robotLogLines.length > 40) robotLogLines.shift();
       const logDiv = document.getElementById('robot-log');
-      logDiv.innerHTML = robotLog.map(m => `<p>${m}</p>`).join('');
+      logDiv.innerHTML = robotLogLines.map(m => `<p>${m}</p>`).join('');
+      logDiv.scrollTop = logDiv.scrollHeight;
     }
 
     function isDuplicate(newArticle) {
       return articles.some(a => a.link === newArticle.link);
     }
 
-    function aiQualityFilter(article) {
-      // هوش مصنوعی ساده: حذف مقالات بدون توضیحات یا خیلی کوتاه
-      if (!article.description || article.description.length < 50) {
-        logRobot(t('ai_filtered') + ` : ${article.title.substring(0, 40)}`);
+    function aiFilter(article) {
+      if (!article.description || article.description.length < 15) { // توییت‌ها ممکنه کوتاه باشن، پس ۱۵ کاراکتر
+        logRobot(`🤖 ${t('ai_filtered')}: ${article.title?.substring(0, 40)}`);
         return false;
       }
       return true;
     }
 
-    async function fetchAndProcess() {
-      logRobot('🔍 شروع دریافت خبرها...');
-      let fetchedArticles = [];
-      for (let url of RSS_SOURCES) {
+    async function fetchNews() {
+      logRobot('🔍 شروع دریافت ۶۰ خبر از منابع + توییتر...');
+      let freshArticles = [];
+      for (let feedUrl of RSS_SOURCES) {
         try {
-          const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
-          const res = await fetch(apiUrl);
-          const data = await res.json();
+          const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
+          const resp = await fetch(apiUrl);
+          const data = await resp.json();
           if (data.status === 'ok') {
             const items = data.items.map(item => ({
               title: item.title,
               link: item.link,
-              description: item.description?.replace(/<[^>]+>/g, '').substring(0, 200) + '...',
-              image: item.thumbnail || item.enclosure?.link || extractImage(item.description) || 'https://via.placeholder.com/400x200?text=No+Image',
+              description: item.description?.replace(/<[^>]+>/g, '').substring(0, 250),
+              image: item.thumbnail || extractImage(item.description) || 'https://via.placeholder.com/400x200?text=No+Image',
               pubDate: item.pubDate,
-              source: data.feed.title
+              source: feedUrl.includes('nitter.net') ? t('twitter_source') : data.feed.title
             }));
-            fetchedArticles.push(...items);
+            freshArticles.push(...items);
           }
         } catch (e) {
-          logRobot(`⚠️ خطا در دریافت ${url}`);
+          logRobot(`⚠️ خطا در دریافت ${feedUrl}`);
         }
       }
 
-      // مرتب‌سازی بر اساس تاریخ انتشار (جدیدترین)
-      fetchedArticles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+      // مرتب‌سازی بر اساس تاریخ (جدیدترین)
+      freshArticles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
 
       let addedCount = 0;
-      for (let article of fetchedArticles) {
+      for (let article of freshArticles) {
         if (addedCount >= MAX_NEW_PER_FETCH) break;
-        if (!isDuplicate(article) && aiQualityFilter(article)) {
+        if (!isDuplicate(article) && aiFilter(article)) {
           article.addedAt = Date.now();
           articles.unshift(article);
           addedCount++;
-          logRobot(`✅ ${t('new_article')} : ${article.title.substring(0, 50)}`);
+          logRobot(`✅ ${t('new_article')}: ${article.title?.substring(0, 50)}`);
         } else if (isDuplicate(article)) {
-          logRobot(`♻️ ${t('duplicate_removed')} : ${article.title.substring(0, 50)}`);
+          logRobot(`♻️ ${t('duplicate_removed')}: ${article.title?.substring(0, 50)}`);
         }
       }
 
       document.getElementById('last-fetch').textContent = 
         `${t('last_fetch')}: ${new Date().toLocaleTimeString('fa-IR')}`;
-      renderNews();
-    }
-
-    function removeOldArticles() {
-      const now = Date.now();
-      const previousLength = articles.length;
-      articles = articles.filter(a => now - a.addedAt < ARTICLE_TTL);
-      if (articles.length < previousLength) {
-        renderNews();
-      }
+      renderArticles();
     }
 
     function extractImage(html) {
@@ -435,92 +439,82 @@
       return match ? match[1] : null;
     }
 
-    // ==================== ترجمه اخبار (MyMemory) ====================
-    const translationCache = JSON.parse(localStorage.getItem('translate_cache') || '{}');
-    async function translateText(text, from = 'en', to = 'fa') {
-      if (!text) return text;
+    function removeOldArticles() {
+      const now = Date.now();
+      const before = articles.length;
+      articles = articles.filter(a => now - a.addedAt < ARTICLE_TTL);
+      if (articles.length < before) renderArticles();
+    }
+
+    // ==================== ترجمهٔ خودکار متن با MyMemory ====================
+    const translateCache = JSON.parse(localStorage.getItem('translate_cache') || '{}');
+    async function translateText(text, from = 'auto', to = 'fa') {
+      if (!text || currentLang === 'en') return text; // اگه انگلیسی نمایش بدیم، ترجمه نمی‌کنیم
       const cacheKey = `${text}_${to}`;
-      if (translationCache[cacheKey]) return translationCache[cacheKey];
+      if (translateCache[cacheKey]) return translateCache[cacheKey];
       try {
         const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`);
         const data = await res.json();
         const translated = data.responseData.translatedText || text;
-        translationCache[cacheKey] = translated;
-        localStorage.setItem('translate_cache', JSON.stringify(translationCache));
+        translateCache[cacheKey] = translated;
+        localStorage.setItem('translate_cache', JSON.stringify(translateCache));
         return translated;
       } catch (e) {
         return text;
       }
     }
 
-    async function renderNews() {
-      const grid = document.getElementById('news-grid');
+    async function renderArticles() {
+      const grid = document.getElementById('news-list');
       grid.innerHTML = '';
       if (articles.length === 0) {
-        grid.innerHTML = `<p style="text-align:center; padding:3rem;">${t('empty')}</p>`;
+        grid.innerHTML = `<p style="text-align:center; padding:2rem;">${t('empty')}</p>`;
         return;
       }
 
-      // نمایش اخبار با ترجمهٔ عنوان و توضیح در صورت نیاز
-      const lang = currentLanguage;
       for (let article of articles) {
         const card = document.createElement('div');
         card.className = 'news-card';
 
         let title = article.title;
         let desc = article.description;
-        if (lang === 'fa') {
-          title = await translateText(title, 'en', 'fa');
-          desc = await translateText(desc, 'en', 'fa');
+        if (currentLang === 'fa') {
+          title = await translateText(title);
+          desc = await translateText(desc);
         }
 
+        const isTwitter = article.source === t('twitter_source') || article.source === 'Twitter';
+        const sourceHtml = isTwitter 
+          ? `<span class="twitter-icon">🐦</span> ${t('twitter_source')}`
+          : article.source;
+
         card.innerHTML = `
-          <img src="${article.image}" alt="" onerror="this.src='https://via.placeholder.com/400x200?text=No+Image'">
+          <img src="${article.image}" alt="" onerror="this.style.display='none'">
           <div class="card-body">
-            <div class="source">${article.source}</div>
+            <div class="source">${sourceHtml}</div>
             <h3>${title}</h3>
             <div class="desc">${desc}</div>
-            <a href="${article.link}" target="_blank">${lang === 'fa' ? 'مشاهدهٔ خبر' : 'Read more'}</a>
+            <a href="${article.link}" target="_blank">${t('read_more')}</a>
           </div>
         `;
         grid.appendChild(card);
       }
     }
 
-    function updateStatusBar() {
-      document.getElementById('status').innerHTML = `
-        <span>🤖 ${t('robot_active')}</span>
-        <span id="last-fetch">${t('last_fetch')}: ${document.getElementById('last-fetch').textContent.split(':')[1] || '--'}</span>
-      `;
-    }
-
-    // ==================== حالت تاریک/روشن ====================
+    // ==================== حالت تاریک ====================
     function toggleTheme() {
       document.body.classList.toggle('light-mode');
       localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
     }
-    // حالت روشن (اختیاری)
-    const style = document.createElement('style');
-    style.textContent = `
-      body.light-mode {
-        --bg: #f0f4f8;
-        --surface: #ffffff;
-        --text: #1a202c;
-        --glass-bg: rgba(255,255,255,0.8);
-      }
-    `;
-    document.head.appendChild(style);
     if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
 
     // ==================== راه‌اندازی ====================
     function init() {
       applyLanguage();
-      fetchAndProcess(); // نخستین دریافت
-      setInterval(fetchAndProcess, FETCH_INTERVAL);
-      setInterval(removeOldArticles, 10000); // بررسی هر ۱۰ ثانیه
+      fetchNews();
+      setInterval(fetchNews, FETCH_INTERVAL);
+      setInterval(removeOldArticles, 30000); // بررسی حذف قدیمی‌ها هر ۳۰ ثانیه
     }
-
-    // شروع
     init();
   </script>
 </body>
